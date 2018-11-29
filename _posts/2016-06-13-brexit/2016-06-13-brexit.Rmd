@@ -1,0 +1,476 @@
+---
+title: "Brexit poll of polls"
+description: |
+  Analysis of Brexit polls by visualisation and a linear model
+author: "Duncan Garmonsway"
+date: June 13, 2016
+preview: "brexit.png"
+output:
+  radix::radix_article:
+    self_contained: false
+resources:
+  exclude:
+    data
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(comment = "##", collapse = TRUE, cache = TRUE)
+```
+
+This post does the following:
+
+* Re-works the Financial Times poll-of-polls graph
+* Explores the relationship between sample size, polling method, and voting
+  intention.
+
+## Data
+
+I scraped the poll data from the [Financial Times poll of
+polls](https://ig.ft.com/sites/brexit-polling).  The Financial Times made this
+graph of it:
+
+![https://ig.ft.com/sites/brexit-polling](brexit-ft-polls.png)
+
+To check a later inference about sample sizes and online/telephone methods, I
+also scraped polling data from the [BBC poll of
+polls](http://www.bbc.co.uk/news/uk-politics-eu-referendum-36271589) and used it
+to augment the Financial Times data with the polling method.
+
+My analysis focusses on the Financial Times data, because the sample sizes are
+provided, there is a longer time-series, and I didn't notice the BBC's version
+until I'd done most of the work.
+
+```{r brexit-boilerplate, include = FALSE, cache = FALSE}
+library(magrittr) # for set_colnames
+library(rvest)
+library(readr) # for write_csv, read_csv and parse_number
+library(dplyr)
+library(tidyr)
+library(lubridate)
+library(ggplot2)
+library(scales)
+library(here)
+
+# theme_set(theme_grey() +
+#           theme(panel.background = element_rect(fill = "#FFF1E0"),
+#                 plot.background = element_rect(fill = "#FFF1E0"),
+#                 legend.background = element_rect(fill = "#FFF1E0"),
+#                 strip.background = element_rect(fill = "#E9DECF"),
+#                 panel.grid = element_blank(),
+#                 legend.key = element_blank(),
+#                 plot.margin = margin(11/2, 22,
+#                                      11/2, 11/2)))
+theme_set(theme_grey() +
+          theme(panel.background = element_blank(),
+                panel.grid = element_blank(),
+                legend.key = element_blank(),
+                plot.margin = margin(11/2, 22,
+                                     11/2, 11/2)))
+ggplot <- function(...) {
+  ggplot2::ggplot(...) +
+  scale_colour_manual(values = c("#DF64A7", "#B9B081"), name = "Majority") +
+  scale_fill_manual(values = c("#DF64A7", "#B9B081"), name = "Majority") +
+  scale_shape_manual(name = "Sample size", values = c(1, 19)) +
+  scale_linetype_manual(name = "Sample size", values = c(4, 1))
+}
+ggplot <- function(...) {
+  ggplot2::ggplot(...) +
+  scale_colour_manual(values = c("darkred", "darkgreen"), name = "Majority") +
+  scale_fill_manual(values = c("darkred", "darkgreen"), name = "Majority") +
+  scale_shape_manual(name = "Sample size", values = c(1, 19)) +
+  scale_linetype_manual(name = "Sample size", values = c(4, 1))
+}
+```
+
+```{r brexit-download-ft, include = FALSE}
+# If downloading:
+# polls <-
+#   read_html("https://ig.ft.com/sites/brexit-polling/") %>%
+#   html_table %>%
+#     .[[1]]
+# write_csv(polls, here("data", "brexit.csv"))
+
+# If loading from disk
+polls <- read_csv(here("data", "brexit.csv")) # copes with commas inside quotes, via parse_number
+
+master_ft <-
+  polls %>%
+  tbl_df %>%
+  set_colnames(c("remain", "leave", "undecided", "date", "pollster", "sample")) %>%
+  mutate(date = mdy(date),
+         sample = parse_number(sample),
+         sample_size = c("< 1400", "≥ 1400")[(sample > 1400 | (sample == 0 & pollster == "YouGov")) + 1]) %>%
+  mutate_each(funs(./100), remain, leave, undecided) %>% # percentage
+  rowwise %>%
+  mutate(majority = c("remain", "leave")[which.max(c(remain, leave))],
+         max_percent = max(remain, leave),
+         min_percent = min(remain, leave)) %>%
+  ungroup
+```
+
+```{r brexit-download-bbc, echo = FALSE}
+# If downloading:
+polls_bbc <-
+#  read_html("http://www.bbc.co.uk/news/special/2016/newsspec_13636/content/english/index.html?v=0.1.1223&hostid=www.bbc.co.uk&hostUrl=http%3A%2F%2Fwww.bbc.co.uk%2Fnews%2Fuk-politics-eu-referendum-36271589&iframeUID=responsive-iframe-19622562&onbbcdomain=true") %>%
+#  html_table %>%
+#  .[[1]]
+#  write_csv(polls_bbc, here("data", "brexit-bbc.csv"))
+
+# If loading from disk
+polls_bbc <- read_csv(here("data", "brexit-bbc.csv"))
+
+master_bbc <-
+  polls_bbc %>%
+  set_colnames(c("date", "leave", "remain", "undecided", "pollster", "method")) %>%
+  tbl_df %>%
+  mutate(date = dmy(date),
+         pollster = ifelse(pollster == "Ipsos Mori", "Ipsos MORI", pollster),
+         pollster = ifelse(pollster == "BMG", "BMG Research", pollster)) %>%
+  mutate_each(funs(./100), remain, leave, undecided) %>% # percentage
+  rowwise %>%
+  mutate(majority = c("remain", "leave")[which.max(c(remain, leave))],
+         max_percent = max(remain, leave),
+         min_percent = min(remain, leave)) %>%
+  ungroup
+
+# Augment the Financial Times data with the BBC method data
+master_ft <- left_join(master_ft,
+                    master_bbc %>% select(date, leave, pollster, method),
+                    by = c("date", "leave", "pollster"))
+
+# Combine both datasets for a frequency table of sample size vs method
+master_both <- full_join(master_ft %>% select(date, leave, pollster,
+                                              sample_size, majority),
+                    master_bbc %>% select(date, leave, pollster, method),
+                    by = c("date", "leave", "pollster"))
+```
+
+## Reworking the graph
+
+The Financial Times graph emphasises the poll-of-polls statistic, and the
+difference between online and telephone polls.  In my version, I want to
+emphasise the outcomes (the majority in each poll), the margins of the
+majorities, and the sample sizes.  I also present the full series.
+
+```{r brexit-timeseries1}
+master_ft %>%
+  filter(!is.na(sample_size)) %>%
+  ggplot(aes(x = date, colour = majority)) +
+  geom_linerange(aes(
+                   ymax = max_percent, ymin = min_percent,
+                   group = interaction(date, pollster),
+                   linetype = sample_size), alpha = .5) +
+  geom_point(aes(y = undecided, shape = sample_size), stroke = 0.8, alpha = .5) +
+  scale_x_date(date_breaks = "6 month", date_minor_breaks = "1 month",
+               limits = c(ymd("2010-07-01"), NA),
+               expand = c(0, 0), labels = date_format("%b %Y")) +
+  scale_y_continuous(labels = percent) +
+  xlab("") +
+  ylab("Majority/minority/undecided %") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  ggtitle("Polls by date: Majority and its margin (lines), and undecided % (points)")
+```
+
+I would have included the poll-of-polls statistic on my graph, since the
+Financial Times describes their method in a footnote:
+
+> The FT poll of polls is calculated by taking the last seven polls from unique
+> pollsters up to a given date, removing the two polls with the highest and
+> lowest shares for 'remain', and calculating an adjusted average of the five
+> remaining polls, where the more recent polls are given a higher weight
+
+Unfortunately, besides omitting the weights, and their tie-breaking policy,
+their statistic has obviously been redesigned since the footnote was written,
+because their current statistic for 'remain' is higher than the second-highest
+'remain' result in the last seven polls.
+
+Here's that graph again, but this time beginning in September 2015 like the
+Financial Times.
+
+```{r brexit-timeseries2}
+master_ft %>%
+  filter(date >= ymd("2015-09-01")) %>%
+  ggplot(aes(x = date, colour = majority)) +
+  geom_linerange(aes(
+                   ymax = max_percent, ymin = min_percent,
+                   group = interaction(date, pollster),
+                   linetype = sample_size), alpha = .5) +
+  geom_point(aes(y = undecided, shape = sample_size), stroke = 0.8, alpha = .5) +
+  scale_x_date(date_breaks = "1 month", # Deleting this comment breaks 'make devserver'
+               limits = c(ymd("2015-09-01"), NA),
+               expand = c(0, 0), labels = date_format("%b %Y")) +
+  scale_y_continuous(labels = percent) +
+  xlab("") +
+  ylab("Majority/minority/undecided %") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  ggtitle("Polls by date: Majority and its margin (lines), and undecided % (points)")
+```
+
+Something worth noticing is that the 'leave' majorities are mostly large
+samples.  Comparing this graph with the one by the Financial Times, sample size
+seems to be a proxy for telephone (small) vs online (large) polling methods.
+Let's check.
+
+Although the Financial Times graph distinguishes between online/telephone
+methods, that information isn't included in the table, despite its obvious
+[importance](https://yougov.co.uk/news/2016/02/23/commentary-what-explains-difference-between-phone-):
+
+> There’s a big difference between the online and telephone polls on the EU
+> referendum – with online polls showing the sides neck-and neck and telephone
+> polls showing about a 15% gap in favour of ‘remain’. Why?
+
+Fortunately, for most polls in the last six months, data from the [BBC's poll of
+polls](http://www.bbc.co.uk/news/uk-politics-eu-referendum-36271589) can augment
+the Financial Times data with online/telephone information.  As the following
+frequency table shows, in nearly all matched polls, large samples correspond
+with an online method.  So while large samples appear to favour 'leave', it may
+simply be that online polls do.
+
+```{r brexit-frequency}
+# Frequency table
+table(master_both$sample_size, master_both$method, useNA = "always") %>% addmargins
+```
+
+However, telephone polls do not necessarily favour either side.  Comparing the
+frequencies of outcomes with first methods and then sample sizes, the
+association between small sample sizes and a 'remain' outcome appears to be much
+stronger than between 'online' and 'remain' or 'phone' and 'remain'.  Perhaps
+this is why the financial markets apparently regard telephone polls as more
+reliable, despite the smaller sample sizes.
+
+```{r brexit-frequency-outcome}
+table(master_both$method, master_both$majority, useNA = "always") %>% addmargins
+table(master_both$sample_size, master_both$majority, useNA = "always") %>% addmargins
+```
+
+## Outcome by sample size / polling method
+
+I already noted that 'leave' majorities tend to come from large-sample/online
+polls.  The next graph makes this more obvious.
+
+```{r brexit-outcome-by-sample-size}
+master_ft %>%
+  ggplot(aes(majority, fill = majority)) +
+  geom_bar() +
+  annotate("text", "leave",  4, label = "Leave", colour = "white") +
+  annotate("text", "remain",  4, label = "Remain", colour = "white") +
+  xlab("") +
+  ylab("Number of polls") +
+  facet_wrap(~sample_size, labeller=labeller(sample_size = c("< 1400" = "Sample size < 1400", "≥ 1400" = "Sample size ≥ 1400"))) +
+  ggtitle("Number of polls by majority") +
+  theme(axis.text.x = element_blank(), axis.ticks.x = element_blank()) +
+  theme(legend.position = "none")
+```
+
+## Justification of large/small threshold
+
+But how did I choose 1400 as the boundary between small and large samples?  It's
+because of the following visualisations,  Polls with samples smaller than 1400
+just seem to behave differently. Perhaps small samples don't find the 'leave'
+voters, or perhaps they *do* find the 'remain' ones.
+
+```{r brexit-remain-by-sample-size}
+master_ft %>%
+  filter(sample > 0) %>%
+  ggplot(aes(sample, remain)) +
+  geom_point(aes(colour = majority, shape = sample_size), stroke = 0.8, alpha = .5) +
+  geom_smooth(se = FALSE, colour = "black") +
+  geom_vline(xintercept = 1400, linetype = 2) +
+  annotate("text", 1350, 0.24, hjust = 1, label = "1400") +
+  scale_x_log10() +
+  scale_y_continuous(labels = percent) +
+  annotation_logticks(sides = "b") +
+  xlab("Sample size (log scale)") +
+  ylab("Remain %") +
+  ggtitle("Remain % vs sample size, by majority")
+```
+
+Smaller samples also don't find the undecided people (this is not quite as
+convincing as the graph above).
+
+```{r brexit-undecided-by-sample-size}
+master_ft %>%
+  filter(sample > 0) %>%
+  ggplot(aes(sample, undecided)) +
+  geom_point(aes(colour = majority, shape = sample_size), stroke = 0.8, alpha =
+             0.5) +
+  geom_smooth(se = FALSE, colour = "black") +
+  geom_vline(xintercept = 1400, linetype = 2) +
+  annotate("text", 1350, 0.01, hjust = 1, label = "1400") +
+  scale_x_log10() +
+  scale_y_continuous(labels = percent) +
+  annotation_logticks(sides = "b") +
+  xlab("Sample size (log scale)") +
+  ylab("Undecided %") +
+  ggtitle("Undecided % vs sample size, by majority")
+```
+
+Checking this against the method data from the BBC, I'm arguably on the right
+track.  It would obviously be best to know the method as well as the sample
+size, but since I'm using the Financial Times data, and since I don't have the
+method of so many of those polls (grey points below), I have focussed on sample
+size instead.
+
+```{r brexit-method-vs-sample-size, warning = FALSE, message = FALSE}
+master_ft %>%
+  filter(sample > 0) %>%
+  ggplot(aes(sample, remain)) +
+  geom_point(aes(colour = method, shape = sample_size), stroke = 0.8, alpha =
+             0.5) +
+  geom_smooth(se = FALSE, colour = "black") +
+  geom_vline(xintercept = 1400, linetype = 2) +
+  annotate("text", 1350, 0.24, hjust = 1, label = "1400") +
+  scale_x_log10() +
+  scale_y_continuous(labels = percent) +
+  scale_colour_manual(values = c("#CC0033", "#0E6DCC"), na.value = "darkgrey", name = "Method") +
+  scale_fill_manual(values = c("#CC0033", "#0E6DCC"), na.value = "darkgrey", name = "Method") +
+  annotation_logticks(sides = "b") +
+  xlab("Sample size (log scale)") +
+  ylab("Remain %") +
+  ggtitle("Remain % vs sample size, by method")
+
+master_ft %>%
+  filter(sample > 0) %>%
+  ggplot(aes(sample, remain)) +
+  geom_point(aes(colour = method, shape = sample_size), stroke = 0.8, alpha =
+             0.5) +
+  geom_smooth(se = FALSE, colour = "black") +
+  geom_vline(xintercept = 1400, linetype = 2) +
+  annotate("text", 1350, 0.24, hjust = 1, label = "1400") +
+  scale_x_log10() +
+  scale_y_continuous(labels = percent) +
+  scale_colour_manual(values = c("#CC0033", "#0E6DCC"), na.value = "darkgrey", name = "Method") +
+  scale_fill_manual(values = c("#CC0033", "#0E6DCC"), na.value = "darkgrey", name = "Method") +
+  annotation_logticks(sides = "b") +
+  xlab("Sample size (log scale)") +
+  ylab("Undecided %") +
+  ggtitle("Undecided % vs sample size, by method")
+```
+
+## Indecision favours a 'leave' outcome: Part I -- graph
+
+Here I can use stats, the only stats I've ever been taught (the really
+out-of-date stuff), to explore whether undecided voters will favour the status
+quo.  (What is my status quo, anyway -- that we're in Europe now, or that I've
+always wanted to leave?)
+
+Here's the association between indecision and the 'remain' vote.
+
+```{r brexit-indecision-by-remain}
+master_ft %>%
+  ggplot(aes(undecided, remain)) +
+  geom_point(aes(colour = majority, shape = sample_size), stroke = 0.8, alpha = .5) +
+  geom_abline(intercept = 0.5, slope = -1/2, linetype = 2) +
+  scale_x_continuous(labels = percent) +
+  scale_y_continuous(labels = percent) +
+  facet_wrap(~sample_size, labeller=labeller(sample_size = c("< 1400" = "Sample size < 1400", "≥ 1400" = "Sample size ≥ 1400"))) +
+  xlab("Undecided %") +
+  ylab("Remain %") +
+  ggtitle("Remain % vs undecided %")
+```
+
+## Intermission (obvious glitch)
+
+A few 'remain' majorities are below the 'win' threshold in the graph above
+(green points below the dotted line).  That could be because of missing
+"won't vote" information.  See YouGov's
+[explanation](https://yougov.co.uk/news/2016/02/23/commentary-what-explains-difference-between-phone-):
+
+> Telephone polls ask their respondents “How will you vote in the
+> referendum?” People are assumed to have an opinion, and 90% of them give
+> one. By contrast, online polls present people with options: remain, leave,
+> won’t vote, don’t know – there is less assumption of an opinion, and 20% or
+> more don’t offer one.
+
+A few polls total much less than 100%, probably for the same reason, but it
+isn't a problem in most cases.
+
+```{r brexit-totals}
+master_ft %>%
+  mutate(total = remain + leave + undecided) %>%
+  ggplot(aes(total)) +
+  geom_histogram(bins = 30, fill = "#74736C") +
+  scale_x_continuous(labels = percent) +
+  xlab("Remain + leave + undecided %") +
+  ylab("") +
+  ggtitle("Distribution of each poll's total (should be about 100%)")
+```
+
+## Indecision favours a 'leave' outcome: Part II -- stats
+We've already seen the non-linearity of sample size vs everything, so I build
+two models, first for large samples, then for small ones.
+
+```{r breixit-lm_large}
+lm_large <- lm(remain ~ undecided, data = master_ft %>% filter(sample_size == "≥ 1400"))
+summary(lm_large)
+```
+
+The coefficient of 'undecided' is nearly -0.5, suggesting that undecided
+large-sample voters about as likely to vote either way (lines almost parallel in
+the graph below).  But as proportion of undecided voters reduces, at what point
+does the 'remain' outcome start to benefit?  (this analysis will be more
+meaningful for small samples, in just a moment).
+
+There are two linear functions: the fitted model, and the threshold of a
+majority (depending on the proportion of voters who are undecided).  Not only
+can we plot these functions (and base R is simplest here), but we can solve
+them for the fulcrum, which turns out to be about 19%.  If the proportion of
+voters who are undecided is below 19%, then outcome is likely to be 'remain'.
+
+I exhibit the R code here, for anyone interested in plotting functions and
+solving them.
+
+```{r brexit-fulcrum-large, echo = TRUE}
+remain <- function(x) {coef(lm_large)[2] * x + coef(lm_large)[1]}
+majority <- function(x) {(1 - x) / 2}
+plot(remain, 0, 0.5, xlab = "undecided", col = "blue")
+plot(majority, 0, 0.5, col = "brown", add = TRUE)
+fulcrum <- function(x) {remain(x) - majority(x)}
+uniroot(fulcrum, interval = c(0, 1))$root
+master_ft %>% filter(sample_size == "≥ 1400", undecided >= 0.1855785) %>% nrow
+```
+
+Since "small" may be a proxy for "online", let's model that, too.
+
+```{r brexit-lm-small}
+lm_small <- lm(remain ~ undecided, data = master_ft %>% filter(sample_size == "< 1400"))
+summary(lm_small)
+```
+
+This time, the coefficient of undecided is about -0.8, suggesting that
+undecided small-sample voters are more likely to vote to remain.  The fulrum,
+now much more meaningful than above, given the coefficient, is at about 26%,
+with a caveat that there are only five observations above 26%.
+
+```{r brexit-fulcrum-small, echo = TRUE}
+remain <- function(x) {coef(lm_small)[2] * x + coef(lm_small)[1]}
+majority <- function(x) {(1 - x) / 2}
+plot(remain, 0, 0.5, xlab = "undecided", col = "blue")
+plot(majority, 0, 0.5, col = "brown", add = TRUE)
+fulcrum <- function(x) {remain(x) - majority(x)}
+uniroot(fulcrum, interval = c(0, 1))$root
+master_ft %>% filter(sample_size == "< 1400", undecided >= 0.255461) %>% nrow
+```
+
+## Zero undecided voters
+
+Finally, what about the five zero-undecided polls (the five points along the
+bottom of the timeseries)?  It turns out that those polls were all conducted by
+the ORB company, and they're also the large-sample polls by ORB.  They aren't
+included in the BBC data, so we can't tell whether or not they are online polls.
+Make of them what you will.
+
+```{r brexit-zero-undecided}
+master_ft %>% filter(undecided == 0)
+master_ft %>%
+  filter(pollster == "ORB") %>%
+  ggplot(aes(date, undecided)) +
+  geom_point(aes(colour = majority, shape = sample_size), stroke = 0.8, alpha = .5) +
+  scale_y_continuous(labels = percent) +
+  scale_x_date(date_breaks = "1 month", labels = date_format("%b %Y")) +
+  xlab("") +
+  ylab("Undecided %") +
+  ggtitle("ORB polls: sample size vs undecided % by date")
+```
+
+

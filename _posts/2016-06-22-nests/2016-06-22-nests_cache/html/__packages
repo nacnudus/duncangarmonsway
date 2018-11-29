@@ -1,0 +1,17 @@
+base
+colorout
+usethis
+devtools
+nvimcom
+magrittr
+xml2
+rvest
+readr
+dplyr
+tidyr
+lubridate
+ggplot2
+scales
+here
+rmarkdown
+bindrcpp

@@ -1,0 +1,262 @@
+---
+title: "R rounding is weird?  Try JavaScript!"
+description: |
+  Reproducing browser rounding in R
+author: Duncan Garmonsway
+date: April 25, 2016
+preview: "rounding.png"
+output:
+  radix::radix_article:
+    self_contained: false
+resources:
+  exclude:
+    data
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(comment = "##", collapse = TRUE, cache = TRUE)
+```
+
+## round(0.5) == 0?  Eh?
+
+A common source of confusion in R is rounding-to-even (example adapted from
+?round):
+
+```{r rounding-confusion, echo = TRUE)
+matrix(c(x1, round(x1)), nrow = 2, byrow = TRUE) #-- IEEE rounding !
+```
+
+This post does five things:
+
+* Illustrates rounding bias with a graph.
+* Discovers that JavaScript (in my browser) rounds the other way.
+* Encounters floating-point difficulties when emulating JavaScript.
+* Calls JavaScript itself via the `V8` package.
+* Explains where all the time goes.
+
+## Graph of rounding bias
+
+Here is an unpolished graphical illustration of the bias introduced by rounding
+halves (0.5, 1.5, etc.) away from zero.  The details of the difference are
+neatly explained in the [R
+Inferno](http://www.burns-stat.com/pages/Tutor/R_inferno.pdf), circle 8.1.52.
+
+```{r rounding-to-even}
+# Round-to-even is the R default
+round_to_even <- round
+
+```{r rounding-away-from-zero}
+# Round-away-from-zero function adapted from http://stackoverflow.com/a/12688836/937932
+round_away_from_zero = function(x, digits = 0) {
+  posneg = sign(x)
+  z = abs(x) * 10^digits
+  z = z + 0.5
+  z = trunc(z)
+  z = z * 10^(-digits)
+  z*posneg
+}
+```
+
+```{r rounding-bias-1, echo = FALSE}
+# Compare the two systems
+# x1 <- seq(-2.5, 2.5)
+# matrix(c(x1,
+#          round_to_even(x1),
+#          round_to_odd(x1)),
+#        nrow = 3, byrow = TRUE)
+
+# Graph the bias of many random draws
+N <- 10000
+bias<- function(FUN) {
+  # Round to one decimal place to ensure 0.5 ever appears.
+  # Draw between 0 and 2 to fairly represent both 0.5 and 1.5.
+  x <- round(runif(10, min = 0, max = 2), 1)
+  mean(FUN(x) - x)
+}
+
+bias_to_even <- replicate(N, bias(round_to_even))
+bias_away_from_zero <- replicate(N, bias(round_away_from_zero))
+
+limits <- c(-0.5, 0.5)
+par(mfrow = c(2, 1))
+  hist(bias_to_even, xlim = limits, col = "lightgreen")
+  hist(bias_away_from_zero, xlim = limits, col = "lightblue")
+```
+
+## JavaScript rounding in the Chrome browser
+
+But when I tried to emulated a website's behaviour in R, it turned out that
+Chrome was rounding towards odd numbers after the decimal point (anyone know
+why?).  Try the following in the Chrome Developer Console (ctrl+shift+c in a
+tab).
+
+```js
+// Rounds away from zero
+console.log((-1.5).toFixed(0));
+console.log((-0.5).toFixed(0));
+console.log((0.5).toFixed(0));
+console.log((1.5).toFixed(0));
+
+// Rounds to odd
+console.log((-0.25).toFixed(1));
+console.log((-0.15).toFixed(1));
+console.log((-0.05).toFixed(1));
+console.log((0.05).toFixed(1));
+console.log((0.15).toFixed(1));
+console.log((0.25).toFixed(1));
+```
+
+How odd is that?  So I adapted a [handy MATLAB
+implementation](https://www.mathworks.com/matlabcentral/fileexchange/40286-rounding-functions-collection)
+of rounding-to-odd, and compared it with the other two strategies.
+
+```{r rounding-to-odd}
+# Round-to-odd function adapted from
+# https://www.mathworks.com/matlabcentral/fileexchange/40286-rounding-functions-collection
+round_to_odd <- function(x, digits = 0) {
+  y <- (x) * 10^digits
+  z <- y %% (2 * sign(y))
+  z[is.nan(z)] <- 0
+  z[abs(z) != 1.5] <- 0
+  z <- round_away_from_zero(y - z/3)
+  z * 10^(-digits)
+}
+```
+
+```{r rounding-bias-2, echo = FALSE}
+# Compare the three systems
+# x1 <- seq(-2.5, 2.5)
+# matrix(c(x1,
+#          round_to_even(x1),
+#          round_away_from_zero(x1),
+#          round_to_odd(x1)), nrow = 4, byrow = TRUE)
+
+bias_to_odd <- replicate(N, bias(round_to_odd))
+
+limits <- c(-0.5, 0.5)
+par(mfrow = c(3, 1))
+  hist(bias_to_even, xlim = limits, col = "lightgreen")
+  hist(bias_away_from_zero, xlim = limits, col = "lightblue")
+  hist(bias_to_odd, xlim = limits, col = "pink")
+```
+
+The graph shows that, like rounding-to-even, rounding-to-odd is unbiased, but a
+snag is that successive rounded operations will never reach zero (see comments
+on [this StackExchange
+answer](http://programmers.stackexchange.com/a/256269/111311)):
+
+```{r rounding-reach-zero, echo = TRUE}
+x <- 77
+for(i in 1:10) {
+  x <<- round_to_odd(x/2)
+  cat(x, ", ")
+}
+
+x <- 77
+for(i in 1:10) {
+  x <<- round_to_even(x/2)
+  cat(x, ", ")
+}
+```
+
+## Floating point errors
+
+Using my new round-to-odd function to emulate JavaScript behaviour, I
+encountered floating point errors.  For example, take the number 6.65:
+
+```{r rounding-floatingpoint1, echo = TRUE}
+sprintf("%.16f", c(6.65, 7 * 0.95, 7 - 0.35))
+```
+
+The tiny differences don't affect rounding in R:
+```{r rounding-floatingpoint2, echo = TRUE}
+round_to_odd(c(6.65, 7 * 0.95, 7 - 0.35), 1)
+```
+
+But they do affect rounding in JavaScript.  Again, paste these into the browser
+console:
+
+```
+console.log((6.65).toFixed(1));
+console.log((7 * 0.95).toFixed(1));
+console.log((7 - 0.35).toFixed(1));
+```
+
+## Calling JavaScript V8 engine via the V8 package
+
+At this point, I gave up on emulating JavaScript behaviour in R, and resorted to
+calling JavaScript from R via the
+[`V8`](https://cran.r-project.org/web/packages/V8/index.html) package, which uses
+the V8 JavaScript engine, the same that my browser (Chrome) uses.
+
+```{r rounding-loadV8, echo = TRUE}
+library(V8)
+```
+
+```{r rounding-V8, echo = TRUE}
+# library(V8)
+ct <- V8::v8()
+roundjs <- function(x, digits) {
+  sapply(x, function(y) {ct$get(paste0("Number((", sprintf("%.16f", y), ").toFixed(", digits, "))"))})
+}
+roundjs(c(6.65, 7 * 0.95, 7 - 0.35), 1)
+```
+
+## What took me so long
+
+This was a particularly tricky part of a bigger project (see next week's
+post).
+
+
+Most of the time went on finding, testing and correcting the two rounding
+functions for round-to-odd and round-away-from-zero.  I adapted the round-to-odd
+function from some [handy MATLAB
+implementations](https://www.mathworks.com/matlabcentral/fileexchange/40286-rounding-functions-collection)
+of various rounding strategies.  Unfortunately, they depended on MATLAB's
+built-in `round` function, which, according to its
+[documentation](https://uk.mathworks.com/help/matlab/ref/round.html), rounds
+away from zero, so I had to find a round-away-from-zero function in R first.
+Even then, it didn't work for negatives when I ported it to R, probably due to
+fundamental language differences:
+
+```{r rounding-surprising, echo = TRUE}
+# Surprising behaviour of
+-1.5 %% 2
+# Predictable behaviour (but different to MATLAB?)
+-1.0 %% 0
+```
+
+I also spent quite a while on the graphs of bias, where I befuddled myself by
+drawing random numbers between 0 to 1 (which is unfair on unbiased functions,
+because only 0.5 is represented, not 1.5), and by not doing preliminary rounding
+on the random draws (which meant that 0.5, 1.5, etc., weren't represented at
+all).
+
+Finally, my initial `V8` function used the `V8` package's own magic for passing
+values to the V8 engine, but when it didn't work, I suspected that the values
+were being passed as a string, and that R was rounding them as part of the
+conversion.  For example:
+
+```{r rounding-V8old, echo = TRUE}
+library(V8)
+roundjs <- function(x, digits) {
+  ct <- V8::v8()
+  ct$source(system.file("js/underscore.js", package="V8")) # Essential for _
+  ct$assign("digits", digits)
+  xrounded <-
+    ct$call("_.forEach",
+            x,
+            V8::JS("function(item, index, arr) {arr[index] = Number(item.toFixed(digits));}"))
+  xrounded
+}
+roundjs(c(6.65, 7 * 0.95, 7 - 0.35), 1)
+```
+
+## Code for the graphs
+
+```{r rounding-recall1, ref.label = 'rounding-bias-1', echo = TRUE, eval = FALSE}
+```
+
+```{r rounding-recall2, ref.label = 'rounding-bias-2', echo = TRUE, eval = FALSE}
+```
+

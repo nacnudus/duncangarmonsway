@@ -1,0 +1,272 @@
+---
+title: "More Harry Potter story arcs (they get darker)"
+description: |
+  Reproducing *Harry Potter* sentiment arcs by some real wizards
+author: Duncan Garmonsway
+date: July 20, 2016
+preview: "harry-potter-arcs-wizards.jpg"
+output:
+  radix::radix_article:
+    self_contained: false
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(collapse = TRUE, cache = TRUE)
+```
+
+```{r harry-potter-arcs-packages, echo = FALSE}
+library(purrr)
+library(dplyr)
+library(tidyr)
+library(stringi)
+library(ggplot2)
+library(scales)
+library(qdapDictionaries) # labMT dictionary
+library(tidytext)
+library(tokenizers)
+library(here)
+```
+
+In my [previous post](/post/2016-07-13-harry-potter-sentiment), I applied [Julia
+Silge](http://juliasilge.com/blog/)'s story-arc
+[sentiment](http://juliasilge.com/blog/Life-Changing-Magic/)
+[analysis](http://juliasilge.com/blog/Life-Changing-Magic/) method to the *Harry
+Potter* books. Twitter's response was a tweet about some very similar and
+fascinating research, on [arXiv](https://arxiv.org/abs/1606.07772).  Here's
+their beautiful graph.
+
+![*Harry Potter and the Deathly Hallows* sentiment arc, from Reagan et al.
+https://arxiv.org/pdf/1606.07772v2.pdf](harry-potter-arcs-wizards.jpg)
+
+This post reproduces their method, using R.
+
+### Method
+
+Reagan et al.'s method differs in two ways. They use the sentiment dictionary
+LabMT, a product of their own research group,
+[Hedonometer](http://hedonometer.org/index.html), which is available in R in the
+[qdapDictionaries](https://github.com/trinker/qdapDictionaries) package.  Then
+they smooth the scores by averaging inside a moving window.  The moving-window
+method produces curves that make a lot more sense.
+
+You can see their curves for all the Harry Potter books on their interactive
+[website](http://hedonometer.org/books/v1/?book=Harry%20Potter%20and%20the%20Sorcerer%27s%20Stone),
+which I highly recommend.
+
+But I wanted to reproduce the method in R, for fun.  The main snag was handling
+the moving window, which is one of the few under-developed parts of R munging at
+the moment.  There's [RcppRoll](https://github.com/kevinushey/RcppRoll), which
+implements a few obvious functions but no-longer allows custom functions, and
+[zoo](https://cran.r-project.org/web/packages/zoo/index.html), which does allow
+custom functions, but seems to want the input to be a timeseries -- fair enough,
+it is a timeseries library.
+
+So I did something hacky with base R and
+[purrr](https://github.com/hadley/purrr).  Starting with two vectors, one for
+the first and the other for the last row number of each window.  Putting those
+into a list, I then **transpose**d them, which you really have to see to
+understand what it's doing -- basically it paired up each entry of each vector
+into a vectors of length 2, each one an element of one overall list.  Then I
+could use **lapply** to iterate over each pair, generating a sequence of
+rownumbers from the first to the last, and finally **bind_rows** combined them
+into a large dataframe of all rows in all windows.  I recommend running the code
+below to see how this works.  Obviously the method doesn't scale too well, since
+it loads all the windows into memory at once.
+
+```{r, echo = TRUE, eval = FALSE}
+# Set up the moving-window-average parameters
+N <- nrow(book) # Number of words in the book
+k <- 10000 # Number of words in each sample
+l <- 200 # Number of points in the time series
+overlap <- floor((N - k)/(l - 1)) # Number of words by which the window slides
+overlap <- floor((N - k - 1)/l) # Function in the paper -- I think it's wrong, but it makes little difference.
+
+# first and last words of each chunk
+uppers <- c(seq(k, by = overlap, length.out = l), N)
+lowers <- c(seq(1, by = overlap, length.out = l), N - k)
+
+arc <-
+  list(lowers, uppers) %>%
+  transpose %>%
+  at_depth(1, unlist) %>%
+  lapply(function(x) {slice(book, x[1]:x[2]) %>% mutate(length = n())}) %>%
+  bind_rows(.id = "window") %>%
+  etc.
+```
+
+One thing on my graphs that Hedonometer doesn't provide is the chapter titles,
+so you can be reminded what is going on at each turn in the plot.
+
+Enjoy the plots below, otherwise that's it for this post.  The code is, as
+always, on [GitHub](https://github.com/nacnudus/crossprod), but you need to
+supply your own copies of the books.
+
+```{r, echo = FALSE, message = FALSE, warning = FALSE}
+# Titles as factor in series order
+titles <- c("1. Philosopher's Stone",
+            "2. Chamber of Secrets",
+            "3. Prisoner of Azkaban",
+            "4. Goblet of Fire",
+            "5. Order of the Phoenix",
+            "6. Half-Blood Prince",
+            "7. Deathly Hallows")
+
+# Filenames (alphanumerically in series order)
+files <-
+  list.files(here("..", "2016-07-13-harry-potter-sentiment", "data", "txt"), full.names = TRUE) %>%
+  normalizePath
+
+# Load the texts (one paragraph per row)
+books <-
+  tibble(title = titles, file = files) %>%
+  mutate(text = map(file, readLines)) %>%
+  dplyr::select(-`file`) %>%
+  unnest %>%
+  filter(text != "")
+
+# Mark chapters (not really necessary for this script)
+# Start-of-book markers: ^— CHAPTER ONE —$ but with different kinds of -.
+# End-of-book markers: ^Titles available.*
+chapters <- c("ONE", "TWO", "THREE", "FOUR", "FIVE", "SIX", "SEVEN", "EIGHT",
+              "NINE", "TEN", "ELEVEN", "TWELVE", "THIRTEEN", "FOURTEEN",
+              "FIFTEEN", "SIXTEEN", "SEVENTEEN", "EIGHTEEN", "NINETEEN",
+              "TWENTY", "TWENTY-ONE", "TWENTY-TWO", "TWENTY-THREE",
+              "TWENTY-FOUR", "TWENTY-FIVE", "TWENTY-SIX", "TWENTY-SEVEN",
+              "TWENTY-EIGHT", "TWENTY-NINE", "THIRTY", "THIRTY-ONE",
+              "THIRTY-TWO", "THIRTY-THREE", "THIRTY-FOUR", "THIRTY-FIVE",
+              "THIRTY-SIX", "THIRTY-SEVEN", "THIRTY-EIGHT",
+              "Nineteen Years Later")
+books <-
+  books %>%
+  group_by(title) %>%
+  mutate(chapter = stri_extract(text, regex = "^[—–] CHAPTER .*|^Titles available.*|Nineteen Years Later"),
+         chapter_title = if_else(is.na(chapter), as.character(NA), lead(text, 1)),
+         chapter_title = if_else(chapter %s==% "Nineteen Years Later", chapter, chapter_title)) %>%
+  fill(chapter, chapter_title) %>%
+  filter(!is.na(chapter)) %>%
+  filter(cumsum(stri_detect(chapter, regex = "^Titles available.*")) == 0) %>%
+  # Convert chapter headings to integers
+  mutate(chapter = stri_extract(chapter, regex = "[a-zA-Z -]+"),
+         chapter = stri_replace_first_fixed(chapter, "CHAPTER", ""),
+         chapter = stri_trim(chapter)) %>%
+  mutate(chapter = as.integer(factor(chapter, levels = chapters))) %>%
+  mutate(linenumber = row_number()) %>%
+  filter(linenumber >= 3) %>%
+  ungroup()
+
+# Convert non-ascii characters for tokenizing and ’ to ' to match stopwords
+books <-
+  books %>%
+  mutate(text = stri_replace_all(text, replacement = "'", regex = "[‘’]"),
+         text = stri_replace_all(text, replacement = "-", regex = "[–?]"))
+
+# Prepare for sentiment analysis ===============================================
+
+# Convert to one token per row
+books <-
+  books %>%
+  unnest_tokens(word, text) %>%
+  group_by(title, chapter, chapter_title, linenumber) %>%
+  mutate(wordnumber = row_number()) %>%
+  ungroup
+
+# Sentiment arcs ---------------------------------------------------------------
+
+arc <- function(book) {
+  book <-
+    book %>%
+    ungroup %>%
+    arrange(chapter, chapter_title, linenumber, wordnumber) %>%
+    mutate(wordnumber = row_number()) %>%
+    dplyr::select(chapter, chapter_title, wordnumber, word)
+
+  chapter_titles <-
+    book %>%
+    group_by(chapter, chapter_title) %>%
+    summarise(words = n()) %>%
+    ungroup %>%
+    mutate(percent = cumsum(words/sum(words)),
+           centre = lag(percent, default = 0) + ((percent - lag(percent, default = 0)) / 2))
+
+  N <- nrow(book) # Number of words in the book
+  k <- 10000 # Number of words in each sample
+  l <- 200 # Number of points in the time series
+  overlap <- floor((N - k)/(l - 1)) # Number of words by which the window slides
+  overlap <- floor((N - k - 1)/l) # Function in the paper -- I think it's wrong, but it makes little difference.
+
+  # first and last words of each chunk
+  uppers <- c(seq(k, by = overlap, length.out = l), N)
+  lowers <- c(seq(1, by = overlap, length.out = l), N - k)
+
+  arc <-
+    list(lowers, uppers) %>%
+    transpose %>%
+    at_depth(1, unlist) %>%
+    lapply(function(x) {slice(book, x[1]:x[2]) %>% mutate(length = n())}) %>%
+    bind_rows(.id = "window") %>%
+    inner_join(labMT, by = "word") %>%
+    dplyr::select(window, length, chapter, word, h_avg = happiness_average) %>%
+    group_by(window, length, word) %>%
+    summarise(chapter = max(chapter),
+              h_avg = first(h_avg),
+              f = n()) %>%
+    mutate(p = f/sum(f)) %>%
+    group_by(window) %>%
+    summarise(length = first(length),
+              chapter = first(chapter),
+              h_avg = sum(h_avg * p, na.rm = TRUE)) %>%
+    mutate(window = as.integer(window)) %>%
+    arrange(window)
+}
+
+arcs <-
+  books %>%
+  group_by(title) %>%
+  do(arc(.))
+
+chapter_titles <-
+  books %>%
+  group_by(title, chapter, chapter_title) %>%
+  summarise(words = n()) %>%
+  group_by(title) %>%
+  mutate(percent = cumsum(words/sum(words)),
+         centre = lag(percent, default = 0) + ((percent - lag(percent, default = 0)) / 2))
+
+plotbook <- function(book) {
+  chapter_titles <-
+    books %>%
+    filter(title == book$title[1]) %>%
+    group_by(chapter, chapter_title) %>%
+    summarise(words = n()) %>%
+    ungroup %>%
+    mutate(percent = cumsum(words/sum(words)),
+           centre = lag(percent, default = 0) + ((percent - lag(percent, default = 0)) / 2))
+  bookplot <-
+    book %>%
+    mutate(x = cumsum(length) / sum(length)) %>%
+    ggplot(aes(x, h_avg)) +
+    geom_vline(aes(xintercept = percent),
+               data = chapter_titles,
+               colour = "grey50") +
+    geom_text(aes(x = centre, label = chapter_title),
+              y = min(arcs$h_avg),
+              data = chapter_titles,
+              angle = 90,
+              hjust = 0,
+              colour = "grey50",
+              size = 3) +
+    geom_hline(yintercept = mean(arcs$h_avg), colour = "blue", linetype = 2, size = 1) +
+    geom_line() +
+    ylab("Happiness") +
+    xlab("") +
+    scale_x_continuous(labels = percent, expand = c(0, .01)) +
+    facet_wrap(~title, dir = "v")
+  print(bookplot)
+  return(data.frame())
+}
+
+arcs %>%
+  group_by(title) %>%
+  do(plotbook(.))
+```
+

@@ -1,0 +1,29 @@
+name: "duncangarmonsway"
+title: "Duncan Garmonsway"
+description: |
+  Duncan Garmonsway
+output_dir: "docs"
+favicon: images/favicon.png
+base_url: https://nacnudus.github.io/duncangarmonsway
+repository_url: https://github.com/nacnudus/duncangarmonsway
+creative_commons: CC BY
+twitter:
+  site: "@nacnudus"
+navbar:
+  right:
+    - text: "Home"
+      href: index.html
+    - text: "About"
+      href: about.html
+    - icon: fa fa-rss
+      href: index.xml
+    - icon: fab fa-github
+      href: https://github.com/nacnudus
+    - icon: fab fa-twitter
+      href: https://twitter.com/nacnudus
+collections:
+  posts:
+    disqus: duncangarmonsway
+    share: [twitter, linkedin]
+    subscribe: _subscribe.html
+output: radix::radix_article

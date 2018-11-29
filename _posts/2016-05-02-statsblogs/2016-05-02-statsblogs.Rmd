@@ -1,0 +1,256 @@
+---
+title: "How many StatsBloggers are there?"
+author: Duncan Garmonsway
+description: |
+  Parsing the daily digest emails and thinking about modelling
+date: May 2, 2016
+preview: "statsblogs.png"
+output:
+  radix::radix_article:
+    self_contained: false
+resources:
+  exclude:
+    data
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(comment = "##", collapse = TRUE, cache = TRUE)
+```
+
+This post does two things:
+
+* Reproduces my [R-Bloggers post](/post/2016-04-18-rbloggers)  on the
+  [StatsBlogs](http://www.statsblogs.com) website, to discover how many
+  StatsBlogs blogs there are *really*.
+* Considers how to interpret changes in diversity without knowingly observing
+  births/deaths of blogs.
+
+Many people who blog about statistics syndicate their posts on the the
+[StatsBlogs](http://www.statsblogs.com) website by the [Talk Stats
+forum](http://www.talkstats.com).  The list of "contributing blogs" tends only
+to lengthen, but how many actual posts are there in a given week/month, from how
+many different blogs?
+
+## The gist of it
+
+I subscribed to the [StatsBlogs](http://www.statsblogs.com/) daily digest emails
+in February 2014, giving me a good time-series of posts.  See my [R-Bloggers
+post](`r htmltools::HTML('{{< relref "2016-04-18-rbloggers.html" >}}')`) and the
+code at the end of this post for how I mined the emails for names and dates.
+
+## The trends
+
+It turns out that there are have been about 30 blogs active in a given month,
+posting about 150 posts (the only one that regularly posts more than once per
+week is, no prizes for guessing, [Statistical Modeling, Causal Inference, and
+Social Science](http://andrewgelman.com/)).  There was a change in mid-2015,
+either a step-change down from ~175 blogs/month, or the start of a decline.
+It's hard to say which.  When I first subscribed in February 2014, there were
+over 200 posts per month.  Please comment if you can suggest reasons for the
+change.
+
+```{r statsblogs-packages, echo = FALSE}
+library(dplyr)
+library(tidyr)
+library(tm.plugin.mail)
+library(xml2)
+library(stringr)
+library(lubridate)
+library(ggplot2)
+library(scales)
+library(fs)
+library(here)
+```
+
+```{r statsblogs-wrangle, echo = FALSE}
+# TODO: Implement the following manual steps in R
+# 1. Create a label in Gmail for the R-Bloggers digests
+# 2. Export emails with that label from Gmail
+# 3. Extract the exported file
+# 4. Run sed ':a;N;$!ba;s/=\r\n//g' statsblogs in the Mail directory, i.e.
+#    sed ':a;N;$!ba;s/=\r\n//g' ./Takeout/Mail/statsblogs > ./clean.mbox
+#    This steps removes funny newlines that are in the original emails in my
+#    inbox.
+
+mail_dir <- here("data", "temp")
+
+# Extract the emails into individual files
+convert_mbox_eml(here("data", "clean.mbox"), mail_dir)
+
+# Collect the file names
+emails <- dir_ls(mail_dir, full.names = TRUE)
+
+# Collect the datetimes in the first line of each file
+# Also collect the journals from the subject lines
+n <- length(emails)
+datetimes <- vector("character", length = n)
+blogs  <- vector("list", length = n)
+i <- 0
+for (filename in emails) {
+  i <<- i + 1
+  datetimes[i] <- readLines(filename, n = 1)
+  # Extract the links to the original blogs
+  blogs[[i]] <-
+    read_html(filename) %>%
+    xml_find_all("//div/p[(@class = '3D\"syndicated-attribution\"')][1]//a[1]") %>%
+    xml_text
+}
+
+# Extract the datetime string
+datetimes <-
+  datetimes %>%
+  str_sub(start = 34) %>%
+  strptime(format = "%b %d %H:%M:%S %z %Y")
+
+# Link the datetime with individual blogs
+names(blogs) <- datetimes
+blogs <- stack(blogs)
+
+# Recover the dates and clean the blog names
+blogs <-
+  blogs %>%
+  rename(blog = values, datetime = ind) %>%
+  mutate(datetime = ymd_hms(datetime),
+         # blog = str_replace(blog, fixed("=\\n"), ""),
+         blog = str_replace(blog, fixed("=C2=BB"), "»"),
+         blog = str_replace(blog, fixed("=E2=80=93"), "–"),
+         blog = str_replace(blog, fixed("=E2=80=A6"), "…"),
+         blog = str_replace(blog, fixed("=C3=A6"), "æ"),
+         blog = str_replace(blog, fixed("=EA=B0=84=EB=93=9C=EB=A3=A8=EB=93=9C =ED=81=AC=EB=A6=AC=EC=8A=A4=ED=86=A0=ED=8C=8C"), "(간드루드 크리스토파)"),
+         blog = str_replace(blog, fixed("=D0=AF=D1=82=D0=BE=D0=BC=D0=B8=D0=B7=D0=BE"), "Ятомизо"),
+         blog = str_trim(blog))
+
+# Number of different blogs per week/month/year
+periodically <- function(x, period) {
+  x %>%
+    group_by_(period, "blog") %>%
+    summarise(posts = n()) %>%
+    group_by_(period) %>%
+    summarise(posts = sum(posts),
+              blogs = n()) %>%
+    gather(measure, n, posts, blogs) %>%
+    rename_("date" = period) %>%
+    mutate(period = paste0(period, "ly"))
+}
+periodical <-
+  blogs %>%
+  mutate(year = ceiling_date(datetime, "year"),
+         month = ceiling_date(datetime, "month"),
+         week = ceiling_date(datetime, "week"))
+monthly <- periodically(periodical, "month")
+weekly <- periodically(periodical, "week")
+periodical <-
+  bind_rows(monthly, weekly) %>%
+  group_by(period) %>%
+  filter(date > min(date),
+         date < max(date)) %>%
+  ungroup
+```
+
+```{r statsblogs-periodical, echo = FALSE}
+periodical %>%
+  ggplot(aes(date, n, colour = period, linetype = measure)) +
+  geom_line() +
+  xlab("") +
+  ylab("Number of blogs/posts") +
+  ggtitle("Number of StatsBlogs blogs/posts per week/month")
+```
+
+```{r statsblogs-top10, echo = FALSE}
+# Most prolific bloggers
+blogs %>%
+  count(blog) %>%
+  arrange(desc(n)) %>%
+  slice(1:10) %>%
+  mutate(blog = str_wrap(blog, 30)) %>%
+  mutate(blog = factor(blog, levels = blog)) %>%
+  ggplot(aes(blog, n, label = blog)) +
+  geom_bar(stat = "identity") +
+  coord_flip() +
+  xlab("") +
+  ylab("Number of posts since February 2014") +
+  ggtitle("Top-10 bloggers by number of posts since February 2014") +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1))
+```
+
+```{r statsblogs-rates, echo = FALSE}
+# Rates of blogging (smoothed difference in days)
+blogs %>%
+  count(blog, datetime) %>%
+  group_by(blog) %>%
+  arrange(datetime) %>%
+  mutate(days = difftime(datetime, lag(datetime), units = "days"),
+         days = as.numeric(days),
+         days = days + .1) %>%         # Avoid log(0) errors
+  filter(n() >= 85) %>%
+  ungroup %>%
+  ggplot(aes(datetime, days)) +
+  geom_point(colour = "grey") +
+  geom_smooth(se = FALSE) +
+  scale_y_continuous(breaks = c(7, 28)) +
+  coord_cartesian(ylim = c(0, 35)) +
+  scale_x_datetime(breaks = date_breaks("6 months"), labels = date_format("%b'%y")) +
+  facet_wrap(~blog, label = label_wrap_gen()) +
+  xlab("") +
+  ylab("Days between posts") +
+  ggtitle("Days between posts on most-prolific blogs") +
+  theme(legend.position = "none")
+```
+
+## Survival modelling without birth/death observations
+
+Can we do a survival analysis without knowingly observing births and deaths of
+blogs?  I haven't trawled the blogs to find their first-ever posts, and it would
+be hard even for an author to identify a last-ever post.  Without that crucial
+information, I doubt a hazard function can be estimated, though I don't know an
+awful lot about that kind of thing, so maybe.
+
+But what about diversity?  I think we could get somewhere even without births
+and deaths.  Here's the cumulative distribution of observed blogs (the number of
+different blogs observed), over the whole period.
+
+```{r statsblogs-cumdist}
+blogs %>%
+  # Get the first observation of each blog
+  group_by(blog) %>%
+  arrange(datetime) %>%
+  slice(1) %>%
+  ungroup %>%
+  arrange(datetime) %>%
+  mutate(cumulative = 1:n()) %>%
+  ggplot(aes(datetime, cumulative)) +
+  geom_line() +
+  xlab("") +
+  ylab("Number of different blogs observed") +
+  ggtitle("Cumulative number of different blogs observed")
+```
+
+Supposing the population of blogs were static, then the first six months
+of the cumulative distribution curve would make sense.  Lots of blogs post daily,
+weekly or monthly, so by the time a couple of months have gone by, many blogs
+have already been observed.  After that, things slacken, until after about six
+months the curve levels off -- all blogs have been observed.
+
+Except that it doesn't level off.  It continues to rise steadily, implying that
+new blogs are being syndicated.  On the other hand, the number of different
+blogs observed in a given month (first graph) is slowly declining, so some
+blogs must be posting less often, or ceasing altogether.  Given those slopes,
+the composition of the population must be changing.
+
+I'm no clever clogs, so I'm not about to develop a statistic to describe those
+two slopes, to figure out their distribution, or to test hypotheses.  If anyone
+knows anything about this, please comment!
+
+## What took so long
+
+Almost nothing, since this post re-used the code from my [R-Bloggers post](`r
+htmltools::HTML('{{< relref "2016-04-18-rbloggers.html" >}}')`).  All I had to
+do was tweak the XPath, and then take a long bath to think about cumulative
+distributions.
+
+## Code
+
+Nothing postworthy, so see
+[GitHub](https://github.com/nacnudus/crossprod/tree/master/content) if you're
+interested.
+

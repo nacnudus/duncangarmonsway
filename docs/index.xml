@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:media="http://search.yahoo.com/mrss/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:dc="http://purl.org/dc/elements/1.1/" version="2.0">
+  <channel>
+    <title>Duncan Garmonsway</title>
+    <link>https://nacnudus.github.io/duncangarmonsway</link>
+    <atom:link href="https://nacnudus.github.io/duncangarmonsway/index.xml" rel="self" type="application/rss+xml"/>
+    <description>Duncan Garmonsway
+</description>
+    <image>
+      <title>Duncan Garmonsway</title>
+      <url>https://nacnudus.github.io/duncangarmonsway/images/favicon.png</url>
+      <link>https://nacnudus.github.io/duncangarmonsway</link>
+    </image>
+    <generator>Radix</generator>
+    <lastBuildDate>Wed, 20 Jul 2016 00:00:00 +0000</lastBuildDate>
+    <item>
+      <title>More Harry Potter story arcs (they get darker)</title>
+      <dc:creator>Duncan Garmonsway</dc:creator>
+      <link>https://nacnudus.github.io/duncangarmonsway/posts/2016-07-20-harry-potter-arcs</link>
+      <description>Reproducing *Harry Potter* sentiment arcs by some real wizards</description>
+      <guid>https://nacnudus.github.io/duncangarmonsway/posts/2016-07-20-harry-potter-arcs</guid>
+      <pubDate>Wed, 20 Jul 2016 00:00:00 +0000</pubDate>
+      <media:content url="https://nacnudus.github.io/duncangarmonsway/posts/2016-07-20-harry-potter-arcs/harry-potter-arcs-wizards.jpg" medium="image" type="image/jpeg"/>
+    </item>
+    <item>
+      <title>Harry Potter and the N-Grams of Sentiment</title>
+      <dc:creator>Duncan Garmonsway</dc:creator>
+      <link>https://nacnudus.github.io/duncangarmonsway/posts/2016-07-13-harry-potter-sentiment</link>
+      <description>*Harry Potter* cliches and story arcs by n-grams and sentiment analysis</description>
+      <guid>https://nacnudus.github.io/duncangarmonsway/posts/2016-07-13-harry-potter-sentiment</guid>
+      <pubDate>Wed, 13 Jul 2016 00:00:00 +0000</pubDate>
+      <media:content url="https://nacnudus.github.io/duncangarmonsway/posts/2016-07-13-harry-potter-sentiment/harry-potter-sentiment.png" medium="image" type="image/png" width="1344" height="960"/>
+    </item>
+    <item>
+      <title>Hacking the Data Science Radar with Data Science</title>
+      <dc:creator>Duncan Garmonsway</dc:creator>
+      <link>https://nacnudus.github.io/duncangarmonsway/posts/2016-06-28-radar</link>
+      <description>Get a perfect score in the Mango Solution Data Science Radar</description>
+      <guid>https://nacnudus.github.io/duncangarmonsway/posts/2016-06-28-radar</guid>
+      <pubDate>Tue, 28 Jun 2016 00:00:00 +0000</pubDate>
+      <media:content url="https://nacnudus.github.io/duncangarmonsway/posts/2016-06-28-radar/radar-perfect.png" medium="image" type="image/png" width="450" height="450"/>
+    </item>
+    <item>
+      <title>Creating nests without tidyr</title>
+      <dc:creator>Duncan Garmonsway</dc:creator>
+      <link>https://nacnudus.github.io/duncangarmonsway/posts/2016-06-22-nests</link>
+      <description>"How to construct nested data frames from scratch, without tidyr"</description>
+      <guid>https://nacnudus.github.io/duncangarmonsway/posts/2016-06-22-nests</guid>
+      <pubDate>Wed, 22 Jun 2016 00:00:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>Brexit poll of polls</title>
+      <dc:creator>Duncan Garmonsway</dc:creator>
+      <link>https://nacnudus.github.io/duncangarmonsway/posts/2016-06-13-brexit</link>
+      <description>Analysis of Brexit polls by visualisation and a linear model</description>
+      <guid>https://nacnudus.github.io/duncangarmonsway/posts/2016-06-13-brexit</guid>
+      <pubDate>Mon, 13 Jun 2016 00:00:00 +0000</pubDate>
+      <media:content url="https://nacnudus.github.io/duncangarmonsway/posts/2016-06-13-brexit/brexit.png" medium="image" type="image/png" width="1344" height="960"/>
+    </item>
+    <item>
+      <title>Simmer vs SimPy: The Bank, Part II</title>
+      <dc:creator>Duncan Garmonsway</dc:creator>
+      <link>https://nacnudus.github.io/duncangarmonsway/posts/2016-06-06-simmer-bank-2</link>
+      <description>Porting a SimPy tutorial to the R package Simmer</description>
+      <guid>https://nacnudus.github.io/duncangarmonsway/posts/2016-06-06-simmer-bank-2</guid>
+      <pubDate>Mon, 06 Jun 2016 00:00:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>Simmer vs SimPy: The Bank, Part I</title>
+      <dc:creator>Duncan Garmonsway</dc:creator>
+      <link>https://nacnudus.github.io/duncangarmonsway/posts/2016-05-11-simmer-bank-1</link>
+      <description>Porting a SimPy tutorial to the R package Simmer</description>
+      <guid>https://nacnudus.github.io/duncangarmonsway/posts/2016-05-11-simmer-bank-1</guid>
+      <pubDate>Wed, 11 May 2016 00:00:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>How many StatsBloggers are there?</title>
+      <dc:creator>Duncan Garmonsway</dc:creator>
+      <link>https://nacnudus.github.io/duncangarmonsway/posts/2016-05-02-statsblogs</link>
+      <description>Parsing the daily digest emails and thinking about modelling</description>
+      <guid>https://nacnudus.github.io/duncangarmonsway/posts/2016-05-02-statsblogs</guid>
+      <pubDate>Mon, 02 May 2016 00:00:00 +0000</pubDate>
+      <media:content url="https://nacnudus.github.io/duncangarmonsway/posts/2016-05-02-statsblogs/2016-05-02-statsblogs_files/figure-html5/statsblogs-periodical-1.png" medium="image" type="image/png" width="1248" height="768"/>
+    </item>
+    <item>
+      <title>R rounding is weird?  Try JavaScript!</title>
+      <dc:creator>Duncan Garmonsway</dc:creator>
+      <link>https://nacnudus.github.io/duncangarmonsway/posts/2016-04-25-rounding</link>
+      <description>Reproducing browser rounding in R</description>
+      <guid>https://nacnudus.github.io/duncangarmonsway/posts/2016-04-25-rounding</guid>
+      <pubDate>Mon, 25 Apr 2016 00:00:00 +0000</pubDate>
+      <media:content url="https://nacnudus.github.io/duncangarmonsway/posts/2016-04-25-rounding/rounding.png" medium="image" type="image/png" width="1344" height="960"/>
+    </item>
+    <item>
+      <title>How many R-Bloggers are there?</title>
+      <dc:creator>Duncan Garmonsway</dc:creator>
+      <link>https://nacnudus.github.io/duncangarmonsway/posts/2016-04-18-rbloggers</link>
+      <description>Parsing the daily digest emails</description>
+      <guid>https://nacnudus.github.io/duncangarmonsway/posts/2016-04-18-rbloggers</guid>
+      <pubDate>Mon, 18 Apr 2016 00:00:00 +0000</pubDate>
+      <media:content url="https://nacnudus.github.io/duncangarmonsway/posts/2016-04-18-rbloggers/rbloggers.png" medium="image" type="image/png" width="1344" height="960"/>
+    </item>
+    <item>
+      <title>New R package: nzcrash</title>
+      <dc:creator>Duncan Garmonsway</dc:creator>
+      <link>https://nacnudus.github.io/duncangarmonsway/posts/2015-07-13-nzcrash</link>
+      <description>Redistributing New Zealand crash data in tidy form</description>
+      <guid>https://nacnudus.github.io/duncangarmonsway/posts/2015-07-13-nzcrash</guid>
+      <pubDate>Mon, 13 Jul 2015 00:00:00 +0000</pubDate>
+      <media:content url="https://nacnudus.github.io/duncangarmonsway/posts/2015-07-13-nzcrash/nzcrash.png" medium="image" type="image/png" width="1344" height="960"/>
+    </item>
+  </channel>
+</rss>

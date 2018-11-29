@@ -1,0 +1,35 @@
+---
+title: "About this site"
+description: |
+  The personal website of Duncan Garmonsway.
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+I am a data scientist in the UK [Government Digital
+Service](https://gds.blog.gov.uk/) and have previously worked for [Scottish
+Power](https://www.scottishpower.co.uk/) and
+[various](https://www.mbie.govt.nz/) [New](http://www.police.govt.nz/)
+[Zealand](http://www.nzdf.mil.nz/) [ministries](https://www.justice.govt.nz/).
+I studied English Literature at [University College
+London](https://www.ucl.ac.uk/) and Applied Statistics at [Victoria University
+of Wellington](https://www.victoria.ac.nz/).
+
+I wrote [Spreadsheet Munging
+Strategies](https://nacnudus.github.io/spreadsheet-munging-strategies), a guide
+to getting data out of complex spreadsheets using my R packages
+[tidyxl](https://nacnudus.github.io/tidyxl) and
+[unpivotr](https://nacnudus.github.io/unpivotr).  I am an
+[ROpenSci](https://ropensci.org/about/) reviewer.  Find more of my work on
+[CRAN](ftp://cran.r-project.org/pub/R/web/checks/check_results_nacnudus_at_gmail.com.html)
+and [GitHub](https://github.com/nacnudus/).
+
+I am a [Christian](https://www.churchofengland.org/our-faith/what-we-believe)
+and have been a member of the choirs of [Wellington Cathedral of Saint
+Paul](https://www.wellingtoncathedral.org.nz/), [St Mary's Cathedral,
+Glasgow](https://thecathedral.org.uk/), and [Pinner Parish
+Church](https://www.pinnerparishchurch.org.uk/).  I play the
+[violin](https://www.facebook.com/groups/amorchuk/), badminton, and go [cycle
+touring](https://www.crazyguyonabike.com/).

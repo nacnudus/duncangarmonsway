@@ -1,0 +1,1721 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1"/>
+  <meta name="generator" content="radix" />
+
+  <style type="text/css">
+  /* Hide doc at startup (prevent jankiness while JS renders/transforms) */
+  body {
+    visibility: hidden;
+  }
+  </style>
+
+ <!--radix_placeholder_import_source-->
+ <!--/radix_placeholder_import_source-->
+
+  <!--radix_placeholder_meta_tags-->
+<title>Duncan Garmonsway: Hacking the Data Science Radar with Data Science</title>
+
+<meta property="description" itemprop="description" content="Get a perfect score in the Mango Solution Data Science Radar"/>
+
+<link rel="canonical" href="https://nacnudus.github.io/duncangarmonsway/posts/2016-06-28-radar/"/>
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/"/>
+<link rel="icon" type="image/png" href="../../images/favicon.png"/>
+
+<!--  https://schema.org/Article -->
+<meta property="article:published" itemprop="datePublished" content="2016-06-28"/>
+<meta property="article:created" itemprop="dateCreated" content="2016-06-28"/>
+<meta name="article:author" content="Duncan Garmonsway"/>
+
+<!--  https://developers.facebook.com/docs/sharing/webmasters#markup -->
+<meta property="og:title" content="Duncan Garmonsway: Hacking the Data Science Radar with Data Science"/>
+<meta property="og:type" content="article"/>
+<meta property="og:description" content="Get a perfect score in the Mango Solution Data Science Radar"/>
+<meta property="og:url" content="https://nacnudus.github.io/duncangarmonsway/posts/2016-06-28-radar/"/>
+<meta property="og:image" content="https://nacnudus.github.io/duncangarmonsway/posts/2016-06-28-radar/radar-perfect.png"/>
+<meta property="og:image:width" content="450"/>
+<meta property="og:image:height" content="450"/>
+<meta property="og:locale" content="en_US"/>
+<meta property="og:site_name" content="Duncan Garmonsway"/>
+
+<!--  https://dev.twitter.com/cards/types/summary -->
+<meta property="twitter:card" content="summary_large_image"/>
+<meta property="twitter:title" content="Duncan Garmonsway: Hacking the Data Science Radar with Data Science"/>
+<meta property="twitter:description" content="Get a perfect score in the Mango Solution Data Science Radar"/>
+<meta property="twitter:url" content="https://nacnudus.github.io/duncangarmonsway/posts/2016-06-28-radar/"/>
+<meta property="twitter:image" content="https://nacnudus.github.io/duncangarmonsway/posts/2016-06-28-radar/radar-perfect.png"/>
+<meta property="twitter:image:width" content="450"/>
+<meta property="twitter:image:height" content="450"/>
+<meta property="twitter:site" content="@nacnudus"/>
+
+<!--  https://scholar.google.com/intl/en/scholar/inclusion.html#indexing -->
+<meta name="citation_title" content="Duncan Garmonsway: Hacking the Data Science Radar with Data Science"/>
+<meta name="citation_fulltext_html_url" content="https://nacnudus.github.io/duncangarmonsway/posts/2016-06-28-radar/"/>
+<meta name="citation_fulltext_world_readable" content=""/>
+<meta name="citation_online_date" content="2016/06/28"/>
+<meta name="citation_publication_date" content="2016/06/28"/>
+<meta name="citation_author" content="Duncan Garmonsway"/>
+<!--/radix_placeholder_meta_tags-->
+  <!--radix_placeholder_rmarkdown_metadata-->
+
+<script type="text/json" id="radix-rmarkdown-metadata">
+{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["creative_commons","title","author","date","description","preview","output","resources","citation_url","canonical_url"]}},"value":[{"type":"character","attributes":{},"value":["CC BY"]},{"type":"character","attributes":{},"value":["Hacking the Data Science Radar with Data Science"]},{"type":"list","attributes":{},"value":[{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name"]}},"value":[{"type":"character","attributes":{},"value":["Duncan Garmonsway"]}]}]},{"type":"character","attributes":{},"value":["June 28, 2016"]},{"type":"character","attributes":{},"value":["Get a perfect score in the Mango Solution Data Science Radar"]},{"type":"character","attributes":{},"value":["radar-perfect.png"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["radix::radix_article"]}},"value":[{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["self_contained"]}},"value":[{"type":"logical","attributes":{},"value":[false]}]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["exclude"]}},"value":[{"type":"character","attributes":{},"value":["data"]}]},{"type":"character","attributes":{},"value":["https://nacnudus.github.io/duncangarmonsway/posts/2016-06-28-radar/"]},{"type":"character","attributes":{},"value":["https://nacnudus.github.io/duncangarmonsway/posts/2016-06-28-radar/"]}]}
+</script>
+<!--/radix_placeholder_rmarkdown_metadata-->
+  
+  <script type="text/json" id="radix-resource-manifest">
+  {"type":"character","attributes":{},"value":["2016-06-28-radar_files/bowser-1.9.3/bowser.min.js","2016-06-28-radar_files/distill-2.2.21/template.v2.js","2016-06-28-radar_files/figure-html/radar-diff-1.png","2016-06-28-radar_files/figure-html/radar-penalty-gap-1.png","2016-06-28-radar_files/figure-html/radar-penalty-inverse-1.png","2016-06-28-radar_files/figure-html/radar-penalty-magnitude-1.png","2016-06-28-radar_files/figure-html/radar-penalty-skew-1.png","2016-06-28-radar_files/figure-html/radar-perfect-1.png","2016-06-28-radar_files/figure-html/radar-systematic-1.png","2016-06-28-radar_files/figure-html5/radar-diff-1.png","2016-06-28-radar_files/figure-html5/radar-penalty-gap-1.png","2016-06-28-radar_files/figure-html5/radar-penalty-inverse-1.png","2016-06-28-radar_files/figure-html5/radar-penalty-magnitude-1.png","2016-06-28-radar_files/figure-html5/radar-penalty-skew-1.png","2016-06-28-radar_files/figure-html5/radar-perfect-1.png","2016-06-28-radar_files/figure-html5/radar-systematic-1.png","2016-06-28-radar_files/jquery-1.11.3/jquery.min.js","2016-06-28-radar_files/webcomponents-2.0.0/webcomponents.js","radar-perfect.png","radar-worst.png","radar.png"]}
+  </script>
+  <!--radix_placeholder_navigation_in_header-->
+
+<script type="application/javascript">
+
+  window.headroom_prevent_pin = false;
+
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+
+    // initialize headroom for banner
+    var header = $('header').get(0);
+    var headerHeight = header.offsetHeight;
+    var headroom = new Headroom(header, {
+      onPin : function() {
+        if (window.headroom_prevent_pin) {
+          window.headroom_prevent_pin = false;
+          headroom.unpin();
+        }
+      }
+    });
+    headroom.init();
+    if(window.location.hash)
+      headroom.unpin();
+    $(header).addClass('headroom--transition');
+
+    // offset scroll location for banner on hash change
+    // (see: https://github.com/WickyNilliams/headroom.js/issues/38)
+    window.addEventListener("hashchange", function(event) {
+      window.scrollTo(0, window.pageYOffset - (headerHeight + 25));
+    });
+
+    // responsive menu
+    $('.radix-site-header').each(function(i, val) {
+      var topnav = $(this);
+      var toggle = topnav.find('.nav-toggle');
+      toggle.on('click', function() {
+        topnav.toggleClass('responsive');
+      });
+    });
+
+    // nav dropdowns
+    $('.nav-dropbtn').click(function(e) {
+      $(this).next('.nav-dropdown-content').toggleClass('nav-dropdown-active');
+      $(this).parent().siblings('.nav-dropdown')
+         .children('.nav-dropdown-content').removeClass('nav-dropdown-active');
+    });
+    $("body").click(function(e){
+      $('.nav-dropdown-content').removeClass('nav-dropdown-active');
+    });
+    $(".nav-dropdown").click(function(e){
+      e.stopPropagation();
+    });
+  });
+</script>
+
+<style type="text/css">
+
+/* Theme (user-documented overrideables for nav appearance) */
+
+.radix-site-nav {
+  color: rgba(255, 255, 255, 0.8);
+  background-color: #455a64;
+  font-size: 15px;
+  font-weight: 300;
+}
+
+.radix-site-nav a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.radix-site-nav a:hover {
+  color: white;
+}
+
+@media print {
+  .radix-site-nav {
+    display: none;
+  }
+}
+
+.radix-site-header {
+
+}
+
+.radix-site-footer {
+
+}
+
+
+/* Site Header */
+
+.radix-site-header {
+  width: 100%;
+  box-sizing: border-box;
+  z-index: 3;
+}
+
+.radix-site-header .nav-left {
+  display: inline-block;
+  margin-left: 8px;
+}
+
+@media screen and (max-width: 768px) {
+  .radix-site-header .nav-left {
+    margin-left: 0;
+  }
+}
+
+
+.radix-site-header .nav-right {
+  float: right;
+  margin-right: 8px;
+}
+
+.radix-site-header a,
+.radix-site-header .title {
+  display: inline-block;
+  text-align: center;
+  padding: 14px 10px 14px 10px;
+}
+
+.radix-site-header .title {
+  font-size: 18px;
+}
+
+.radix-site-header .logo {
+  padding: 0;
+}
+
+.radix-site-header .logo img {
+  display: none;
+  max-height: 20px;
+  width: auto;
+  margin-bottom: -4px;
+}
+
+.radix-site-header .nav-image img {
+  max-height: 18px;
+  width: auto;
+  display: inline-block;
+  margin-bottom: -3px;
+}
+
+
+
+@media screen and (min-width: 1000px) {
+  .radix-site-header .logo img {
+    display: inline-block;
+  }
+  .radix-site-header .nav-left {
+    margin-left: 20px;
+  }
+  .radix-site-header .nav-right {
+    margin-right: 20px;
+  }
+  .radix-site-header .title {
+    padding-left: 12px;
+  }
+}
+
+
+.radix-site-header .nav-toggle {
+  display: none;
+}
+
+.nav-dropdown {
+  display: inline-block;
+  position: relative;
+}
+
+.nav-dropdown .nav-dropbtn {
+  border: none;
+  outline: none;
+  color: rgba(255, 255, 255, 0.8);
+  padding: 16px 10px;
+  background-color: transparent;
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+  margin: 0;
+  margin-top: 1px;
+  z-index: 2;
+}
+
+.nav-dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: white;
+  min-width: 200px;
+  border: 1px solid rgba(0,0,0,0.15);
+  border-radius: 4px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.1);
+  z-index: 1;
+  margin-top: 2px;
+  white-space: nowrap;
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+.nav-dropdown-content hr {
+  margin-top: 4px;
+  margin-bottom: 4px;
+  border: none;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.nav-dropdown-active {
+  display: block;
+}
+
+.nav-dropdown-content a, .nav-dropdown-content .nav-dropdown-header {
+  color: black;
+  padding: 6px 24px;
+  text-decoration: none;
+  display: block;
+  text-align: left;
+}
+
+.nav-dropdown-content .nav-dropdown-header {
+  display: block;
+  padding: 5px 24px;
+  padding-bottom: 0;
+  text-transform: uppercase;
+  font-size: 14px;
+  color: #999999;
+  white-space: nowrap;
+}
+
+.nav-dropdown:hover .nav-dropbtn {
+  color: white;
+}
+
+.nav-dropdown-content a:hover {
+  background-color: #ddd;
+  color: black;
+}
+
+.nav-right .nav-dropdown-content {
+  margin-left: -45%;
+  right: 0;
+}
+
+@media screen and (max-width: 768px) {
+  .radix-site-header a, .radix-site-header .nav-dropdown  {display: none;}
+  .radix-site-header a.nav-toggle {
+    float: right;
+    display: block;
+  }
+  .radix-site-header .title {
+    margin-left: 0;
+  }
+  .radix-site-header .nav-right {
+    margin-right: 0;
+  }
+  .radix-site-header {
+    overflow: hidden;
+  }
+  .nav-right .nav-dropdown-content {
+    margin-left: 0;
+  }
+}
+
+
+@media screen and (max-width: 768px) {
+  .radix-site-header.responsive {position: relative;}
+  .radix-site-header.responsive a.nav-toggle {
+    position: absolute;
+    right: 0;
+    top: 0;
+  }
+  .radix-site-header.responsive a,
+  .radix-site-header.responsive .nav-dropdown {
+    display: block;
+    text-align: left;
+  }
+  .radix-site-header.responsive .nav-left,
+  .radix-site-header.responsive .nav-right {
+    width: 100%;
+  }
+  .radix-site-header.responsive .nav-dropdown {float: none;}
+  .radix-site-header.responsive .nav-dropdown-content {position: relative;}
+  .radix-site-header.responsive .nav-dropdown .nav-dropbtn {
+    display: block;
+    width: 100%;
+    text-align: left;
+  }
+}
+
+/* Site Footer */
+
+.radix-site-footer {
+  width: 100%;
+  overflow: hidden;
+  box-sizing: border-box;
+  z-index: 3;
+  margin-top: 30px;
+  padding-top: 30px;
+  padding-bottom: 30px;
+  text-align: center;
+}
+
+/* Headroom */
+
+d-title {
+  padding-top: 6rem;
+}
+
+@media print {
+  d-title {
+    padding-top: 4rem;
+  }
+}
+
+.headroom {
+  z-index: 1000;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+}
+
+.headroom--transition {
+  transition: all .4s ease-in-out;
+}
+
+.headroom--unpinned {
+  top: -100px;
+}
+
+.headroom--pinned {
+  top: 0;
+}
+
+</style>
+
+<link href="../../site_libs/font-awesome-5.0.13/css/fa-svg-with-js.css" rel="stylesheet"/>
+<script src="../../site_libs/font-awesome-5.0.13/js/fontawesome-all.min.js"></script>
+<script src="../../site_libs/font-awesome-5.0.13/js/fa-v4-shims.min.js"></script>
+<script src="../../site_libs/headroom-0.9.4/headroom.min.js"></script>
+<!--/radix_placeholder_navigation_in_header-->
+  <!--radix_placeholder_distill-->
+
+<style type="text/css">
+
+body {
+  background-color: white;
+}
+
+.pandoc-table {
+  width: 100%;
+}
+
+.pandoc-table>caption {
+  margin-bottom: 10px;
+}
+
+.pandoc-table th:not([align]) {
+  text-align: left;
+}
+
+.pagedtable-footer {
+  font-size: 15px;
+}
+
+.html-widget {
+  margin-bottom: 2.0em;
+}
+
+.l-screen-inset {
+  padding-right: 16px;
+}
+
+.l-screen .caption {
+  margin-left: 10px;
+}
+
+.shaded {
+  background: rgb(247, 247, 247);
+  padding-top: 20px;
+  padding-bottom: 20px;
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.shaded .html-widget {
+  margin-bottom: 0;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.shaded .shaded-content {
+  background: white;
+}
+
+.text-output {
+  margin-top: 0;
+  line-height: 1.5em;
+}
+
+.hidden {
+  display: none !important;
+}
+
+d-article {
+  padding-bottom: 30px;
+}
+
+d-appendix {
+  padding-top: 30px;
+}
+
+d-article>p>img {
+  width: 100%;
+}
+
+d-article iframe {
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  margin-bottom: 2.0em;
+  width: 100%;
+}
+
+figure img.external {
+  background: white;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  box-shadow: 0 1px 8px rgba(0, 0, 0, 0.1);
+  padding: 18px;
+  box-sizing: border-box;
+}
+
+/* CSS for table of contents */
+
+.d-toc {
+  color: rgba(0,0,0,0.8);
+  font-size: 0.8em;
+  line-height: 1em;
+}
+
+.d-toc-header {
+  font-size: 0.6rem;
+  font-weight: 400;
+  color: rgba(0, 0, 0, 0.5);
+  text-transform: uppercase;
+  margin-top: 0;
+  margin-bottom: 1.3em;
+}
+
+.d-toc a {
+  border-bottom: none;
+}
+
+.d-toc ul {
+  padding-left: 0;
+}
+
+.d-toc li>ul {
+  padding-top: 0.8em;
+  padding-left: 16px;
+  margin-bottom: 0.6em;
+}
+
+.d-toc ul,
+.d-toc li {
+  list-style-type: none;
+}
+
+.d-toc li {
+  margin-bottom: 0.9em;
+}
+
+.d-toc-separator {
+  margin-top: 20px;
+  margin-bottom: 2em;
+}
+
+.d-article-with-toc {
+  border-top: none;
+  padding-top: 0;
+}
+
+
+
+/* Tweak code blocks (note that this CSS is repeated above in an injection
+   into the d-code shadow dom) */
+
+d-code {
+  overflow-x: auto !important;
+}
+
+pre.d-code code.d-code {
+  padding-left: 10px;
+  font-size: 12px;
+  border-left: 2px solid rgba(0,0,0,0.1);
+}
+
+pre.text-output {
+
+  font-size: 12px;
+  color: black;
+  background: none;
+  font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
+  text-align: left;
+  white-space: pre;
+  word-spacing: normal;
+  word-break: normal;
+  word-wrap: normal;
+  line-height: 1.5;
+
+  -moz-tab-size: 4;
+  -o-tab-size: 4;
+  tab-size: 4;
+
+  -webkit-hyphens: none;
+  -moz-hyphens: none;
+  -ms-hyphens: none;
+  hyphens: none;
+}
+
+@media(min-width: 768px) {
+
+d-code {
+  overflow-x: visible !important;
+}
+
+pre.d-code code.d-code  {
+    padding-left: 18px;
+    font-size: 14px;
+}
+pre.text-output {
+  font-size: 14px;
+}
+}
+
+/* Figure */
+
+.figure {
+  position: relative;
+  margin-bottom: 2.5em;
+  margin-top: 1.5em;
+}
+
+.figure img {
+  width: 100%;
+}
+
+.figure .caption {
+  color: rgba(0, 0, 0, 0.6);
+  font-size: 12px;
+  line-height: 1.5em;
+}
+
+.figure img.external {
+  background: white;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  box-shadow: 0 1px 8px rgba(0, 0, 0, 0.1);
+  padding: 18px;
+  box-sizing: border-box;
+}
+
+.figure .caption a {
+  color: rgba(0, 0, 0, 0.6);
+}
+
+.figure .caption b,
+.figure .caption strong, {
+  font-weight: 600;
+  color: rgba(0, 0, 0, 1.0);
+}
+
+
+
+/* Tweak 1000px media break to show more text */
+
+@media(min-width: 1000px) {
+  .base-grid,
+  distill-header,
+  d-title,
+  d-abstract,
+  d-article,
+  d-appendix,
+  distill-appendix,
+  d-byline,
+  d-footnote-list,
+  d-citation-list,
+  distill-footer {
+    grid-template-columns: [screen-start] 1fr [page-start kicker-start] 80px [middle-start] 50px [text-start kicker-end] 65px 65px 65px 65px 65px 65px 65px 65px [text-end gutter-start] 65px [middle-end] 65px [page-end gutter-end] 1fr [screen-end];
+    grid-column-gap: 16px;
+  }
+
+  .grid {
+    grid-column-gap: 16px;
+  }
+
+  d-article {
+    font-size: 1.06rem;
+    line-height: 1.7em;
+  }
+  figure .caption, .figure .caption, figure figcaption {
+    font-size: 13px;
+  }
+}
+
+@media(min-width: 1180px) {
+  .base-grid,
+  distill-header,
+  d-title,
+  d-abstract,
+  d-article,
+  d-appendix,
+  distill-appendix,
+  d-byline,
+  d-footnote-list,
+  d-citation-list,
+  distill-footer {
+    grid-template-columns: [screen-start] 1fr [page-start kicker-start] 60px [middle-start] 60px [text-start kicker-end] 60px 60px 60px 60px 60px 60px 60px 60px [text-end gutter-start] 60px [middle-end] 60px [page-end gutter-end] 1fr [screen-end];
+    grid-column-gap: 32px;
+  }
+
+  .grid {
+    grid-column-gap: 32px;
+  }
+}
+
+
+/* Get the citation styles for the appendix (not auto-injected on render since
+   we do our own rendering of the citation appendix) */
+
+d-appendix .citation-appendix,
+.d-appendix .citation-appendix {
+  font-size: 11px;
+  line-height: 15px;
+  border-left: 1px solid rgba(0, 0, 0, 0.1);
+  padding-left: 18px;
+  border: 1px solid rgba(0,0,0,0.1);
+  background: rgba(0, 0, 0, 0.02);
+  padding: 10px 18px;
+  border-radius: 3px;
+  color: rgba(150, 150, 150, 1);
+  overflow: hidden;
+  margin-top: -12px;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
+
+/* Social footer */
+
+.social_footer {
+  margin-top: 30px;
+  margin-bottom: 0;
+  color: rgba(0,0,0,0.67);
+}
+
+.disqus-comments {
+  margin-right: 30px;
+}
+
+.disqus-comment-count {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.4);
+  cursor: pointer;
+}
+
+#disqus_thread {
+  margin-top: 30px;
+}
+
+.article-sharing a {
+  border-bottom: none;
+  margin-right: 8px;
+}
+
+.article-sharing a:hover {
+  border-bottom: none;
+}
+
+.sidebar-section.subscribe {
+  font-size: 12px;
+  line-height: 1.6em;
+}
+
+.subscribe p {
+  margin-bottom: 0.5em;
+}
+
+
+.article-footer .subscribe {
+  font-size: 15px;
+  margin-top: 45px;
+}
+
+
+/* Improve display for browsers without grid (IE/Edge <= 15) */
+
+.downlevel {
+  line-height: 1.6em;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", Arial, sans-serif;
+  margin: 0;
+}
+
+.downlevel .d-title {
+  padding-top: 6rem;
+  padding-bottom: 1.5rem;
+}
+
+.downlevel .d-title h1 {
+  font-size: 50px;
+  font-weight: 700;
+  line-height: 1.1em;
+  margin: 0 0 0.5rem;
+}
+
+.downlevel .d-title p {
+  font-weight: 300;
+  font-size: 1.2rem;
+  line-height: 1.55em;
+  margin-top: 0;
+}
+
+.downlevel .d-byline {
+  padding-top: 0.8em;
+  padding-bottom: 0.8em;
+  font-size: 0.8rem;
+  line-height: 1.8em;
+}
+
+.downlevel .section-separator {
+  border: none;
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.downlevel .d-article {
+  font-size: 1.06rem;
+  line-height: 1.7em;
+  padding-top: 1rem;
+  padding-bottom: 2rem;
+}
+
+
+.downlevel .d-appendix {
+  padding-left: 0;
+  padding-right: 0;
+  max-width: none;
+  font-size: 0.8em;
+  line-height: 1.7em;
+  margin-bottom: 0;
+  color: rgba(0,0,0,0.5);
+  padding-top: 40px;
+  padding-bottom: 48px;
+}
+
+.downlevel .footnotes ol {
+  padding-left: 13px;
+}
+
+.downlevel .base-grid,
+.downlevel .distill-header,
+.downlevel .d-title,
+.downlevel .d-abstract,
+.downlevel .d-article,
+.downlevel .d-appendix,
+.downlevel .distill-appendix,
+.downlevel .d-byline,
+.downlevel .d-footnote-list,
+.downlevel .d-citation-list,
+.downlevel .distill-footer,
+.downlevel .appendix-bottom,
+.downlevel .posts-container {
+  padding-left: 40px;
+  padding-right: 40px;
+}
+
+@media(min-width: 768px) {
+  .downlevel .base-grid,
+  .downlevel .distill-header,
+  .downlevel .d-title,
+  .downlevel .d-abstract,
+  .downlevel .d-article,
+  .downlevel .d-appendix,
+  .downlevel .distill-appendix,
+  .downlevel .d-byline,
+  .downlevel .d-footnote-list,
+  .downlevel .d-citation-list,
+  .downlevel .distill-footer,
+  .downlevel .appendix-bottom,
+  .downlevel .posts-container {
+  padding-left: 150px;
+  padding-right: 150px;
+  max-width: 900px;
+}
+}
+
+.downlevel pre code {
+  display: block;
+  border-left: 2px solid rgba(0, 0, 0, .1);
+  padding: 0 0 0 20px;
+  font-size: 14px;
+}
+
+.downlevel code, .downlevel pre {
+  color: black;
+  background: none;
+  font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
+  text-align: left;
+  white-space: pre;
+  word-spacing: normal;
+  word-break: normal;
+  word-wrap: normal;
+  line-height: 1.5;
+
+  -moz-tab-size: 4;
+  -o-tab-size: 4;
+  tab-size: 4;
+
+  -webkit-hyphens: none;
+  -moz-hyphens: none;
+  -ms-hyphens: none;
+  hyphens: none;
+}
+
+</style>
+
+<script type="application/javascript">
+
+function is_downlevel_browser() {
+  if (bowser.isUnsupportedBrowser({ msie: "12", msedge: "16"},
+                                 window.navigator.userAgent)) {
+    return true;
+  } else {
+    return window.load_distill_framework === undefined;
+  }
+}
+
+// show body when load is complete
+function on_load_complete() {
+
+  // set body to visible
+  document.body.style.visibility = 'visible';
+
+  // force redraw for leaflet widgets
+  if (window.HTMLWidgets) {
+    var maps = window.HTMLWidgets.findAll(".leaflet");
+    $.each(maps, function(i, el) {
+      var map = this.getMap();
+      map.invalidateSize();
+      map.eachLayer(function(layer) {
+        if (layer instanceof L.TileLayer)
+          layer.redraw();
+      });
+    });
+  }
+
+  // trigger 'shown' so htmlwidgets resize
+  $('d-article').trigger('shown');
+}
+
+function init_distill() {
+
+  init_common();
+
+  // create front matter
+  var front_matter = $('<d-front-matter></d-front-matter>');
+  $('#distill-front-matter').wrap(front_matter);
+
+  // create d-title
+  $('.d-title').changeElementType('d-title');
+
+  // create d-byline
+  var byline = $('<d-byline></d-byline>');
+  $('.d-byline').replaceWith(byline);
+
+  // create d-article
+  var article = $('<d-article></d-article>');
+  $('.d-article').wrap(article).children().unwrap();
+
+  // move posts container into article
+  $('.posts-container').appendTo($('d-article'));
+
+  // create d-appendix
+  $('.d-appendix').changeElementType('d-appendix');
+
+  // create d-bibliography
+  var bibliography = $('<d-bibliography></d-bibliography>');
+  $('#distill-bibliography').wrap(bibliography);
+
+  // flag indicating that we have appendix items
+  var appendix = $('.appendix-bottom').children('h3').length > 0;
+
+  // replace citations with <d-cite>
+  $('.citation').each(function(i, val) {
+    appendix = true;
+    var cites = $(this).attr('data-cites').split(" ");
+    var dt_cite = $('<d-cite></d-cite>');
+    dt_cite.attr('key', cites.join());
+    $(this).replaceWith(dt_cite);
+  });
+  // remove refs
+  $('#refs').remove();
+
+  // replace footnotes with <d-footnote>
+  $('.footnote-ref').each(function(i, val) {
+    appendix = true;
+    var href = $(this).attr('href');
+    var id = href.replace('#', '');
+    var fn = $('#' + id);
+    var fn_p = $('#' + id + '>p');
+    fn_p.find('.footnote-back').remove();
+    var text = fn_p.html();
+    var dtfn = $('<d-footnote></d-footnote>');
+    dtfn.html(text);
+    $(this).replaceWith(dtfn);
+  });
+  // remove footnotes
+  $('.footnotes').remove();
+
+  $('h1.appendix, h2.appendix').each(function(i, val) {
+    $(this).changeElementType('h3');
+  });
+  $('h3.appendix').each(function(i, val) {
+    var id = $(this).attr('id');
+    $('.d-toc a[href="#' + id + '"]').parent().remove();
+    appendix = true;
+    $(this).nextUntil($('h1, h2, h3')).addBack().appendTo($('d-appendix'));
+  });
+
+  // show d-appendix if we have appendix content
+  $("d-appendix").css('display', appendix ? 'grid' : 'none');
+
+  // replace code blocks with d-code
+  $('pre>code').each(function(i, val) {
+    var code = $(this);
+    var pre = code.parent();
+    var clz = "";
+    var language = pre.attr('class');
+    if (language) {
+      // map unknown languages to "clike" (without this they just dissapear)
+      if ($.inArray(language, ["bash", "clike", "css", "go", "html",
+                               "javascript", "js", "julia", "lua", "markdown",
+                               "markup", "mathml", "python", "svg", "xml"]) == -1)
+        language = "clike";
+      language = ' language="' + language + '"';
+      var dt_code = $('<d-code block' + language + clz + '></d-code>');
+      dt_code.text(code.text());
+      pre.replaceWith(dt_code);
+    } else {
+      code.addClass('text-output').unwrap().changeElementType('pre');
+    }
+  });
+
+  // localize layout chunks to just output
+  $('.layout-chunk').each(function(i, val) {
+
+    // capture layout
+    var layout = $(this).attr('data-layout');
+
+    // apply layout to markdown level block elements
+    var elements = $(this).children().not('d-code, pre.text-output, script');
+    elements.each(function(i, el) {
+      var layout_div = $('<div class="' + layout + '"></div>');
+      if (layout_div.hasClass('shaded')) {
+        var shaded_content = $('<div class="shaded-content"></div>');
+        $(this).wrap(shaded_content);
+        $(this).parent().wrap(layout_div);
+      } else {
+        $(this).wrap(layout_div);
+      }
+    });
+
+
+    // unwrap the layout-chunk div
+    $(this).children().unwrap();
+  });
+
+  // load distill framework
+  load_distill_framework();
+
+  // wait for window.distillRunlevel == 4 to do post processing
+  function distill_post_process() {
+
+    if (!window.distillRunlevel || window.distillRunlevel < 4)
+      return;
+
+    // hide author/affiliations entirely if we have no authors
+    var front_matter = JSON.parse($("#distill-front-matter").html());
+    var have_authors = front_matter.authors && front_matter.authors.length > 0;
+    if (!have_authors)
+      $('d-byline').addClass('hidden');
+
+    // table of contents
+    if (have_authors) // adjust border if we are in authors
+      $('.d-toc').parent().addClass('d-article-with-toc');
+
+    // strip links that point to #
+    $('.authors-affiliations').find('a[href="#"]').removeAttr('href');
+
+    // hide elements of author/affiliations grid that have no value
+    function hide_byline_column(caption) {
+      $('d-byline').find('h3:contains("' + caption + '")').parent().css('visibility', 'hidden');
+    }
+
+    // affiliations
+    var have_affiliations = false;
+    for (var i = 0; i<front_matter.authors.length; ++i) {
+      var author = front_matter.authors[i];
+      if (author.affiliation !== "&nbsp;") {
+        have_affiliations = true;
+        break;
+      }
+    }
+    if (!have_affiliations)
+      $('d-byline').find('h3:contains("Affiliations")').css('visibility', 'hidden');
+
+    // published date
+    if (!front_matter.publishedDate)
+      hide_byline_column("Published");
+
+    // document object identifier
+    var doi = $('d-byline').find('h3:contains("DOI")');
+    var doi_p = doi.next().empty();
+    if (!front_matter.doi) {
+      // if we have a citation and valid citationText then link to that
+      if ($('#citation').length > 0 && front_matter.citationText) {
+        doi.html('Citation');
+        $('<a href="#citation"></a>')
+          .text(front_matter.citationText)
+          .appendTo(doi_p);
+      } else {
+        hide_byline_column("DOI");
+      }
+    } else {
+      $('<a></a>')
+         .attr('href', "https://doi.org/" + front_matter.doi)
+         .html(front_matter.doi)
+         .appendTo(doi_p);
+    }
+
+     // change plural form of authors/affiliations
+    if (front_matter.authors.length === 1) {
+      var grid = $('.authors-affiliations');
+      grid.children('h3:contains("Authors")').text('Author');
+      grid.children('h3:contains("Affiliations")').text('Affiliation');
+    }
+
+    // inject pre code styles (can't do this with a global stylesheet b/c a shadow root is used)
+    $('d-code').each(function(i, val) {
+      var style = document.createElement('style');
+      style.innerHTML = 'pre code { padding-left: 10px; font-size: 12px; border-left: 2px solid rgba(0,0,0,0.1); } ' +
+                        '@media(min-width: 768px) { pre code { padding-left: 18px; font-size: 14px; } }';
+      if (this.shadowRoot)
+        this.shadowRoot.appendChild(style);
+    });
+
+    // move appendix-bottom entries to the bottom
+    $('.appendix-bottom').appendTo('d-appendix').children().unwrap();
+    $('.appendix-bottom').remove();
+
+    // clear polling timer
+    clearInterval(tid);
+
+    // show body now that everything is ready
+    on_load_complete();
+  }
+
+  var tid = setInterval(distill_post_process, 50);
+  distill_post_process();
+
+}
+
+function init_downlevel() {
+
+  init_common();
+
+   // insert hr after d-title
+  $('.d-title').after($('<hr class="section-separator"/>'));
+
+  // check if we have authors
+  var front_matter = JSON.parse($("#distill-front-matter").html());
+  var have_authors = front_matter.authors && front_matter.authors.length > 0;
+
+  // manage byline/border
+  if (!have_authors)
+    $('.d-byline').remove();
+  $('.d-byline').after($('<hr class="section-separator"/>'));
+  $('.d-byline a').remove();
+
+  // remove toc
+  $('.d-toc-header').remove();
+  $('.d-toc').remove();
+  $('.d-toc-separator').remove();
+
+  // move appendix elements
+  $('h1.appendix, h2.appendix').each(function(i, val) {
+    $(this).changeElementType('h3');
+  });
+  $('h3.appendix').each(function(i, val) {
+    $(this).nextUntil($('h1, h2, h3')).addBack().appendTo($('.d-appendix'));
+  });
+
+
+  // inject headers into references and footnotes
+  var refs_header = $('<h3></h3>');
+  refs_header.text('References');
+  $('#refs').prepend(refs_header);
+
+  var footnotes_header = $('<h3></h3');
+  footnotes_header.text('Footnotes');
+  $('.footnotes').children('hr').first().replaceWith(footnotes_header);
+
+  // move appendix-bottom entries to the bottom
+  $('.appendix-bottom').appendTo('.d-appendix').children().unwrap();
+  $('.appendix-bottom').remove();
+
+  // remove appendix if it's empty
+  if ($('.d-appendix').children().length === 0)
+    $('.d-appendix').remove();
+
+  // prepend separator above appendix
+  $('.d-appendix').before($('<hr class="section-separator" style="clear: both"/>'));
+
+  // trim code
+  $('pre>code').each(function(i, val) {
+    $(this).html($.trim($(this).html()));
+  });
+
+  // move posts-container right before article
+  $('.posts-container').insertBefore($('.d-article'));
+
+  $('body').addClass('downlevel');
+
+  on_load_complete();
+}
+
+
+function init_common() {
+
+  // jquery plugin to change element types
+  (function($) {
+    $.fn.changeElementType = function(newType) {
+      var attrs = {};
+
+      $.each(this[0].attributes, function(idx, attr) {
+        attrs[attr.nodeName] = attr.nodeValue;
+      });
+
+      this.replaceWith(function() {
+        return $("<" + newType + "/>", attrs).append($(this).contents());
+      });
+    };
+  })(jQuery);
+
+  // prevent underline for linked images
+  $('a > img').parent().css({'border-bottom' : 'none'});
+
+  // mark non-body figures created by knitr chunks as 100% width
+  $('.layout-chunk').each(function(i, val) {
+    var figures = $(this).find('img, .html-widget');
+    if ($(this).attr('data-layout') !== "l-body") {
+      figures.css('width', '100%');
+    } else {
+      figures.css('max-width', '100%');
+      figures.filter("[width]").each(function(i, val) {
+        var fig = $(this);
+        fig.css('width', fig.attr('width') + 'px');
+      });
+
+    }
+  });
+
+  // auto-append index.html to post-preview links in file: protocol
+  // and in rstudio ide preview
+  $('.post-preview').each(function(i, val) {
+    if (window.location.protocol === "file:")
+      $(this).attr('href', $(this).attr('href') + "index.html");
+  });
+
+  // get rid of index.html references in header
+  if (window.location.protocol !== "file:") {
+    $('.radix-site-header a[href]').each(function(i,val) {
+      $(this).attr('href', $(this).attr('href').replace("index.html", "./"));
+    });
+  }
+
+  // add class to pandoc style tables
+  $('tr.header').parent('thead').parent('table').addClass('pandoc-table');
+  $('.kable-table').children('table').addClass('pandoc-table');
+
+  // add figcaption style to table captions
+  $('caption').parent('table').addClass("figcaption");
+
+  // initialize posts list
+  if (window.init_posts_list)
+    window.init_posts_list();
+
+  // implmement disqus comment link
+  $('.disqus-comment-count').click(function() {
+    window.headroom_prevent_pin = true;
+    $('#disqus_thread').toggleClass('hidden');
+    if (!$('#disqus_thread').hasClass('hidden')) {
+      var offset = $(this).offset();
+      $(window).resize();
+      $('html, body').animate({
+        scrollTop: offset.top - 35
+      });
+    }
+  });
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  if (is_downlevel_browser())
+    init_downlevel();
+  else
+    window.addEventListener('WebComponentsReady', init_distill);
+});
+
+</script>
+
+<!--/radix_placeholder_distill-->
+  <script src="../../site_libs/jquery-1.11.3/jquery.min.js"></script>
+  <script src="../../site_libs/bowser-1.9.3/bowser.min.js"></script>
+  <script src="../../site_libs/webcomponents-2.0.0/webcomponents.js"></script>
+  <script src="../../site_libs/distill-2.2.21/template.v2.js"></script>
+  <!--radix_placeholder_site_in_header-->
+<!--/radix_placeholder_site_in_header-->
+
+
+</head>
+
+<body>
+
+<!--radix_placeholder_front_matter-->
+
+<script id="distill-front-matter" type="text/json">
+{"title":"Hacking the Data Science Radar with Data Science","description":"Get a perfect score in the Mango Solution Data Science Radar","authors":[{"author":"Duncan Garmonsway","authorURL":"#","affiliation":"&nbsp;","affiliationURL":"#"}],"publishedDate":"2016-06-28T00:00:00.000+01:00","citationText":"Garmonsway, 2016"}
+</script>
+
+<!--/radix_placeholder_front_matter-->
+<!--radix_placeholder_navigation_before_body-->
+<header class="header header--fixed" role="banner">
+<nav class="radix-site-nav radix-site-header">
+<div class="nav-left">
+<a href="../../index.html" class="title">Duncan Garmonsway</a>
+</div>
+<div class="nav-right">
+<a href="../../index.html">Home</a>
+<a href="../../about.html">About</a>
+<a href="../../index.xml">
+<i class="fa fa-rss"></i>
+</a>
+<a href="https://github.com/nacnudus">
+<i class="fab fa-github"></i>
+</a>
+<a href="https://twitter.com/nacnudus">
+<i class="fab fa-twitter"></i>
+</a>
+<a href="javascript:void(0);" class="nav-toggle">&#9776;</a>
+</div>
+</nav>
+</header>
+<!--/radix_placeholder_navigation_before_body-->
+<!--radix_placeholder_site_before_body-->
+<!--/radix_placeholder_site_before_body-->
+
+<div class="d-title">
+<h1>Hacking the Data Science Radar with Data Science</h1>
+<p>Get a perfect score in the Mango Solution Data Science Radar</p>
+</div>
+
+<div class="d-byline">
+  
+  Duncan Garmonsway
+  
+<br/>June 28, 2016
+</div>
+
+<div class="d-article">
+<p>This post reverse-engineers the Mango Solutions <a href="https://www.mango-solutions.com/radar/">Data Science Radar</a> using</p>
+<ul>
+<li>Programming (R)</li>
+<li>Visualisation (ggplot2)</li>
+<li>Data wrangling (dpylr/tidyr/etc.)</li>
+<li>Modelling (lm)</li>
+<li>Technology (embedded V8 javascript)</li>
+<li>Communication (blog)</li>
+</ul>
+<p>Why hack? Because getting at the innards also reveals</p>
+<ul>
+<li>What a good score is in each category</li>
+<li>Which statements are most important</li>
+<li>Whether scores are comparable across people</li>
+<li>Whether you should strongly agree with the statement “On average, I spend at least 25% of my time manipulating data into analysis-ready formats”</li>
+</ul>
+<h2 id="the-radar">The radar</h2>
+<p>Based on Likert-style responses to 24 provocative statements, the Data Science Radar visualises your skills along six axes, the “core attributes of a contemporary ‘Data Scientist’.” It looks like this.</p>
+<figure>
+<img src="radar.png" alt="Mango Solutions Data Science Radar" /><figcaption>Mango Solutions Data Science Radar</figcaption>
+</figure>
+<h2 id="first-attempt-multivariate-multiple-regression">First attempt: Multivariate multiple regression</h2>
+<p>How can we score better? Hacking the url would be <a href="https://www.mango-solutions.com/radar/?fs=true&amp;r=7.0,7.0,7.0,7.0,7.0,7.0">cheating</a>, so instead, let’s use science: hypothesise -&gt; test -&gt; improve. Here are some initial guesses.</p>
+<ul>
+<li>Each of the 24 statements relates to exactly one attribute, i.e. four statements per attribute.</li>
+<li>The Likert values (strongly agree, agree, somewhat agree, etc.) are coded from 1 to 7 (since there are seven points on each axis).</li>
+<li>There is a linear relationship between the coded agreement with the statements, and the attributes.</li>
+</ul>
+<p>So something like <span class="math display">\[\text{score}_{\text{attribute}} = \frac{1}{4} \sum_{i = 1}^{4} \text{answer}_i\]</span> where <span class="math inline">\(\text{answer}_i = 1, 2, \cdots, 7\)</span> by encoding “Strongly disagree” as 1, up to “Strongly agree” as 7, including only four relevant answers per attribute. The best-possible set of answers would score 7 on every axis, and the worst set would score 1.</p>
+<p>If the hypotheses are correct, then all we need to do to prove them is to record 24 sets of random answers, the resulting scores, and fit a multivariate linear model. We’d expect each score (outcome variable) to have four non-zero coefficients (out of the 24 input variables). Let’s try it.</p>
+<div class="layout-chunk" data-layout="l-body">
+<pre class="r"><code>
+# The first two aren&#39;t random, but they&#39;re still linearly independent of the
+# others, which is what matters.
+random_data &lt;- read_csv(here(&quot;data&quot;, &quot;radar-random.csv&quot;))
+lm1 &lt;- lm(cbind(Communicator, `Data Wrangler`, Modeller,
+                Programmer, Technologist, Visualiser) ~ ., data = random_data)
+lm1
+## 
+## Call:
+## lm(formula = cbind(Communicator, `Data Wrangler`, Modeller, Programmer, 
+##     Technologist, Visualiser) ~ ., data = random_data)
+## 
+## Coefficients:
+##              Communicator  Data Wrangler  Modeller    Programmer
+## (Intercept)   2.060e+00     2.422e+00      3.247e+00   6.658e-01
+## q01           1.997e-01    -2.507e-02      2.602e-01  -1.103e-01
+## q02          -2.571e-01     2.729e-02     -4.514e-01   2.090e-01
+## q03           3.087e-01     1.744e-02     -3.471e-01  -1.303e-03
+## q04           4.356e-01     8.534e-04     -8.676e-03  -2.346e-02
+## q05          -2.524e-01     2.267e-01      8.732e-01  -1.559e-01
+## q06          -1.948e-01     1.545e-01      7.016e-01  -7.626e-02
+## q07          -7.925e-03     2.075e-01      4.423e-01  -1.089e-01
+## q08           8.902e-02    -4.810e-01     -1.246e-02   8.111e-02
+## q09           1.901e-01     5.174e-02     -5.260e-01  -9.428e-02
+## q10           9.750e-02    -1.248e-02     -2.365e-01   3.181e-02
+## q11          -2.099e-01    -5.220e-02      2.943e-01   2.032e-01
+## q12          -1.000e-01     1.813e-15      7.000e-01  -1.333e-01
+## q13           5.164e-02     2.647e-02     -3.386e-01   2.881e-01
+## q14           1.211e-01    -8.162e-02     -3.835e-02  -2.508e-01
+## q15           4.971e-03     5.740e-02     -2.581e-01   3.729e-01
+## q16           2.450e-01    -6.448e-02      6.447e-02   1.757e-01
+## q17          -2.310e-01     8.405e-02     -3.947e-02   1.424e-01
+## q18           4.003e-02    -4.045e-02      2.264e-02  -9.453e-02
+## q19           5.952e-02     5.815e-02     -6.029e-01   6.573e-02
+## q20          -8.766e-02     2.262e-01     -6.807e-01   1.403e-01
+## q21           1.903e-01    -3.190e-02     -6.312e-01   1.331e-01
+## q22          -1.334e-01     5.980e-02      1.251e-01   8.396e-02
+## q23          -5.700e-02    -1.563e-01      5.947e-01  -1.535e-01
+## q24          -1.419e-01     4.202e-02      2.188e-01   2.128e-02
+##              Technologist  Visualiser
+## (Intercept)  -1.331e+00     1.456e+00
+## q01          -5.866e-02    -7.103e-02
+## q02           1.554e-01     1.281e-01
+## q03           5.611e-02     1.978e-01
+## q04          -7.130e-02    -4.193e-02
+## q05          -1.907e-01    -3.885e-01
+## q06          -1.271e-01    -3.897e-01
+## q07          -2.015e-01    -2.247e-01
+## q08          -5.556e-02    -4.572e-02
+## q09           5.506e-02     2.620e-01
+## q10           1.557e-01     3.267e-01
+## q11           6.801e-02    -1.775e-01
+## q12           9.653e-16    -1.000e-01
+## q13          -4.010e-03     1.428e-01
+## q14          -4.963e-02     7.972e-02
+## q15           7.939e-02     1.018e-01
+## q16          -2.060e-01     7.158e-03
+## q17           3.434e-01    -8.871e-02
+## q18           2.958e-01    -2.477e-02
+## q19           5.393e-01     2.828e-01
+## q20           5.257e-01     3.440e-01
+## q21           5.689e-02     4.847e-01
+## q22           7.175e-02    -4.788e-01
+## q23          -1.894e-01    -6.388e-02
+## q24          -4.087e-02     2.361e-01</code></pre>
+</div>
+<p>Hopeless! At least one of the assumptions must be wrong, but which one? This time, let’s use our brains instead of stats, and do a visualisation.</p>
+<h2 id="visualisation-brain-not-brawn">Visualisation: Brain not brawn</h2>
+<p>Since patterns are hard to find among random responses, I answered 24 more surveys systematically, answering “Strongly disagree” to one statement, and “Strongly agree” to all the others, until all 24 statements had been strongly disagreed with. One time, I answered one with “Strongly agree” to every statement, plotting the resulting scores at 0 on the x-axis.</p>
+<div class="layout-chunk" data-layout="l-body">
+<p><img src="2016-06-28-radar_files/figure-html5/radar-systematic-1.png" width="624" /></p>
+</div>
+<p>Let’s break this down.</p>
+<ul>
+<li>The maximum score appears to be 7, which ‘Technologist’ got most of the time. If you’re a technologist, you should agree with everything.</li>
+<li>Disagreement with any of the statements drastically affects the score of exactly one attribute, with minor effects on some/all of the others.</li>
+<li>Sometimes disagreement affects attributes for the better (e.g. 2 improves ‘Communicator’). Sometimes it’s really damaging (e.g. 17–20 ruins ‘Technologist’).</li>
+<li>There are no ties between attributes. This is a massive clue.</li>
+</ul>
+<p>It’s now easy from this graph to work out the perfect survey responses. For example, we could max-out ‘Communicator’ by agreeing with statements 1, 3, and 4, but disagreeing with statement 2 – which caused a peak in the previous graph.</p>
+<div class="layout-chunk" data-layout="l-body">
+<p><img src="2016-06-28-radar_files/figure-html5/radar-perfect-1.png" width="624" /></p>
+</div>
+<p>This is much clearer.</p>
+<ul>
+<li>Each attribute relates to four statements.</li>
+<li>Not only that, but related statements are grouped together (okay, that’s guessable from just doing the survey).</li>
+<li>Not every statement is equally weighted (the trough depths vary within groups).</li>
+<li>Even the statement weighting system varies between questions (the range of trough depths varies between groups).</li>
+</ul>
+<h2 id="penalties">Penalties</h2>
+<p>Crucially, it’s now obvious from the parallel movements between 0 and 1, 4 and 5, and 8 and 9, that attributes are penalized by their rank. When statement 1 is strongly disagreed with, ‘Communicator’ has the bottom score, and the others are spread between 7 and five. But when statement 1 is strongly agreed with (position 0 on the x-axis), ‘Communicator’ takes the lead with a score of 7, and the scores of all the others are bumped down a step. This strongly suggests that the scores are penalised by some function of the rank.</p>
+<p>Think of it this way: if they’re all equal-first-place, then rank them arbitrarily (zero-based rank, 0 to 5), and then penalise them by, say, subtracting their rank from their score. So say ‘Communicator’ is arbitrarily ranked zero-th among equals (i.e. first place), then ‘Communicator’ still scores 7, But ‘Modeller’, ranked 1 (second place), loses 1 point, and ‘Programmer’, ranked 2 (third place) loses 2 points. This penalisation process guarantees against any ties, but it also obfuscates any straightforward relationship between survey response and pre-penalty scores.</p>
+<p>Here’s the penalty function in action. I answered every statement ‘correctly’, except for statement 1, which I answered at every level from “Strongly disagree” to “Strongly agree”. Note the change of axis variables.</p>
+<div class="layout-chunk" data-layout="l-body">
+<p><img src="2016-06-28-radar_files/figure-html5/radar-diff-1.png" width="624" /></p>
+</div>
+<p>As my answers go from “Strongly disagree” up to “Agree” (0 to 6 on the x-axis), the score of ‘Communicator’ gradually increases, as we’d expect. But in the final step, “Strongly agree”, there’s a jump. That’s because ‘Communicator’ is now ranked (abitrarily) in first place, so no penalty is applied, and it gets the full 7 points. At the same time, the other attributes are bumped down.</p>
+<h2 id="hunt-the-function">Hunt the function</h2>
+<p>We need to remove these penalties before we can investigate the statement/response weightings, but we don’t yet know what exactly the penalty function is, besides being some function of the rank. Using the perfect answers, though (at 6 on the x-axis above), we can get clues to narrow down the options. Since we know that the original pre-penalty score of every attribute ought to have been 7, then by subtracting their final scores from 7, we reveal the size of the penalty.</p>
+<div class="layout-chunk" data-layout="l-body">
+<pre class="r"><code>
+sort(7 - unlist(perfect_data[1, -1:-24]))       # absolute penalty
+##  Communicator      Modeller    Programmer  Technologist    Visualiser 
+##           0.0           0.4           0.7           1.0           1.4 
+## Data Wrangler 
+##           1.8</code></pre>
+</div>
+<p>So penalties can be as large as 1.8. That would be a problem for poor-ranking pre-penalty scores below 1.8, which would be pushed below zero. To guarantee positive final scores, the penalty function must scale with the pre-penalty score, i.e. the pre-penalty score must be a coefficient in the function. That restricts us to a couple of basic designs for each attribute’s score.</p>
+<p>Either:</p>
+<p><span class="math display">\[\text{final score} = \text{pre-penalty} - (\text{pre-penalty} \times \text{factor} \times \text{rank})\]</span> where <span class="math inline">\(0 \leq \text{factor} &lt; 1/5\)</span> (for positivity).</p>
+<p>Or:</p>
+<p><span class="math display">\[\text{final score} = \text{factor} \times \frac{\text{pre-penalty}}{\text{rank}}\]</span> where <span class="math inline">\(0 \leq \text{factor} &lt; 1\)</span> (to ensure a penalty when <span class="math inline">\(\text{rank} = 1\)</span>).</p>
+<p>There is a telling difference between these functions. The first is a straight line, essentially <span class="math inline">\(y = mx + c\)</span>, so that, given equal pre-penalty scores, the differences between final scores are equal. The second is a curve, essentially <span class="math inline">\(y = m/x\)</span>, so that, even given equal pre-penalty scores, the gap between poorly-ranked scores is wider than between the top scores.</p>
+<p>Since we have a handy set of equal pre-penalty scores, we can eliminate one of the functions by seeing whether the difference in penalties between ranks is, in fact, constant.</p>
+<div class="layout-chunk" data-layout="l-body">
+<pre class="r"><code>
+diff(sort(7 - unlist(perfect_data[1, -1:-24]))) # difference in penalties between ranks
+##      Modeller    Programmer  Technologist    Visualiser Data Wrangler 
+##           0.4           0.3           0.3           0.4           0.4</code></pre>
+</div>
+<p>It’s constant enough for me, so I choose the first model.</p>
+<p>We can also check that penalties do, indeed, scale with the pre-penalty scores, by producing a set of <a href="https://www.mango-solutions.com/radar/?fs=true&amp;r=1.0,0.9,0.9,0.8,0.8,0.7">worst-possible answers</a>. Pay attention: these are the scores to beat.</p>
+<div class="layout-chunk" data-layout="l-body">
+
+</div>
+<div class="layout-chunk" data-layout="l-body">
+<pre><code>
+## # A tibble: 6 x 2
+##   attribute     score
+##   &lt;chr&gt;         &lt;dbl&gt;
+## 1 Communicator    1  
+## 2 Modeller        0.9
+## 3 Programmer      0.9
+## 4 Technologist    0.8
+## 5 Visualiser      0.8
+## 6 Data Wrangler   0.7</code></pre>
+</div>
+<figure>
+<img src="radar-worst.png" alt="Mango Solutions Data Science Radar: worst score" /><figcaption>Mango Solutions Data Science Radar: worst score</figcaption>
+</figure>
+<p>Not only does this prove the scaling of penalties by pre-penalty score, but it also justifies the coding of ‘agreement’ between 1 and 7, rather than, say, 0 and 6, since we now have a clear minimum pre-penalty score of 1, as well as a maximum of 7 from the set of perfect answers.</p>
+<p>If you look carefully, this set of worst-possible scores also hints at the value of the penalty factor. Since the pre-penalty score is 1, and the difference between penalties is constant by design, and the difference between <em>these</em> penalties alternates between 0.1 and 0.0, I <em>strongly</em> suspect a factor of 0.5 and a rounding system that alternates between odds and evens.</p>
+<h2 id="modelling-success">Modelling success</h2>
+<p>But we can nail this down with a linear model, using the two sets of data where we already know the pre-penalty scores, i.e. the best- and worst-possible scores, as well as the ranks, so we can estimate the penalty factor.</p>
+<p>A reminder of the model:</p>
+<p><span class="math display">\[\text{final score} = \text{pre-penalty} - (\text{pre-penalty} \times \text{factor} \times \text{rank})\]</span> where <span class="math inline">\(0 \leq \text{factor} &lt; 1/5\)</span> (for positivity).</p>
+<div class="layout-chunk" data-layout="l-body">
+<pre class="r"><code>
+worst$rank &lt;- 0:5
+worst$prepenalty &lt;- 1
+best &lt;-
+  frame_data(~attribute,     ~rank, ~score,
+             &quot;Communicator&quot;,     0,    7.0,
+             &quot;Modeller&quot;,         1,    6.6,
+             &quot;Programmer&quot;,       2,    6.3,
+             &quot;Technologist&quot;,     3,    6.0,
+             &quot;Visualiser&quot;,       4,    5.6,
+             &quot;Data Wrangler&quot;,    5,    5.2)
+best$prepenalty &lt;- 7
+
+lm(score ~ prepenalty + prepenalty:rank, data = rbind(best, worst))
+## 
+## Call:
+## lm(formula = score ~ prepenalty + prepenalty:rank, data = rbind(best, 
+##     worst))
+## 
+## Coefficients:
+##     (Intercept)       prepenalty  prepenalty:rank  
+##        -0.02778          1.00349         -0.05029</code></pre>
+</div>
+<p>That’ll do! The coefficient on the pre-penalty score is 1, as in our model, and the coefficient on the pre-penalty–rank interaction is -0.05, a nice round number such as a model-builder might choose (and the right sign).</p>
+<h2 id="weighting-game">Weighting game</h2>
+<p>We’re on the home straight. Now that we understand the penalty system, we can go beneath its obfuscations and sort out the statement weights. Here, I invert the penalty function, and apply it to an earlier set of answers that you’ll recognise in the graph.</p>
+<p><span class="math display">\[\text{pre-penalty} = \frac{\text{final score}}{1 - (\text{factor} \times \text{rank})}\]</span></p>
+<div class="layout-chunk" data-layout="l-body">
+<p><img src="2016-06-28-radar_files/figure-html5/radar-penalty-inverse-1.png" width="624" /></p>
+</div>
+<p>It does the soul good to see the pre-penalty attribute scores restored (bar rounding).</p>
+<p>The weight of each statement equals the amount of damage that it can do to the relevant attribute’s score, divided by the total damage done by the other relevant statements.</p>
+<div class="layout-chunk" data-layout="l-body">
+<pre><code>
+##             type Score damage weight
+## 1   Communicator  5.73   1.27   0.20
+## 2   Communicator  5.73   1.27   0.20
+## 3   Communicator  5.73   1.27   0.20
+## 4   Communicator  4.53   2.47   0.39
+## 5  Data Wrangler  5.47   1.53   0.23
+## 6  Data Wrangler  5.47   1.53   0.23
+## 7  Data Wrangler  5.47   1.53   0.23
+## 8  Data Wrangler  5.07   1.93   0.30
+## 9       Modeller  5.73   1.27   0.20
+## 10      Modeller  5.73   1.27   0.20
+## 11      Modeller  5.73   1.27   0.20
+## 12      Modeller  4.53   2.47   0.39
+## 13    Programmer  5.73   1.27   0.21
+## 14    Programmer  5.73   1.27   0.21
+## 15    Programmer  5.20   1.80   0.29
+## 16    Programmer  5.20   1.80   0.29
+## 17  Technologist  5.73   1.27   0.21
+## 18  Technologist  5.20   1.80   0.29
+## 19  Technologist  5.20   1.80   0.29
+## 20  Technologist  5.73   1.27   0.21
+## 21    Visualiser  5.73   1.27   0.21
+## 22    Visualiser  5.20   1.80   0.29
+## 23    Visualiser  5.73   1.27   0.21
+## 24    Visualiser  5.20   1.80   0.29</code></pre>
+</div>
+<p>Being nice fractions, the three systems make perfect sense (allowing yet again for minor rounding): <span class="math inline">\((\frac{1}{5}\)</span>, <span class="math inline">\(\frac{1}{5}\)</span>, <span class="math inline">\(\frac{1}{5}\)</span>, <span class="math inline">\(\frac{2}{5})\)</span>, <span class="math inline">\((\frac{7}{30}\)</span>, <span class="math inline">\(\frac{7}{30}\)</span>, <span class="math inline">\(\frac{7}{30}\)</span>, <span class="math inline">\(\frac{9}{30})\)</span>, and <span class="math inline">\((\frac{2}{10}\)</span>, <span class="math inline">\(\frac{2}{10}\)</span>, <span class="math inline">\(\frac{3}{10}\)</span>, <span class="math inline">\(\frac{3}{10})\)</span>.</p>
+<p>And don’t forget to re-write the model to account for the weights.</p>
+<p><span class="math display">\[\text{score}_{\text{attribute}} = \sum_{i = 1}^{4} \text{answer}_i \times
+\text{weight}_i\]</span> where <span class="math inline">\(\text{weight}_i\)</span> is taken from above.</p>
+<h2 id="implementation-and-simulation">Implementation and simulation</h2>
+<p>At last, we can implement the whole thing in R, run it on thousands of random answer-sets, and explore the distributions. Well, almost – it turns out that R and JavaScript handle rounding and floating-point arithmetic differently, so I had to use the <a href="https://github.com/jeroenooms/V8">V8</a> package to implement the rounding steps in JavaScript, as the website does. I give more details in a <a href="%7Bfilename%7D./rounding.Rmd">previous post</a>. At least I got to display some ‘Technologist’ skills.</p>
+<div class="layout-chunk" data-layout="l-body">
+<pre class="r"><code>
+ct &lt;- V8::v8()
+roundjs &lt;- function(x, digits) {
+  sapply(x, function(y) {ct$get(paste0(&quot;Number((&quot;, sprintf(&quot;%.16f&quot;, y), &quot;).toFixed(&quot;, digits, &quot;))&quot;))})
+}</code></pre>
+</div>
+<div class="layout-chunk" data-layout="l-body">
+
+</div>
+<p>The effect of the penalty can be prettily illustrated by a scatterplot of the scores of two attributes. Ties are separated, parting the cloud, slightly above the line <span class="math inline">\(y = x\)</span>.</p>
+<div class="layout-chunk" data-layout="l-body">
+<p><img src="2016-06-28-radar_files/figure-html5/radar-penalty-gap-1.png" width="624" /></p>
+</div>
+<p>We can also de-penalise the scores to see the effect of the penalty on the distribution. Pre-penalty scores are distributed as you’d expect, despite slightly uneven weights. Post-penalty scores are skewed to the right, but not so much that you’d notice in casual use.</p>
+<div class="layout-chunk" data-layout="l-body">
+<p><img src="2016-06-28-radar_files/figure-html5/radar-penalty-skew-1.png" width="624" /></p>
+</div>
+<p>The magnitude of the penalty depends on the magnitude of the pre-penalty score as well as its rank, introducing a tricky extra dimension to any visualisation. Hexagonal bins work well, coloured according to frequency. Penalties tend to be largest for middling scores, where the rank tends to be poor enough to multiply the penalty factor by a few times, but the magnitude of the score isn’t small enough to scale the penalty down.</p>
+<div class="layout-chunk" data-layout="l-body">
+<p><img src="2016-06-28-radar_files/figure-html5/radar-penalty-magnitude-1.png" width="624" /></p>
+</div>
+<h2 id="the-whole-point">The whole point</h2>
+<p>It turns out that interpreting individual radars should be done more thoughtfully than one might have expected, because</p>
+<ul>
+<li>5.2 = 7.0 for data-wrangling unicorns with perfect answers.</li>
+<li>Scores aren’t directly comparable between people, unless they’re at the extremes where the penalties exaggerate less.</li>
+<li>The correct answer to the statement “On average, I spend at least 25% of my time manipulating data into analysis-ready formats”, if you want a high ‘Data Wrangler’ score, is <em>Strongly disagree</em>.</li>
+</ul>
+<p>And the <a href="https://www.mango-solutions.com/radar/?fs=true&amp;r=7.0,6.6,6.3,6.0,5.6,5.2">perfect score</a>?</p>
+<div class="layout-chunk" data-layout="l-body">
+<pre><code>
+## # A tibble: 6 x 2
+##   attribute     score
+##   &lt;chr&gt;         &lt;dbl&gt;
+## 1 Communicator    7  
+## 2 Modeller        6.6
+## 3 Programmer      6.3
+## 4 Technologist    6  
+## 5 Visualiser      5.6
+## 6 Data Wrangler   5.2</code></pre>
+</div>
+<figure>
+<img src="radar-perfect.png" alt="Mango Solutions Data Science Radar: perfect score" /><figcaption>Mango Solutions Data Science Radar: perfect score</figcaption>
+</figure>
+<!--radix_placeholder_article_footer-->
+<div class="article-footer">
+  <p class="social_footer">
+    <span class="disqus-comments">
+      <i class="fas fa-comments"></i>
+      &nbsp;
+      <span class="disqus-comment-count" data-disqus-identifier="posts/2016-06-28-radar/">Comment on this article</span>
+    </span>
+    <span class="article-sharing">
+      Share: &nbsp;
+      <a href="https://twitter.com/share?text=Hacking%20the%20Data%20Science%20Radar%20with%20Data%20Science&amp;url=https%3A%2F%2Fnacnudus.github.io%2Fduncangarmonsway%2Fposts%2F2016-06-28-radar%2F">
+        <i class="fab fa-twitter"></i>
+      </a>
+      <a href="https://www.linkedin.com/shareArticle?mini=true&amp;url=https%3A%2F%2Fnacnudus.github.io%2Fduncangarmonsway%2Fposts%2F2016-06-28-radar%2F&amp;title=Hacking%20the%20Data%20Science%20Radar%20with%20Data%20Science">
+        <i class="fab fa-linkedin"></i>
+      </a>
+    </span>
+  </p>
+  <script id="dsq-count-scr" src="https://duncangarmonsway.disqus.com/count.js" async></script>
+  <div id="disqus_thread" class="hidden"></div>
+  <script>
+var disqus_config = function () {
+  this.page.url = 'https://nacnudus.github.io/duncangarmonsway/posts/2016-06-28-radar/';
+  this.page.identifier = 'posts/2016-06-28-radar/';
+};
+(function() {
+  var d = document, s = d.createElement('script');
+  s.src = 'https://duncangarmonsway.disqus.com/embed.js';
+  s.setAttribute('data-timestamp', +new Date());
+  (d.head || d.body).appendChild(s);
+})();
+</script>
+  <p>
+    <div class="subscribe"><form method='post' action='https://blogtrottr.com'>
+  <p>Enjoy this blog? Get notified of new posts via email:</p>
+  <input type='text' name='btr_email' />
+  <input type='hidden' name='btr_url'
+         value='https://nacnudus.github.io/duncangarmonsway/index.html'/>
+  <input type='hidden' name='schedule_type' value='0' />
+  <input type='submit' value='Subscribe' />
+</form>
+</div>
+  </p>
+</div>
+<!--/radix_placeholder_article_footer-->
+</div>
+
+<div class="d-appendix">
+</div>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+<!--radix_placeholder_site_after_body-->
+<!--/radix_placeholder_site_after_body-->
+<!--radix_placeholder_appendices-->
+<div class="appendix-bottom">
+  <h3 id="updates-and-corrections">Corrections</h3>
+  <p>If you see mistakes or want to suggest changes, please <a href="https://github.com/nacnudus/duncangarmonsway/issues/new">create an issue</a> on the source repository.</p>
+  <h3 id="reuse">Reuse</h3>
+  <p>Text and figures are licensed under Creative Commons Attribution <a rel="license" href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>. Source code is available at <a href="https://github.com/nacnudus/duncangarmonsway">https://github.com/nacnudus/duncangarmonsway</a>, unless otherwise noted. The figures that have been reused from other sources don't fall under this license and can be recognized by a note in their caption: "Figure from ...".</p>
+  <h3 id="citation">Citation</h3>
+  <p>For attribution, please cite this work as</p>
+  <pre class="citation-appendix short">Garmonsway (2016, June 28). Duncan Garmonsway: Hacking the Data Science Radar with Data Science. Retrieved from https://nacnudus.github.io/duncangarmonsway/posts/2016-06-28-radar/</pre>
+  <p>BibTeX citation</p>
+  <pre class="citation-appendix long">@misc{garmonsway2016hacking,
+  author = {Garmonsway, Duncan},
+  title = {Duncan Garmonsway: Hacking the Data Science Radar with Data Science},
+  url = {https://nacnudus.github.io/duncangarmonsway/posts/2016-06-28-radar/},
+  year = {2016}
+}</pre>
+</div>
+<!--/radix_placeholder_appendices-->
+<!--radix_placeholder_navigation_after_body-->
+<!--/radix_placeholder_navigation_after_body-->
+
+</body>
+
+</html>

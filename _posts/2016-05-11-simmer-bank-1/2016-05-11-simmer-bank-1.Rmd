@@ -1,0 +1,267 @@
+---
+title: "Simmer vs SimPy: The Bank, Part I"
+description: |
+  Porting a SimPy tutorial to the R package Simmer
+author: Duncan Garmonsway
+date: May 11, 2016
+output:
+  radix::radix_article:
+    self_contained: false
+resources:
+  exclude:
+    data
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(comment = "##", collapse = TRUE, cache = TRUE)
+```
+
+***A maintained version of this post is available with
+[simmer](http://r-simmer.org/) as a
+[vignette](http://r-simmer.org/articles/D-bank-1.html).  Simmer has undergone
+heavy development since this post was written.***
+
+## Simmer vs SimPy
+
+Which package would be easier for teaching queueing theory?  Python 2.7's
+[`SimPy`](https://pythonhosted.org/SimPy/SimPy_Overview.html), designed for
+(as far as I can tell) lecturing, by Tony Vigneau at my alma mater, Vic Uni
+Wellington NZ, or [`simmer`](http://r-simmer.org/), designed by Bart Smeets and
+Iñaki Ucar to (as far as I can tell) actually use?
+
+The `simmer` package is a relatively new R package for discrete event simulation
+(DES).  It's an exciting development, because there isn't a lot of open-source
+DES software.  `SimPy` seems to be the only serious competitor for teaching
+DES and queueing theory.
+
+This post does three things:
+
+* Ports the code of the main `SimPy` tutorial ['The
+  Bank'](https://pythonhosted.org/SimPy/Tutorials/TheBank.html) to `simmer`.
+* Opines that `simmer` would be easier to teach as part of a queueing theory
+  course.
+* Pursues a random red herring.
+
+## Why not SimPy 3?
+
+I use `SimPy` 2 (for Python 2), because it is the last version developed by the
+original author, because it was the version I was taught, only last year, and
+because, in one crucial respect (monitoring), it's [much easier to
+use](https://simpy.readthedocs.io/en/latest/topical_guides/monitoring.html).
+
+## The Bank
+
+'The Bank' is a tutorial that develops DES concepts and techniques by simulating
+the paths of customers at a bank.  The arrivals (customers) queue for a server
+(counter), are served, and exit.
+
+## Complete example
+
+The actual ported code is available [on
+GitHub](https://github.com/nacnudus/simmer-bank), and I only give simple
+examples in this post.  The first example is complete.
+
+First, `SimPy`:
+
+```{r, engine = "python", engine.path = "/usr/bin/python2", echo = TRUE}
+""" bank01: The single non-random Customer """
+from SimPy.Simulation import *
+
+## Model components -----------------------------
+
+class Customer(Process):
+    """ Customer arrives, looks around and leaves """
+
+    def visit(self,timeInBank):
+        print now(),self.name," Here I am"
+        yield hold,self,timeInBank
+        print now(),self.name," I must leave"
+
+## Experiment data ------------------------------
+
+maxTime = 100.0     # minutes
+timeInBank = 10.0   # minutes
+
+## Model/Experiment ------------------------------
+
+initialize()
+c = Customer(name="Klaus")
+activate(c,c.visit(timeInBank),at=5.0)
+simulate(until=maxTime)
+```
+
+Next, `simmer`:
+
+```{r, echo = TRUE}
+# bank01: The single non-random customer
+suppressMessages(library(simmer))
+
+## Experiment data ------------------------------
+
+maxTime <- 100     # minutes
+timeInBank <- 10   # minutes
+
+## Model components -----------------------------
+
+customer <-
+  create_trajectory("Customer's path") %>%
+  timeout(function() {timeInBank})
+
+## Model/Experiment ------------------------------
+
+bank <- simmer("bank")
+bank %>% add_generator("Customer", customer, at(5))
+bank %>% run(until = maxTime)
+bank %>% get_mon_arrivals
+```
+
+Already there are several differences that might make teaching queueing theory
+with `simmer` easier than with `SimPy`:
+
+* The difference between `from X import Y` and `Import X` isn't relevant.
+* Whitespace doesn't matter.
+* The difference between integer and floating-point types doesn't matter here.
+* Arguments don't have to be defined.
+* References don't have to be passed.
+* `self` is irrelevant.
+* `timeout` is more intuitive than `yield` (`yield` describes how the class
+  behaves in the implementation of the DES, as it yields control back to the
+  clock, whereas `timeout` describes what the function does in the mind of the
+  modeller).
+
+But there is one point that could be tricky, and that soon becomes important:
+
+* `timeout` and `add_generator` both expect *functions*, rather than vectors, to
+  control (inter-)arrival time and timeout duration.  It would be nice to have
+  syntactic sugar to handle vectors.  The reason for the functions is that, when
+  a model is run indefinitely, a function can continue generating new arrival
+  times and timeout durations, whereas a vector will soon be exhausted.
+
+## Example fragments
+
+Implementing the rest of the examples brought up a few other interesting points.
+
+### Generate more than one arrival
+
+In the `SimPy` examples, to generate `n > 1` arrivals, the `activate` code to
+generate them moves inside the `Source` class.  To explain why requires a quite
+a lot of understanding/intuition of object-oriented programming that isn't
+relevant to learning about queuing theory.  `Simmer` doesn't present this
+difficulty.
+
+### Limit the number of arrivals
+
+Arrivals with random inter-arrival times would be generated indefinitely by
+`bank %>% add_generator("Customer", customer, function() {runif(1)})`.  To limit
+this to `n = 10` arrivals, you might try `times <- runif(10); bank %>%
+add_generator("Customer", customer, times)`, but it doesn't work, because
+`add_generator` expects a function that *will* supply inter-arrival times, not a
+vector that *does* supply them.
+
+`Simmer` provides a handy function, `at()`, to
+convert a vector to function, so you could do `add_generator("Customer", customer,
+at(runif(10)))`, except that this still doesn't work.  That's because `at()`
+is designed to convert *arrival* times into *inter-arrival* times, but the
+`runif` function is being used to provide *inter-arrival* times in the first
+place.  The final fix is to do `add_generator("Customer", customer, at(c(0,
+cumsum(runif(10)))))`.
+
+### Joining the shortest queue
+
+This is a pain in both `SimPy` and `simmer`.  The `SimPy` example creates a
+method to return the length of each queue, and then the following code iterates
+through the results until a queue is chosen:
+
+```python3
+# Select the shortest queue
+for i in range(Nc):
+    if Qlength[i] == 0 or Qlength[i] == min(Qlength):
+        choice = i  # the chosen queue number
+        break
+
+# Join the queue
+yield request,self,counters[choice]
+```
+
+In `simmer`, this is done by branching:
+
+```r
+customer <-
+  create_trajectory("Customer's path") %>%
+    branch(function() {
+             # Select the shortest queue
+             which.min(c(bank %>% get_server_count("counter1") +
+                           bank %>% get_queue_count("counter1"),
+                         bank %>% get_server_count("counter2") +
+                           bank %>% get_queue_count("counter2")))
+         },
+         merge = rep(TRUE, 2),
+         # Join the first queue, if it was chosen
+         create_trajectory("branch1") %>%
+           seize("counter1") %>%
+           timeout(function() {rexp(1, 1/timeInBank)}) %>%
+           release("counter1"),
+         # Otherwise join the second queue, if it was chosen
+         create_trajectory("branch2") %>%
+           seize("counter2") %>%
+           timeout(function() {rexp(1, 1/timeInBank)}) %>%
+           release("counter2"))
+```
+
+I mucked about for a while trying to avoid branching by using attributes to name
+the server at `seize` time. I won't explain attributes here because they're
+covered in the excellent `simmer` [vignettes](), but basically the following
+code doesn't work because attributes are only available to certain arguments,
+the `resource` argument not among them, only `amount` and perhaps
+`priority` and `preemptible`.
+
+```r
+# This doesn't work:
+customer <-
+  create_trajectory("Customer's path") %>%
+    # Attributes can be set, to choose the queue
+    set_attribute("counter",
+                  function() {
+                    which.min(c(bank %>% get_server_count("counter1") +
+                                  bank %>% get_queue_count("counter1"),
+                                bank %>% get_server_count("counter2") +
+                                  bank %>% get_queue_count("counter2")))}) %>%
+    # But they aren't available in the `resource` argument of `seize` for naming
+    # the server, so this doesn't work.
+    seize(function(attrs) {paste0("counter", attrs["counter"])}) %>%
+    timeout(function() {rexp(1, 1/timeInBank)}) %>%
+    release(function(attrs) {paste0("counter", attrs["counter"])})
+```
+
+### Monitoring
+
+`Simmer` has a killer feature: everything is monitored automatically, and
+reported in handy data frames.  This works especially well when doing many
+replications.
+
+But it isn't obvious how to do the equivalent of, in Python, injecting `print`
+or `cat` commands to describe the state of particular arrivals and servers.
+Presumably something could be done in the functions passed to `dist` arguments.
+In this sence, `simmer` is more declarative; like a story book, where the text
+describes the characters, but the characters don't really exist.  `Simmer`
+describes arrivals and servers, but they don't really exist, and can't be
+directly interacted with.
+
+## Random red herring
+
+Python 2.7, R and MATLAB all use the Mersenne-Twister algorithm by default.  But
+none of them matches.  The `numpy` Python package [*does* match
+MATLAB](http://www.walkingrandomly.com/?p=5479) (except for seed = 0), but not
+R.
+
+Two potential solutions are:
+
+* Generate any old random numbers, write them to disk, and read them into both
+  Python and R.
+* Use `rpy2` to use R's random number generator from within Python.
+
+I used `rpy2`, but it wasn't long before I encountered a more serious problem.
+When random draws are conducted in more than one part of the code, the
+programmer can't control the order of the draws.  That's up to `SimPy` and
+`simmer`.  At that point, I gave up.
+

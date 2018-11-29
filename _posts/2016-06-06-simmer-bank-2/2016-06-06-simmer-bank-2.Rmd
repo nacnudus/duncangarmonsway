@@ -1,0 +1,139 @@
+---
+title: "Simmer vs SimPy: The Bank, Part II"
+description: |
+  Porting a SimPy tutorial to the R package Simmer
+author: "Duncan Garmonsway"
+date: June 6, 2016
+output:
+  radix::radix_article:
+    self_contained: false
+resources:
+  exclude:
+    data
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(comment = "##", collapse = TRUE, cache = TRUE)
+```
+
+***Simmer has undergone heavy development since this post was written.***
+
+## Simmer vs SimPy (rematch)
+
+In my [previous post](/post/2016-05-11-simmer-bank-1), I ported [Part
+I](https://pythonhosted.org/SimPy/Tutorials/TheBank.html) of `SimPy`'s flagship
+tutorial, *The Bank*, to `simmer`.  This post does the same for [Part
+II](https://pythonhosted.org/SimPy/Tutorials/TheBank2.html), which introduces
+tricky concepts for tricky customers.
+
+This post does two things:
+
+* Discusses some difficulties implementing The Bank: Part II.
+* Suggests some reasons why simulation is hard (blame humans).
+
+## The Bank
+
+'The Bank' is a tutorial that develops DES concepts and techniques by simulating
+the paths of customers at a bank.  The arrivals (customers) queue for a server
+(counter), are served, and exit.
+
+## Complete code
+
+The actual ported code is available [on
+GitHub](https://github.com/nacnudus/simmer-bank), and I only give simple
+examples in this post.
+
+## Priority and pre-emption
+
+High-priority arrivals (customers) go straight to the front of the queue.  When
+pre-emption is allowed, they can even barge they way onto a busy server,
+interrupting an arrival (customer) that is already being served.
+
+Priority and pre-emption has only recently been added to `simmer`, and it still
+feels a bit clumsy.  The complications arise because events have to be
+rescheduled, and decisions have to be remade.  For example:
+
+* When a server is serving several arrivals at once, which one should be
+  interrupted by a higher-priority arrival?  `Simmer` already implements
+  first-in-first-out (FIFO) and last-in-first-out (LIFO) policies.
+* When an arrival is interrupted while being served, and then resumes service,
+  should they start again (repeating the first period of their service time) or
+  carry on from where they left off (completing their remaining service time).
+  `Simmer` already implements these two options, but it's reasonable to suppose
+  that resumption of service might come with a time penalty, and it doesn't
+  currently seem to be possible to express such a penalty.
+* While an interrupted arrival is waiting to return to the server, where do they
+  wait?  This matters in a finite queue.  Currently, `simmer` allows the arrival
+  to wait in the finite queue, even if the queue is already full and rejecting
+  new arrivals.  To change this behaviour, one would have to define a policy for
+  ejecting arrivals from the queue to maintain the constraint on its size.
+
+## Balking and reneging
+
+Balking is the behaviour of an arrival that, for some reason, never enters a
+queue.  The example in The Bank Tutorial is the case when a finite queue is
+full, so the arrival is rejected.  An alternative might be that the arrival
+decides whether or not to enter the queue according to the number of arrivals
+already in it.  That scenario can already be implemented in `simmer` by branching
+based on an enquiry into the state of the queue.
+
+Reneging is the behaviour of an arrival already in a queue, who decides to leave
+it.  This isn't yet possible in `simmer`, but the authors have indulged me in
+several discussions about it, on
+[GitHub](https://github.com/r-simmer/simmer/issues) and in the [discussion
+forum](https://groups.google.com/forum/#!forum/simmer-devel).  The difficulty,
+as I currently see it, is that the `seize` function, by handling the whole
+interval between entering the queue and reaching the server, makes the queueing
+period relatively inaccessible.  If one wanted an arrival to renege from one
+queue and branch instead into another queue, there is no way to express that
+inside the `seize` function.  If one wanted other customers in the queue to
+reassess their patience, based on customers ahead of them reneging, then there
+is no way to express that idea either.
+
+To be fair to the `simmer` authors, these ideas weren't present in early
+versions of `SimPy` either, and were still clumsy when The Bank: Part II was
+written.  It also can't be easy to separate the concept of queueing from the
+`seize` function, since this is probably the most computationally-expensive
+aspect of modelling, which has, very sensibly, been implemented in C++.
+
+## Interruption
+
+`SimPy` provides functions for interrupting an arrival that is being served.
+The examples in The Bank Tutorial don't convince me that special functions are
+necessary. Why not simply increase their service time?  That's certainly how I
+implemented interruptions in `simmer`.
+
+## Wait until
+
+Another relatively new feature of `simmer` is the ability to schedule the
+capacity of resources at certain times.  I used schedules to implement the bank
+opening in the morning, and to 'open the door' once every 30 minutes to let in
+any customers that are queueing outside.
+
+The scheduling feature can be periodic, which is wonderful, but it isn't
+currently possible to schedule a single change in capacity that then endures
+indefinitely.  See
+[GitHub](https://github.com/nacnudus/simmer-bank/blob/master/17-waituntil.R) for
+examples.  It also doesn't seem to be possible to schedule infinite capacity.
+
+**[EDIT]**  I was wrong.  It is possible to do both those things.
+
+## Monitoring and plotting
+
+Here is where `simmer` continues to excel, providing far simpler and
+more-intuitive monitoring of arrivals, resources and attributes, in handy data
+frames for straightforward plotting with any graphics library.
+
+## Simulation is hard
+
+Because human behaviour is hard.  Real-life systems involving humans are
+massively parallel.  Every actor processes his/her own activities onto the
+universal time-line.  As long as computers have very finite numbers of
+processors, simulation libraries will have to find ways to express this
+parallelism in a way that computers can serialise.  When actors in a system
+influence each-other's behaviour, the computational difficulties of serialising
+their behaviour begin to meet the boundaries of efficient computation.
+
+The authors of `simmer` have a very generous attitude towards suggestions and
+discussion, like so many R developers.  No doubt that this post will soon become
+obsolete by their efforts.

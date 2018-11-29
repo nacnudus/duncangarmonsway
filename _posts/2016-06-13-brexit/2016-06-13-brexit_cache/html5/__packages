@@ -1,0 +1,12 @@
+base
+magrittr
+xml2
+rvest
+readr
+dplyr
+tidyr
+lubridate
+ggplot2
+scales
+here
+bindrcpp

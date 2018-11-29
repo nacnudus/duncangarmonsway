@@ -1,0 +1,345 @@
+---
+title: "How many R-Bloggers are there?"
+description:
+  Parsing the daily digest emails
+author: Duncan Garmonsway
+date: April 18, 2016
+preview: "rbloggers.png"
+output:
+  radix::radix_article:
+    self_contained: false
+resources:
+  exclude:
+    data
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(comment = "##", collapse = TRUE, cache = TRUE)
+```
+
+This post does three things:
+
+* Finds out how many R-related blogs there are *really* (not a well-defined
+  question).
+* Shows that I can use semi-structured non-csv data (job interview weakness).
+* Explains where all the time goes.
+
+Many people who promote R quote the number of R blogs as given on the
+[R-Bloggers](http://www.r-bloggers.com/) website by Tal Galili, which syndicates
+literally hundreds of R-related blogs (573 at the time of writing).  But the
+number tends only to increase.  How many actual posts are there in a given
+week/month, from how many different blogs?
+
+## Update 30 April 2016
+
+I have a longer history of daily digest emails than I thought.  The data, and
+some of the text, has been updated to go back to October 2013.
+
+## The gist of it
+
+I subscribed to the [R-Bloggers](http://www.r-bloggers.com/) daily digest emails
+in early 2014, giving me a good time-series of posts.
+
+The initial dump is easy from Gmail (define a filter > use it to apply a
+new label > request a dump of the labelled emails).  Since the dump is in a
+single plain-text file, and because the amazing R-community has bothered to
+generalise so many solutions to fiddly problems by making packages, all the
+remaining steps are also easy.
+
+1. Separate the emails into individual files, using `convert_mbox_eml` in the
+   `tm.plugin.mail` package.
+2. Parse the date-time in the first line of each file, using base R (hooray for
+   base!)
+3. Parse the HTML email content using `read_html` in the `xml2` package (which
+   has its own magic to trim off the non-HTML email headers).
+4. Extract the names of the blogs in each email using an XPath string created by
+   the *SelectorGadget* browser extension/bookmarklet.
+5. Mung and analyse the data.
+
+## The answer
+
+It turns out that there are about 75 blogs active in a given month, posting
+about 160 posts (Revolutions is the only one that regularly posts more than once
+per week).  Nothing much has changed in the last year.  For some arbitrary
+definition of "dead blog", a survival analysis could be done.
+
+```{r rbloggers-packages, echo = FALSE}
+library(dplyr)
+library(tidyr)
+library(tm.plugin.mail)
+library(xml2)
+library(stringr)
+library(lubridate)
+library(ggplot2)
+library(scales)
+library(fs)
+library(here)
+```
+
+```{r rbloggers-wrangle, echo = FALSE}
+# TODO: Implement the following manual steps in R
+# 1. Create a label in Gmail for the R-Bloggers digests
+# 2. Export emails with that label from Gmail
+# 3. Extract the exported file
+# 4. Run sed ':a;N;$!ba;s/=\n//g' rbloggers.mbox in the Mail directory, i.e.
+#    sed ':a;N;$!ba;s/=\r\n//g' ./Takeout/Mail/rbloggers.mbox > ./clean.mbox
+#    This steps removes funny newlines that are in the original emails in my
+#    inbox.
+
+mail_dir <- here("data", "temp")
+
+# Extract the emails into individual files
+convert_mbox_eml(here("data", "clean.mbox"), mail_dir)
+
+# Collect the file names
+emails <- dir_ls(mail_dir)
+
+# Remove the "confirm email address" one
+# and the one that has no links to the original blogs
+emails <- emails[c(-2, -342)]
+
+# Remove any that are replies
+emails <- emails[vapply(emails,
+                        function(filename) {
+                          !any(grepl("^In-Reply-To: <",
+                                     readLines(filename, n = 10)))},
+                        TRUE)]
+
+# Collect the datetimes in the first line of each file
+# Also collect the journals from the subject lines
+n <- length(emails)
+datetimes <- vector("character", length = n)
+blogcounts <- vector("character", length = n)
+blogs  <- vector("list", length = n)
+i <- 0
+for (filename in emails) {
+  i <<- i + 1
+  datetimes[i] <- readLines(filename, n = 1)
+  # Extract the links to the original blogs
+  blogs[[i]] <-
+    read_html(filename) %>%
+    xml_find_all("//*[(@id = '3D\"itemcontentlist\"')]//div//div//strong[(((count(preceding-sibling::*) + 1) = 1) and parent::*)]//a") %>%
+    xml_text
+}
+
+# Extract the datetime string
+datetimes <-
+  datetimes %>%
+  str_sub(start = 34) %>%
+  strptime(format = "%b %d %H:%M:%S %z %Y")
+
+# Link the datetime with individual blogs
+names(blogs) <- datetimes
+blogs <- stack(blogs)
+
+# Recover the dates and clean the blog names
+blogs <-
+  blogs %>%
+  rename(blog = values, datetime = ind) %>%
+  mutate(datetime = ymd_hms(datetime),
+         # blog = str_replace(blog, fixed("=\\n"), ""),
+         blog = str_replace(blog, fixed("=C2=BB"), "»"),
+         blog = str_replace(blog, fixed("=E2=80=93"), "–"),
+         blog = str_replace(blog, fixed("=E2=80=A6"), "…"),
+         blog = str_replace(blog, fixed("=C3=A6"), "æ"),
+         blog = str_replace(blog, fixed("=EA=B0=84=EB=93=9C=EB=A3=A8=EB=93=9C =ED=81=AC=EB=A6=AC=EC=8A=A4=ED=86=A0=ED=8C=8C"), "(간드루드 크리스토파)"),
+         blog = str_replace(blog, fixed("=D0=AF=D1=82=D0=BE=D0=BC=D0=B8=D0=B7=D0=BE"), "Ятомизо"),
+         blog = str_trim(blog))
+
+# Number of different blogs per week/month/year
+periodically <- function(x, period) {
+  x %>%
+    group_by_(period, "blog") %>%
+    summarise(posts = n()) %>%
+    group_by_(period) %>%
+    summarise(posts = sum(posts),
+              blogs = n()) %>%
+    gather(measure, n, posts, blogs) %>%
+    rename_("date" = period) %>%
+    mutate(period = paste0(period, "ly"))
+}
+periodical <-
+  blogs %>%
+  mutate(year = ceiling_date(datetime, "year"),
+         month = ceiling_date(datetime, "month"),
+         week = ceiling_date(datetime, "week"))
+monthly <- periodically(periodical, "month")
+weekly <- periodically(periodical, "week")
+periodical <-
+  bind_rows(monthly, weekly) %>%
+  group_by(period) %>%
+  filter(date > min(date),
+         date < max(date)) %>%
+  ungroup
+```
+
+```{r rbloggers-periodical, echo = FALSE}
+periodical %>%
+  ggplot(aes(date, n, colour = period, linetype = measure)) +
+  geom_line() +
+  xlab("") +
+  ylab("Number of blogs/posts") +
+  ggtitle("Number of R-Bloggers blogs/posts per week/month")
+```
+
+## What took me so long
+
+This was an easy project, but a few quirks soaked up a lot of time:
+
+* I wanted to initialise an empty list, to store information collected by
+  looping through the emails.  This is one of my favourite R idiosyncracies.
+  Consider how the following function could be any less intuitive: `empty_list
+  <- vector(mode = "list", length = n)`.  I usually don't think of lists as a
+  kind of vector, and usually think of them as a class rather than a mode, but
+  perhaps that's just me.
+* Gmail filters and labels *conversations*, rather than individual emails, so
+  the occasional forward of an R-Bloggers digest scuppered the code.
+* One of the digests had a glitch -- no links to the originial blogs.  The date
+  is given in a non-`lubridate`-friendly order, so I had to rediscover
+  `strptime`.
+* Some blog names include unusual characters that appear in the plain text in a
+  funny way (e.g. "=E2=80=A6").  These had to be found-and-replaced (using
+  `stringr`).
+* While, `xml_find_all` in the `xml2` package understands
+* `3D\"itemcontentlist\"` as part of an XPath string, I intially fell foul of
+  `html_nodes` in the `rvest` package, which doesn't seem to understand it as
+  part of a CSS string.
+* Given a named list, how can you crate a data frame that links the names to the
+  each element of the vectors?  Finding this kind of thing out is entirely a
+  game of Google Search Term Bingo, but in this case I used part of a clever
+  [StackOverflow solution](http://stackoverflow.com/a/16326629/937932) of a
+  different problem.  To save you digging around in the `purrr` or `rlist`
+  packages, the answer is `stack` in (hooray!) `base`.
+
+But the biggest time-sucker by far was the bizarre way that the plain text of
+the emails had been trimmed to 76 characters, by sticking an equals sign and a
+Windows-style line-ending (carriage return and line feed, i.e. `\r\n`) after the
+75th character.  This is snag-tastic, because it's hard to find a tool that will
+both search-and-replace across line-endings, and also search-and-replace
+multiple characters.  `sed` is one of those command-line tools that lurks for
+years before pouncing, and this was its moment, when I finally had to learn a
+bit more than merely `s/pattern/replacement/g`.  [This StackOverflow
+answer](http://stackoverflow.com/a/7697604/937932) explains how the following
+command works: `sed ':a;N;$!ba;s/=\r\n//g' dirty.mbox > clean.mbox`.
+
+## Reward
+
+Thankyou for reading. Here are some more graphs, and some code fragments.
+
+```{r rbloggers-top10, echo = FALSE}
+# Most prolific bloggers
+blogs %>%
+  count(blog) %>%
+  arrange(desc(n)) %>%
+  slice(1:10) %>%
+  mutate(blog = factor(blog, levels = blog)) %>%
+  ggplot(aes(blog, n, label = blog)) +
+  geom_bar(stat = "identity") +
+  coord_flip() +
+  xlab("") +
+  ylab("Number of posts since October 2013") +
+  ggtitle("Top-10 bloggers by number of posts since October 2013") +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1))
+```
+
+```{r rbloggers-rates, echo = FALSE}
+# Rates of blogging (smoothed difference in days)
+
+# A problem: If the smoother smooths to zeroes or negative values, then the log
+# transform won't work.  Here, I don't think there will ever be zeroes, so I can
+# use the first suggestion here:
+# http://stackoverflow.com/a/2782383/937932
+# Which smooths on the logged values (which guarantees being above zero), but
+# plots on the exponentiated logged values (equivalent to the original).
+
+# The log transformation displays widely disparate rates on one scale, and the
+# fuss about log(7) is to get the axis to be labelled in one-week and four-week
+# bits.
+
+# The bug was hard to pin down, because it didn't apply consistently to any
+# given blog when that blog was removed from the data, and that's because the
+# smoothing function was applied *before* facetting (and again afterward), so
+# removing certain blogs affected the smoothing of the remaining blogs, which
+# meant that the blogs that were to blame on their own were able to hide among
+# the others.
+
+blogs %>%
+  count(blog, datetime) %>%
+  group_by(blog) %>%
+  arrange(datetime) %>%
+  mutate(days = difftime(datetime, lag(datetime), units = "days"),
+         days = as.numeric(days),
+         days = days + .1) %>%         # Avoid log(0) errors
+  filter(n() >= 55) %>%
+  ungroup %>%
+  ggplot(aes(datetime, days)) +
+  geom_point(colour = "grey") +
+  geom_smooth(se = FALSE) +
+  scale_y_continuous(breaks = c(7, 28)) +
+  coord_cartesian(ylim = c(0, 35)) +
+  scale_x_datetime(breaks = date_breaks("6 months"), labels = date_format("%b'%y")) +
+  facet_wrap(~blog) +
+  xlab("") +
+  ylab("Days between posts") +
+  ggtitle("Days between posts on most-prolific blogs") +
+  theme(legend.position = "none")
+```
+
+```{r rbloggers-fragments, echo = TRUE, eval = FALSE}
+# NOTE: These are frangments of code.  They do not stand alone.
+
+# Collect the file names
+emails <- list.files(mail_dir, full.names = TRUE)
+
+# Remove the "confirm email address" one
+# and the one that has no links to the original blogs
+emails <- emails[c(-2, -342)]
+
+# Remove any that are replies
+emails <- emails[vapply(emails,
+                        function(filename) {
+                          !any(grepl("^In-Reply-To: <",
+                                     readLines(filename, n = 10)))},
+                        TRUE)]
+
+# Collect the datetimes in the first line of each file
+# Also collect the journals from the subject lines
+n <- length(emails)
+datetimes <- vector("character", length = n)
+blogcounts <- vector("character", length = n)
+blogs  <- vector("list", length = n)
+i <- 0
+for (filename in emails) {
+  i <<- i + 1
+  datetimes[i] <- readLines(filename, n = 1)
+  # Extract the links to the original blogs
+  blogs[[i]] <-
+    read_html(filename) %>%
+    xml_find_all("//*[(@id = '3D\"itemcontentlist\"')]//div//div//strong[(((count(preceding-sibling::*) + 1) = 1) and parent::*)]//a") %>%
+    xml_text
+}
+
+# Extract the datetime string
+datetimes <-
+  datetimes %>%
+  str_sub(start = 34) %>%
+  strptime(format = "%b %d %H:%M:%S %z %Y")
+
+# Link the datetime with individual blogs
+names(blogs) <- datetimes
+blogs <- stack(blogs)
+
+# Recover the dates and clean the blog names
+blogs <-
+  blogs %>%
+  rename(blog = values, datetime = ind) %>%
+  mutate(datetime = ymd_hms(datetime),
+         # blog = str_replace(blog, fixed("=\\n"), ""),
+         blog = str_replace(blog, fixed("=C2=BB"), "»"),
+         blog = str_replace(blog, fixed("=E2=80=93"), "–"),
+         blog = str_replace(blog, fixed("=E2=80=A6"), "…"),
+         blog = str_replace(blog, fixed("=C3=A6"), "æ"),
+         blog = str_replace(blog, fixed("=EA=B0=84=EB=93=9C=EB=A3=A8=EB=93=9C =ED=81=AC=EB=A6=AC=EC=8A=A4=ED=86=A0=ED=8C=8C"), "(간드루드 크리스토파)"),
+         blog = str_replace(blog, fixed("=D0=AF=D1=82=D0=BE=D0=BC=D0=B8=D0=B7=D0=BE"), "Ятомизо"),
+         blog = str_trim(blog))
+```

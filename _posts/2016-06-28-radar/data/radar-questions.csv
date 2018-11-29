@@ -1,0 +1,25 @@
+attribute,weight,inverse
+Communicator,0.2,FALSE
+Communicator,0.2,TRUE
+Communicator,0.2,FALSE
+Communicator,0.4,FALSE
+Data Wrangler,0.2333,FALSE
+Data Wrangler,0.2333,FALSE
+Data Wrangler,0.2333,FALSE
+Data Wrangler,0.3,TRUE
+Modeller,0.2,TRUE
+Modeller,0.2,FALSE
+Modeller,0.2,FALSE
+Modeller,0.4,FALSE
+Programmer,0.2,FALSE
+Programmer,0.2,TRUE
+Programmer,0.3,FALSE
+Programmer,0.3,FALSE
+Technologist,0.2,FALSE
+Technologist,0.3,FALSE
+Technologist,0.3,FALSE
+Technologist,0.2,FALSE
+Visualiser,0.2,FALSE
+Visualiser,0.3,TRUE
+Visualiser,0.2,FALSE
+Visualiser,0.3,FALSE

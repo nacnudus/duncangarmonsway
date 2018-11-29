@@ -1,0 +1,303 @@
+---
+title: "Harry Potter N-Grams and Sentiment Arcs"
+output: flexdashboard::flex_dashboard
+runtime: shiny
+---
+
+```{r}
+library(dplyr)
+library(tidyr)
+library(ggplot2)
+library(syuzhet)
+library(tokenizers)
+
+ngrams_all <- readRDS("./ngrams80.Rds")
+arcs <- readRDS("./arcs.Rds")
+sentences_all <- readRDS("./sentences80.Rds")
+```
+
+Sentiment
+=======================================================================
+
+Sidebar {.sidebar data-width=275}
+-----------------------------------------------------------------------
+
+By [**Duncan Garmonsway**](http://nacnudus.github.io/crossprod/).
+
+This tab is based on Julia Silge's
+[blog](http://juliasilge.com/blog/If-I-Loved-NLP-Less/)
+[posts](http://juliasilge.com/blog/Life-Changing-Magic/) about Jane Austen's
+novels.  Here, it is applied to the Harry Potter series.  Read more
+[here](http://nacnudus.github.io/crossprod/harry-potter-and-the-n-grams-of-sentiment).
+
+The **arcs** describe the **sentiment** (positive or negative) of passages in the
+novels.  Sentiment is calculated for discrete chunks of words, and is smoothed
+into an arc by a fast Fourier transform.
+
+'**Wiggliness**' is a parameter of the smoothing function, chosen
+arbitrarily.  The **grey ribbons** show how the choice affects the arcs, by
+describing their range over 'wiggliness' values from from a minimum to a
+maximum.
+
+The **blue line/area** is the arc of a particular 'wiggliness' value.  This
+is a line when the ribbon is also drawn, otherwise it is an area.
+
+`r br()`
+
+```{r}
+checkboxInput("plot_ribbon", label = "Plot ribbon?", value = TRUE)
+
+sliderInput("minwiggle",
+            label = "Minimum wiggliness (grey ribbon):",
+            min = 1,
+            max = 10,
+            value = 3)
+
+sliderInput("maxwiggle",
+            label = "Maximum wiggliness (grey ribbon):",
+            min = 1,
+            max = 10,
+            value = 10)
+
+checkboxInput("plot_arc", label = "Plot arc?", value = TRUE)
+
+uiOutput("dynamic_wiggliness")
+```
+
+Column
+-----------------------------------------------------------------------
+
+### 
+
+```{r}
+output$dynamic_wiggliness <-  renderUI({
+  sliderInput("wiggliness",
+              label = "Arc wiggliness (blue line/area):",
+              min = input$minwiggle,
+              max = input$maxwiggle,
+              step = 1,
+              value = input$minwiggle)
+})
+
+ranges <- reactive(
+  arcs %>%
+    filter(low_pass_size >= input$minwiggle,
+           low_pass_size <= input$maxwiggle) %>%
+    group_by(title, row) %>%
+    summarise(min = min(transformed), max = max(transformed))
+ )
+
+renderPlot({
+  main <- 
+    ggplot() +
+    ylim(-3.5, 3.5) +
+    facet_wrap(~title, ncol = 2, dir = "v") +
+    theme_minimal() +
+    ylab("Transformed Sentiment Value") +
+    labs(title = "Sentiment in Harry Potter") +
+    scale_x_discrete(expand=c(0,0)) +
+    theme(plot.title = element_text(size = 20)) +
+    theme(strip.text = element_text(hjust = 0)) +
+    theme(strip.text = element_text(face = "italic")) +
+    theme(strip.text = element_text(size = 14)) +
+    theme(axis.text.y = element_text(margin = margin(r = -10))) +
+    theme(legend.position = "none") +
+    theme(axis.title.y = element_text(size = 14)) +
+    theme(axis.title.x = element_blank()) +
+    theme(axis.ticks.x = element_blank()) +
+    theme(axis.text.x = element_blank())
+
+  if (!is.null(input$wiggliness)) {
+    hline <- 
+       geom_hline(yintercept = 0, alpha = .3)
+
+    ribbon <- 
+      geom_ribbon(aes(row, ymin = min, ymax = max),
+                  fill = "grey85",
+                  data = ranges())
+
+    arcline <- 
+      geom_line(aes(row, transformed),
+                colour = "#2780E3",
+                size = 1,
+                data = arcs %>% filter(low_pass_size == input$wiggliness))
+
+    arcarea <- 
+      geom_area(aes(row, transformed),
+                fill = "#2780E3",
+                alpha = .5,
+                data = arcs %>% filter(low_pass_size == input$wiggliness))
+
+    if (input$plot_ribbon) {
+      out <- main + ribbon
+      if (input$plot_arc) {
+        out <- out + arcline
+      }
+      out <- out + hline
+    } else {
+      if (input$plot_arc) {
+        out <- main + arcarea
+      }
+    }
+  }
+
+  out
+})
+```
+
+N-Grams
+=======================================================================
+
+Sidebar {.sidebar data-width=275}
+-----------------------------------------------------------------------
+
+By [**Duncan Garmonsway**](http://nacnudus.github.io/crossprod/).
+
+Explore the most-common phrases in Harry Potter.
+
+Read more about this project
+[here](http://nacnudus.github.io/crossprod/harry-potter-and-the-n-grams-of-sentiment).
+
+On small screens, adjust the number of n-grams to be displayed, and the size of
+the text.
+
+`r br()`
+
+```{r}
+sliderInput("words",
+            label = "Number of words ('n' in 'n-gram'):",
+            min = 2,
+            max = 10,
+            value = 4)
+
+sliderInput("ngrams",
+            label = "Number of n-grams to plot:",
+            min = 20,
+            max = 80,
+            value = 40)
+
+sliderInput("textsizengrams",
+            label = "Text size:",
+            min = 1,
+            max = 10,
+            value = 5)
+```
+
+Column 
+-----------------------------------------------------------------------
+
+###
+
+```{r}
+ngrams <- reactive(
+  ngrams_all %>%
+    filter(words == input$words)
+ )
+
+maxcount_ngrams <- reactive(
+  max(ngrams()$n)
+  )
+   
+renderPlot({
+  ngrams() %>%
+    slice(1:input$ngrams) %>% 
+    arrange(desc(rank)) %>%
+    mutate(ngram = factor(ngram, levels = ngram)) %>%
+    ggplot(aes(ngram, n)) +
+    coord_flip() +
+    geom_text(aes(label = ngram), hjust = 0, size = input$textsizengrams) + 
+    scale_y_continuous(limits = c(0, maxcount_ngrams() * 1.25), expand = c(0, 0)) +
+    xlab("") +
+    theme_minimal() +
+    ylab("Occurrences (left-justified)") +
+    theme(axis.text.y = element_blank(),
+          axis.ticks.y = element_blank(),
+          panel.grid = element_blank()) +
+    ggtitle(paste0("Top ", input$ngrams, " Harry Potter ", input$words, "-Grams"))
+})
+```
+
+Sentences
+=======================================================================
+
+Sidebar {.sidebar data-width=275}
+-----------------------------------------------------------------------
+
+By [**Duncan Garmonsway**](http://nacnudus.github.io/crossprod/).
+
+Explore the most-common sentences in Harry Potter.
+
+Read more about this project
+[here](http://nacnudus.github.io/crossprod/harry-potter-and-the-n-grams-of-sentiment).
+
+On small screens, adjust the number of sentences to be displayed, and the size
+of the text.
+
+`r br()`
+
+```{r}
+sliderInput("minwords",
+            label = "Minimum number of words in the sentence:",
+            min = 1,
+            max = max(sentences_all$words),
+            value = 1,
+            step = 1)
+
+sliderInput("maxwords",
+            label = "Maximum number of words in the sentence:",
+            min = 1,
+            max = max(sentences_all$words),
+            value = max(sentences_all$words),
+            step = 1)
+
+sliderInput("sentences",
+            label = "Number of sentences to plot:",
+            min = 20,
+            max = 80,
+            value = 40)
+
+sliderInput("textsizesentences",
+            label = "Text size:",
+            min = 1,
+            max = 10,
+            value = 5)
+```
+
+Column 
+-----------------------------------------------------------------------
+
+###
+
+```{r}
+sentences <- reactive(
+  sentences_all %>%
+    filter(words >= input$minwords, words <= input$maxwords) %>%
+    arrange(desc(n)) %>%
+    slice(1:input$sentences)
+ )
+
+maxcount_sentences <- reactive(
+  max(sentences()$n)
+  )
+   
+renderPlot({
+  if (nrow(sentences())) {
+    sentences() %>%
+      slice(1:input$sentences) %>% 
+      arrange(n) %>%
+      mutate(sentence = factor(sentence, levels = sentence)) %>%
+      ggplot(aes(sentence, n)) +
+      coord_flip() +
+      geom_text(aes(label = sentence), hjust = 0, size = input$textsizesentences) + 
+      scale_y_continuous(limits = c(0, maxcount_sentences() * 1.25), expand = c(0, 0)) +
+      xlab("") +
+      theme_minimal() +
+      ylab("Occurrences (left-justified)") +
+      theme(axis.text.y = element_blank(),
+            axis.ticks.y = element_blank(),
+            panel.grid = element_blank()) +
+      ggtitle(paste0("Top ", input$sentences, " Harry Potter sentences\nbetween ", 
+                     input$minwords, " and ", input$maxwords, " words long."))
+  }
+})
+```

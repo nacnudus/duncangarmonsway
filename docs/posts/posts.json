@@ -1,0 +1,181 @@
+[
+  {
+    "path": "posts/2016-07-20-harry-potter-arcs/",
+    "title": "More Harry Potter story arcs (they get darker)",
+    "description": "Reproducing *Harry Potter* sentiment arcs by some real wizards",
+    "author": [
+      {
+        "name": "Duncan Garmonsway",
+        "url": {}
+      }
+    ],
+    "date": "2016-07-20",
+    "categories": [],
+    "preview": "posts/2016-07-20-harry-potter-arcs/harry-potter-arcs-wizards.jpg",
+    "last_modified": "2018-11-29T00:40:44+00:00"
+  },
+  {
+    "path": "posts/2016-07-13-harry-potter-sentiment/",
+    "title": "Harry Potter and the N-Grams of Sentiment",
+    "description": "*Harry Potter* cliches and story arcs by n-grams and sentiment analysis",
+    "author": [
+      {
+        "name": "Duncan Garmonsway",
+        "url": {}
+      }
+    ],
+    "date": "2016-07-13",
+    "categories": [],
+    "preview": "posts/2016-07-13-harry-potter-sentiment/harry-potter-sentiment.png",
+    "last_modified": "2018-11-29T00:40:27+00:00",
+    "preview_width": 1344,
+    "preview_height": 960
+  },
+  {
+    "path": "posts/2016-06-28-radar/",
+    "title": "Hacking the Data Science Radar with Data Science",
+    "description": "Get a perfect score in the Mango Solution Data Science Radar",
+    "author": [
+      {
+        "name": "Duncan Garmonsway",
+        "url": {}
+      }
+    ],
+    "date": "2016-06-28",
+    "categories": [],
+    "preview": "posts/2016-06-28-radar/radar-perfect.png",
+    "last_modified": "2018-11-29T00:40:56+00:00",
+    "preview_width": 450,
+    "preview_height": 450
+  },
+  {
+    "path": "posts/2016-06-22-nests/",
+    "title": "Creating nests without tidyr",
+    "description": "\"How to construct nested data frames from scratch, without tidyr\"",
+    "author": [
+      {
+        "name": "Duncan Garmonsway",
+        "url": {}
+      }
+    ],
+    "date": "2016-06-22",
+    "categories": [],
+    "preview": {},
+    "last_modified": "2018-11-29T00:40:59+00:00"
+  },
+  {
+    "path": "posts/2016-06-13-brexit/",
+    "title": "Brexit poll of polls",
+    "description": "Analysis of Brexit polls by visualisation and a linear model",
+    "author": [
+      {
+        "name": "Duncan Garmonsway",
+        "url": {}
+      }
+    ],
+    "date": "2016-06-13",
+    "categories": [],
+    "preview": "posts/2016-06-13-brexit/brexit.png",
+    "last_modified": "2018-11-29T00:41:03+00:00",
+    "preview_width": 1344,
+    "preview_height": 960
+  },
+  {
+    "path": "posts/2016-06-06-simmer-bank-2/",
+    "title": "Simmer vs SimPy: The Bank, Part II",
+    "description": "Porting a SimPy tutorial to the R package Simmer",
+    "author": [
+      {
+        "name": "Duncan Garmonsway",
+        "url": {}
+      }
+    ],
+    "date": "2016-06-06",
+    "categories": [],
+    "preview": {},
+    "last_modified": "2018-11-29T00:41:06+00:00"
+  },
+  {
+    "path": "posts/2016-05-11-simmer-bank-1/",
+    "title": "Simmer vs SimPy: The Bank, Part I",
+    "description": "Porting a SimPy tutorial to the R package Simmer",
+    "author": [
+      {
+        "name": "Duncan Garmonsway",
+        "url": {}
+      }
+    ],
+    "date": "2016-05-11",
+    "categories": [],
+    "preview": {},
+    "last_modified": "2018-11-29T00:41:13+00:00"
+  },
+  {
+    "path": "posts/2016-05-02-statsblogs/",
+    "title": "How many StatsBloggers are there?",
+    "description": "Parsing the daily digest emails and thinking about modelling",
+    "author": [
+      {
+        "name": "Duncan Garmonsway",
+        "url": {}
+      }
+    ],
+    "date": "2016-05-02",
+    "categories": [],
+    "preview": "posts/2016-05-02-statsblogs/2016-05-02-statsblogs_files/figure-html5/statsblogs-periodical-1.png",
+    "last_modified": "2018-11-29T00:41:17+00:00",
+    "preview_width": 1248,
+    "preview_height": 768
+  },
+  {
+    "path": "posts/2016-04-25-rounding/",
+    "title": "R rounding is weird?  Try JavaScript!",
+    "description": "Reproducing browser rounding in R",
+    "author": [
+      {
+        "name": "Duncan Garmonsway",
+        "url": {}
+      }
+    ],
+    "date": "2016-04-25",
+    "categories": [],
+    "preview": "posts/2016-04-25-rounding/rounding.png",
+    "last_modified": "2018-11-29T00:41:20+00:00",
+    "preview_width": 1344,
+    "preview_height": 960
+  },
+  {
+    "path": "posts/2016-04-18-rbloggers/",
+    "title": "How many R-Bloggers are there?",
+    "description": "Parsing the daily digest emails",
+    "author": [
+      {
+        "name": "Duncan Garmonsway",
+        "url": {}
+      }
+    ],
+    "date": "2016-04-18",
+    "categories": [],
+    "preview": "posts/2016-04-18-rbloggers/rbloggers.png",
+    "last_modified": "2018-11-29T00:41:23+00:00",
+    "preview_width": 1344,
+    "preview_height": 960
+  },
+  {
+    "path": "posts/2015-07-13-nzcrash/",
+    "title": "New R package: nzcrash",
+    "description": "Redistributing New Zealand crash data in tidy form",
+    "author": [
+      {
+        "name": "Duncan Garmonsway",
+        "url": {}
+      }
+    ],
+    "date": "2015-07-13",
+    "categories": [],
+    "preview": "posts/2015-07-13-nzcrash/nzcrash.png",
+    "last_modified": "2018-11-29T00:41:25+00:00",
+    "preview_width": 1344,
+    "preview_height": 960
+  }
+]

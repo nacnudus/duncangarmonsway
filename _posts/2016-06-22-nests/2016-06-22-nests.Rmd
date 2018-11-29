@@ -1,0 +1,102 @@
+---
+title: "Creating nests without tidyr"
+description: |
+  "How to construct nested data frames from scratch, without tidyr"
+author: "Duncan Garmonsway"
+date: June 22, 2016
+output:
+  radix::radix_article:
+    self_contained: false
+resources:
+  exclude:
+    data
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(comment = "##", collapse = TRUE, cache = TRUE)
+```
+
+Unless you begin with an unnested data frame, creating a nested data frame needs
+a little trick.  Here it is.
+
+# Nested data frames
+
+The `tidyr` package has a handy function for *nesting* data frames.  Hadley
+Wickham describes it [thus](https://blog.rstudio.org/2016/02/02/tidyr-0-4-0/):
+
+> In a grouped data frame, you have one row per observation, and additional
+> metadata define the groups. In a nested data frame, you have one row per
+> group, and the individual observations are stored in a column that is a list
+> of data frames. This is a useful structure when you have lists of other
+> objects (like models) with one element per group.
+
+Here's a small example:
+
+```{r nests-iris, echo = TRUE}
+library(dplyr)
+library(tidyr)
+
+iris_nested <-
+  iris %>%
+  group_by(Species) %>%
+  sample_n(2) %>%
+  nest
+iris_nested
+iris_nested %>% str
+```
+
+Interestingly, the nested column isn't a vector like ordinary columns; it's a
+list.  Actually lists are just one kind of vector -- the non-atomic kind
+(composed of parts, i.e vectors and other lists), whereas
+integer/character/etc. vectors are the atomic kind (not composed of parts).
+This is nicely explained in [Advanced
+R](http://adv-r.had.co.nz/Data-structures.html#vectors) by Hadley Wickham.
+
+```{r nest-vector-list, echo = TRUE}
+is.atomic(vector(mode = "character", length = 2))
+is.atomic(vector(mode = "list", length = 2))
+```
+
+# Please say it's a data frame
+
+Data frames, which are a list of vectors, handle list-type columns perfectly
+well, but data-frame-construction functions don't. So when I tried to create
+one from scratch (rather than by nesting an existing data frame as above), I
+lost a lot of time mucking about with `data.frame()` and the like.
+
+```{r nests-mucking-about, echo = TRUE, error = TRUE}
+data.frame(X1 = 1:2, X2 = list(iris, mtcars))
+as.data.frame(list(X1 = 1:2, X2 = list(iris, mtcars)))
+```
+
+# It's a data frame because I say so
+
+The answer is to simply tell R that the data structure is a data frame by
+setting its class and giving it a "row.names" attribute.
+
+```{r nests-construction, echo = TRUE}
+x <- list(X1 = 1:2, X2 = list(iris[1:2, 1:2], iris[3:5, 1:4]))
+structure(x, class = c("tbl_df", "data.frame"), row.names = 1:2)
+```
+
+# Invading the nest
+
+Accessing the nested column by the usual subsetting
+operators, `$`, `[` and `[[`, is a little clumsy.
+
+```{r nests-subsetting, echo = TRUE}
+x$X2 # Returns the list of data frames
+x$X2[2] # Returns the second data frame, wrapped in a list
+
+x$X2[[2]] # Returns the second data frame -- probably what you want
+x[["X2"]][[2]] # Returns the second data frame -- also probably what you want
+```
+
+***[Edit: The code below no longer works in the latest version of R.]***
+
+```{r nests-subsetting2, echo = TRUE, error = TRUE}
+x[2, "X2"] # Returns the second data frame wrapped in another data frame
+x[2, "X2", drop = TRUE] # Same -- ignores "drop"
+x[2, "X2"][1, "X2"][1, "X2"] # The `[` goes around in circles
+```
+

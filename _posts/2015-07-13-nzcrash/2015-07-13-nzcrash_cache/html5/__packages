@@ -1,0 +1,13 @@
+base
+colorout
+usethis
+devtools
+nzcrash
+dplyr
+tidyr
+magrittr
+stringr
+ggplot2
+scales
+lubridate
+bindrcpp

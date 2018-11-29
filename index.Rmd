@@ -1,0 +1,20 @@
+---
+title: "Duncan Garmonsway"
+description: |
+  The personal website of Duncan Garmonsway, data scientist and UK civil
+  servant.
+site: radix::radix_website
+listing: posts
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+
+# Learn more about creating websites with Radix at:
+# https://rstudio.github.io/radix/website.html
+
+# Learn more about publishing to GitHub Pages at:
+# https://rstudio.github.io/radix/publish_website.html#github-pages
+
+```
+

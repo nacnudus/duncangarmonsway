@@ -1,0 +1,521 @@
+---
+title: "Hacking the Data Science Radar with Data Science"
+author: Duncan Garmonsway
+date: June 28, 2016
+description: |
+  Get a perfect score in the Mango Solution Data Science Radar
+preview: "radar-perfect.png"
+output:
+  radix::radix_article:
+    self_contained: false
+resources:
+  exclude:
+    data
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(comment = "##", collapse = TRUE, cache = TRUE)
+```
+
+This post reverse-engineers the Mango Solutions [Data Science
+Radar](https://www.mango-solutions.com/radar/) using
+
+* Programming (R)
+* Visualisation (ggplot2)
+* Data wrangling (dpylr/tidyr/etc.)
+* Modelling (lm)
+* Technology (embedded V8 javascript)
+* Communication (blog)
+
+Why hack?  Because getting at the innards also reveals
+
+* What a good score is in each category
+* Which statements are most important
+* Whether scores are comparable across people
+* Whether you should strongly agree with the statement "On average, I spend at
+  least 25% of my time manipulating data into analysis-ready formats"
+
+## The radar
+
+Based on Likert-style responses to 24 provocative statements, the Data
+Science Radar visualises your skills along six axes, the "core attributes of a
+contemporary 'Data Scientist'." It looks like this.
+
+![Mango Solutions Data Science Radar](radar.png)
+
+```{r radar-boilerplate, include = FALSE, cache = FALSE}
+library(here)
+library(readr)
+library(dplyr)
+library(tidyr)
+library(knitr)
+library(purrr)
+library(tibble)
+library(stringr)
+library(ggplot2)
+library(directlabels)
+library(ggrepel)
+```
+
+## First attempt: Multivariate multiple regression
+
+How can we score better?  Hacking the url would be
+[cheating](https://www.mango-solutions.com/radar/?fs=true&r=7.0,7.0,7.0,7.0,7.0,7.0),
+so instead, let's use science: hypothesise -> test -> improve.  Here are some
+initial guesses.
+
+* Each of the 24 statements relates to exactly one attribute, i.e. four
+  statements per attribute.
+* The Likert values (strongly agree, agree, somewhat agree, etc.) are coded from
+  1 to 7 (since there are seven points on each axis).
+* There is a linear relationship between the coded agreement with the
+  statements, and the attributes.
+
+So something like
+$$\text{score}_{\text{attribute}} = \frac{1}{4} \sum_{i = 1}^{4} \text{answer}_i$$
+where $\text{answer}_i = 1, 2, \cdots, 7$ by encoding "Strongly disagree" as
+1, up to "Strongly agree" as 7, including only four relevant answers per
+attribute.  The best-possible set of answers would score 7 on every axis, and
+the worst set would score 1.
+
+If the hypotheses are correct, then all we need to do to prove them is to record
+24 sets of random answers, the resulting scores, and fit a multivariate
+linear model.  We'd expect each score (outcome variable) to have four non-zero
+coefficients (out of the 24 input variables).  Let's try it.
+
+```{r radar-lm, echo = TRUE}
+# The first two aren't random, but they're still linearly independent of the
+# others, which is what matters.
+random_data <- read_csv(here("data", "radar-random.csv"))
+lm1 <- lm(cbind(Communicator, `Data Wrangler`, Modeller,
+                Programmer, Technologist, Visualiser) ~ ., data = random_data)
+lm1
+```
+
+Hopeless!  At least one of the assumptions must be wrong, but which one?  This
+time, let's use our brains instead of stats, and do a visualisation.
+
+## Visualisation: Brain not brawn
+
+Since patterns are hard to find among random responses, I answered 24 more
+surveys systematically, answering "Strongly disagree" to one statement, and
+"Strongly agree" to all the others, until all 24 statements had been strongly
+disagreed with. One time, I answered one with "Strongly agree" to every
+statement, plotting the resulting scores at 0 on the x-axis.
+
+```{r radar-systematic}
+systematic_data <- read_csv(here("data", "radar-systematic.csv"))
+systematic <-
+  systematic_data %>%
+  select(-(starts_with("q"))) %>%
+  mutate(statement = 1:n() - 1) %>%
+  gather(type, Score, -statement) %>%
+  as.data.frame %>%
+  ggplot(aes(statement, Score, colour = type)) +
+  geom_line() +
+  expand_limits(x = c(0, 27)) +
+  xlab("Statement answered with 'Strongly disagree'") +
+  scale_x_continuous(breaks = 0:24) +
+  scale_y_continuous(breaks = 0:7, limits = c(0, 7)) +
+  theme(panel.grid.minor = element_blank())
+systematic %>% direct.label(method = "last.polygons")
+```
+
+Let's break this down.
+
+* The maximum score appears to be 7, which 'Technologist' got most of the time.
+  If you're a technologist, you should agree with everything.
+* Disagreement with any of the statements drastically affects the score of
+  exactly one attribute, with minor effects on some/all of the others.
+* Sometimes disagreement affects attributes for the better (e.g. 2 improves
+  'Communicator').  Sometimes it's really damaging (e.g. 17--20 ruins
+  'Technologist').
+* There are no ties between attributes.  This is a massive clue.
+
+It's now easy from this graph to work out the perfect survey responses.  For
+example, we could max-out 'Communicator' by agreeing with statements 1, 3, and
+4, but disagreeing with statement 2 -- which caused a peak in the previous
+graph.
+
+```{r radar-perfect}
+perfect_data <- read_csv(here("data", "radar-perfect.csv"))
+systematic <-
+  perfect_data %>%
+  select(-(starts_with("q"))) %>%
+  mutate(statement = 1:n() - 1) %>%
+  gather(type, Score, -statement) %>%
+  ggplot(aes(statement, Score, colour = type)) +
+  geom_line() +
+  expand_limits(x = c(0, 27)) +
+  xlab("Statement answered 'wrongly'") +
+  scale_x_continuous(breaks = 0:24) +
+  scale_y_continuous(breaks = 0:7, limits = c(0, 7)) +
+  theme(panel.grid.minor = element_blank())
+systematic %>% direct.label(method = "last.polygons")
+```
+
+This is much clearer.
+
+* Each attribute relates to four statements.
+* Not only that, but related statements are grouped together (okay, that's
+  guessable from just doing the survey).
+* Not every statement is equally weighted (the trough depths vary within
+  groups).
+* Even the statement weighting system varies between questions (the range of
+  trough depths varies between groups).
+
+## Penalties
+
+Crucially, it's now obvious from the parallel movements between 0 and 1, 4 and
+5, and 8 and 9, that attributes are penalized by their rank.  When statement 1
+is strongly disagreed with, 'Communicator' has the bottom score, and the others
+are spread between 7 and five.  But when statement 1 is strongly agreed with
+(position 0 on the x-axis), 'Communicator' takes the lead with a score of 7, and
+the scores of all the others are bumped down a step.  This strongly suggests
+that the scores are penalised by some function of the rank.
+
+Think of it this way: if they're all equal-first-place, then rank them
+arbitrarily (zero-based rank, 0 to 5), and then penalise them by, say,
+subtracting their rank from their score.  So say 'Communicator' is arbitrarily
+ranked zero-th among equals (i.e. first place), then 'Communicator' still scores
+7, But 'Modeller', ranked 1 (second place), loses 1 point, and 'Programmer',
+ranked 2 (third place) loses 2 points.  This penalisation process guarantees
+against any ties, but it also obfuscates any straightforward relationship
+between survey response and pre-penalty scores.
+
+Here's the penalty function in action.  I answered every statement 'correctly',
+except for statement 1, which I answered at every level from "Strongly disagree"
+to "Strongly agree".  Note the change of axis variables.
+
+```{r radar-diff}
+penalty <-  read_csv(here("data", "radar-penalties.csv"))
+penaltygraph <-
+  penalty %>%
+  select(-1:-24) %>%
+  mutate(agreement = n():1 - 1) %>% # "Strongly disagree" == 0
+  gather(type, score, -agreement) %>%
+  ggplot(aes(agreement, score, colour = type)) +
+  geom_line() +
+  scale_x_continuous(breaks = 0:6) +
+  scale_y_continuous(breaks = 0:7, limits = c(0, 7)) +
+  expand_limits(x = c(1, 7)) +
+  xlab("agreement with first statement") +
+  ylab("score of 'Communicator'") +
+  theme(panel.grid.minor = element_blank())
+penaltygraph %>% direct.label(method = "last.polygons")
+```
+
+As my answers go from "Strongly disagree" up to "Agree" (0 to 6 on the x-axis),
+the score of 'Communicator' gradually increases, as we'd expect.  But in the
+final step, "Strongly agree", there's a jump.  That's because 'Communicator' is
+now ranked (abitrarily) in first place, so no penalty is applied, and it gets
+the full 7 points.  At the same time, the other attributes are bumped down.
+
+## Hunt the function
+
+We need to remove these penalties before we can investigate the
+statement/response weightings, but we don't yet know what exactly the penalty
+function is, besides being some function of the rank.  Using the perfect
+answers, though (at 6 on the x-axis above), we can get clues to narrow down the
+options.  Since we know that the original pre-penalty score of every attribute
+ought to have been 7, then by subtracting their final scores from 7, we reveal
+the size of the penalty.
+
+```{r radar-penalty-absolute, echo = TRUE}
+sort(7 - unlist(perfect_data[1, -1:-24]))       # absolute penalty
+```
+
+So penalties can be as large as 1.8.  That would be a problem for poor-ranking
+pre-penalty scores below 1.8, which would be pushed below zero.  To guarantee
+positive final scores, the penalty function must scale with the pre-penalty
+score, i.e. the pre-penalty score must be a coefficient in the function.  That
+restricts us to a couple of basic designs for each attribute's score.
+
+Either:
+
+$$\text{final score} = \text{pre-penalty} - (\text{pre-penalty} \times \text{factor} \times \text{rank})$$
+where $0 \leq \text{factor} < 1/5$ (for positivity).
+
+Or:
+
+$$\text{final score} = \text{factor} \times \frac{\text{pre-penalty}}{\text{rank}}$$
+where $0 \leq \text{factor} < 1$ (to ensure a penalty when $\text{rank} = 1$).
+
+There is a telling difference between these functions.  The first is a straight
+line, essentially $y = mx + c$, so that, given equal pre-penalty scores, the
+differences between final scores are equal.  The second is a curve, essentially
+$y = m/x$, so that, even given equal pre-penalty scores, the gap between
+poorly-ranked scores is wider than between the top scores.
+
+Since we have a handy set of equal pre-penalty scores, we can eliminate one of
+the functions by seeing whether the difference in penalties between ranks is, in
+fact, constant.
+
+```{r radar-penalty-diff, echo = TRUE}
+diff(sort(7 - unlist(perfect_data[1, -1:-24]))) # difference in penalties between ranks
+```
+
+It's constant enough for me, so I choose the first model.
+
+We can also check that penalties do, indeed, scale with the pre-penalty scores,
+by producing a set of [worst-possible
+answers](https://www.mango-solutions.com/radar/?fs=true&r=1.0,0.9,0.9,0.8,0.8,0.7).
+Pay attention: these are the scores to beat.
+
+```{r radar-worst-input}
+worst <-
+  frame_data(~attribute,     ~score,
+             "Communicator",      1,
+             "Modeller",        0.9,
+             "Programmer",      0.9,
+             "Technologist",    0.8,
+             "Visualiser",      0.8,
+             "Data Wrangler",   0.7)
+```
+
+```{r radar-worst-output}
+worst
+```
+
+![Mango Solutions Data Science Radar: worst score](radar-worst.png)
+
+Not only does this prove the scaling of penalties by pre-penalty score, but it
+also justifies the coding of 'agreement' between 1 and 7, rather than, say, 0
+and 6, since we now have a clear minimum pre-penalty score of 1, as well as a
+maximum of 7 from the set of perfect answers.
+
+If you look carefully, this set of worst-possible scores also hints at the value
+of the penalty factor.  Since the pre-penalty score is 1, and the difference
+between penalties is constant by design, and the difference between *these*
+penalties alternates between 0.1 and 0.0, I *strongly* suspect a factor of 0.5
+and a rounding system that alternates between odds and evens.
+
+## Modelling success
+
+But we can nail this down with a linear model, using the two sets of data where
+we already know the pre-penalty scores, i.e. the best- and worst-possible
+scores, as well as the ranks, so we can estimate the penalty factor.
+
+A reminder of the model:
+
+$$\text{final score} = \text{pre-penalty} - (\text{pre-penalty} \times \text{factor} \times \text{rank})$$
+where $0 \leq \text{factor} < 1/5$ (for positivity).
+
+```{r radar-penalty-model, echo = TRUE}
+worst$rank <- 0:5
+worst$prepenalty <- 1
+best <-
+  frame_data(~attribute,     ~rank, ~score,
+             "Communicator",     0,    7.0,
+             "Modeller",         1,    6.6,
+             "Programmer",       2,    6.3,
+             "Technologist",     3,    6.0,
+             "Visualiser",       4,    5.6,
+             "Data Wrangler",    5,    5.2)
+best$prepenalty <- 7
+
+lm(score ~ prepenalty + prepenalty:rank, data = rbind(best, worst))
+```
+
+That'll do!  The coefficient on the pre-penalty score is 1, as in our
+model, and the coefficient on the pre-penalty--rank interaction is -0.05, a nice
+round number such as a model-builder might choose (and the right sign).
+
+## Weighting game
+
+We're on the home straight.  Now that we understand the penalty system, we can
+go beneath its obfuscations and sort out the statement weights.  Here, I invert
+the penalty function, and apply it to an earlier set of answers that you'll
+recognise in the graph.
+
+$$\text{pre-penalty} = \frac{\text{final score}}{1 - (\text{factor} \times \text{rank})}$$
+
+```{r radar-penalty-inverse}
+systematic_prepenalty <-
+  perfect_data %>%
+  select(-(starts_with("q"))) %>%
+  mutate(statement = 1:n() - 1) %>%
+  gather(type, Score, -statement) %>%
+  group_by(statement) %>%
+  mutate(rank = rank(-Score) - 1) %>%
+  ungroup %>%
+  mutate(Score = Score / (1 - 0.05 * rank)) # invert penalty
+systematic_prepenalty %>%
+  ggplot(aes(statement, Score)) +
+  geom_line(aes(colour = type)) +
+  # expand_limits(x = c(0, 27)) +
+  xlab("Statement answered 'wrongly'") +
+  scale_x_continuous(breaks = 0:24) +
+  scale_y_continuous(breaks = 0:7, limits = c(0, 7.06)) +
+  scale_colour_discrete(name = "") +
+  theme(panel.grid.minor = element_blank())
+```
+
+It does the soul good to see the pre-penalty attribute scores restored (bar
+rounding).
+
+The weight of each statement equals the amount of damage that it can do to the
+relevant attribute's score, divided by the total damage done by the other
+relevant statements.
+
+```{r radar-weights}
+systematic_prepenalty %>%
+  slice(-1) %>% # Discard the perfect set
+  filter(Score < 6) %>% # Discard perfect-scoring attributes
+  select(type, Score) %>%
+  group_by(type) %>%
+  mutate(damage = 7 - Score,
+         weight = damage / sum(damage)) %>%
+  ungroup() %>%
+  mutate_at(vars(-type), round, digits = 2) %>%
+  as.data.frame
+```
+
+Being nice fractions, the three systems make perfect sense (allowing yet again for minor
+rounding): $(\frac{1}{5}$, $\frac{1}{5}$, $\frac{1}{5}$, $\frac{2}{5})$, $(\frac{7}{30}$, $\frac{7}{30}$, $\frac{7}{30}$, $\frac{9}{30})$, and $(\frac{2}{10}$, $\frac{2}{10}$, $\frac{3}{10}$, $\frac{3}{10})$.
+
+And don't forget to re-write the model to account for the weights.
+
+$$\text{score}_{\text{attribute}} = \sum_{i = 1}^{4} \text{answer}_i \times
+\text{weight}_i$$ where $\text{weight}_i$ is taken from above.
+
+## Implementation and simulation
+
+At last, we can implement the whole thing in R, run it on thousands of random
+answer-sets, and explore the distributions.  Well, almost -- it turns out that R
+and JavaScript handle rounding and floating-point arithmetic differently, so I
+had to use the [V8](https://github.com/jeroenooms/V8) package to implement the
+rounding steps in JavaScript, as the website does.  I give more details in a
+[previous post]({filename}./rounding.Rmd).  At least I got to display some
+'Technologist' skills.
+
+```{r radar-roundjs, eval = TRUE, echo = TRUE}
+ct <- V8::v8()
+roundjs <- function(x, digits) {
+  sapply(x, function(y) {ct$get(paste0("Number((", sprintf("%.16f", y), ").toFixed(", digits, "))"))})
+}
+```
+
+```{r radar-simulation}
+ct <- V8::v8()
+# Question directions (agree/disagree) and weights
+questions <- read_csv(here("data", "radar-questions.csv"))
+
+radar <- function(answers) {
+  questions %>%
+    mutate(answers = if_else(inverse, 7 - answers + 1, answers), # disagree/agree
+           prepenalty = roundjs(answers * weight, 1)) %>%        # weights
+    group_by(attribute) %>%
+    summarise(prepenalty = roundjs(sum(prepenalty), 1)) %>%      # prepenalty
+    arrange(desc(prepenalty)) %>% # arbitrary sort luckily is same as javascript
+    mutate(rank = 1:n() - 1,
+            score = roundjs(prepenalty * (1 - 0.05 * rank), 1)) %>% # penalty
+    select(attribute, score)
+}
+
+# N <- 10000
+# set.seed(2016-06-26)
+# randomsets <- matrix(sample(as.double(1:7), 24*N, replace = TRUE),
+#                      ncol = 24,
+#                      byrow = TRUE)
+# results <-
+#   apply(randomsets, MARGIN = 1, radar) %>%
+#   bind_rows(.id = "set")
+
+# # posterity
+# results %>% write_csv(here("data", "radar-results.csv"))
+results <- read_csv(here("data", "radar-results.csv"))
+
+# De-penalise
+results <-
+  results %>%
+  group_by(set) %>%
+  mutate(rank = rank(-score) - 1) %>%
+  ungroup %>%
+  mutate(prepenalty = round(score / (1 - 0.05 * rank), 1), # invert penalty
+         penalty = prepenalty - score)
+```
+
+The effect of the penalty can be prettily illustrated by a scatterplot of the
+scores of two attributes.  Ties are separated, parting the cloud, slightly above
+the line $y = x$.
+
+```{r radar-penalty-gap}
+# Gap where they'd be equal, flares towards higher scores
+results %>%
+  select(set, attribute, score) %>%
+  spread(attribute, score) %>%
+  ggplot(aes(Communicator, Modeller)) +
+  geom_point(alpha = .1) +
+  scale_x_continuous(breaks = 0:7, limits = c(0, 7)) +
+  scale_y_continuous(breaks = 0:7, limits = c(0, 7)) +
+  coord_fixed()
+```
+
+We can also de-penalise the scores to see the effect of the penalty on the
+distribution.  Pre-penalty scores are distributed as you'd expect, despite
+slightly uneven weights.  Post-penalty scores are skewed to the right, but not
+so much that you'd notice in casual use.
+
+```{r radar-penalty-skew}
+# Penalty skews to the right, of course
+# Weighting doesn't disturb classic bell-curve much
+results %>%
+  rename(postpenalty = score) %>%
+  select(attribute, postpenalty, prepenalty) %>%
+  gather(type, score, postpenalty, prepenalty) %>%
+  ggplot(aes(score, fill = type)) +
+  geom_density(colour = NA, alpha = 0.5, adjust = 1.5) +
+  scale_x_continuous(breaks = 0:7, limits = c(0, 7)) +
+  scale_fill_discrete(labels = c("Post-penalty", "Pre-penalty")) +
+  xlab("Score") +
+  theme(axis.title.y = element_blank(),
+        axis.text.y = element_blank(),
+        axis.ticks.y = element_blank(),
+        legend.position = "bottom",
+        legend.title = element_blank())
+```
+
+The magnitude of the penalty depends on the magnitude of the pre-penalty score
+as well as its rank, introducing a tricky extra dimension to any visualisation.
+Hexagonal bins work well, coloured according to frequency.  Penalties tend to be
+largest for middling scores, where the rank tends to be poor enough to multiply
+the penalty factor by a few times, but the magnitude of the score isn't small
+enough to scale the penalty down.
+
+```{r radar-penalty-magnitude}
+# Magnitude of penalty
+results %>%
+  ggplot(aes(score, prepenalty)) +
+  geom_hex(bins = 30) +
+  geom_abline(slope = 1, intercept = 0, colour = "red") +
+  coord_fixed() +
+  scale_x_continuous(breaks = 0:7, limits = c(0, 7)) +
+  scale_y_continuous(breaks = 0:7, limits = c(0, 7)) +
+  coord_fixed() +
+  xlab("Post-penalty score") +
+  ylab("Pre-penalty score") +
+  theme(legend.position = "none")
+```
+
+## The whole point
+
+It turns out that interpreting individual radars should be done more thoughtfully
+than one might have expected, because
+
+* 5.2 = 7.0 for data-wrangling unicorns with perfect answers.
+* Scores aren't directly comparable between people, unless they're at the
+  extremes where the penalties exaggerate less.
+* The correct answer to the statement "On average, I spend at least 25% of my
+  time manipulating data into analysis-ready formats", if you want a high 'Data
+  Wrangler' score, is *Strongly disagree*.
+
+And the [perfect score](https://www.mango-solutions.com/radar/?fs=true&r=7.0,6.6,6.3,6.0,5.6,5.2)?
+
+```{r radar-perfect-score}
+ct <- V8::v8()
+radar(unlist(perfect_data[1, 1:24] %>% as.double))
+```
+
+![Mango Solutions Data Science Radar: perfect score](radar-perfect.png)
+

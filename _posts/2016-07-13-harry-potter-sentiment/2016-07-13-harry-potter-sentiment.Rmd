@@ -1,0 +1,290 @@
+---
+title: "Harry Potter and the N-Grams of Sentiment"
+description: |
+  *Harry Potter* cliches and story arcs by n-grams and sentiment analysis
+author: "Duncan Garmonsway"
+date: July 13, 2016
+preview: "harry-potter-sentiment.png"
+output:
+  radix::radix_article:
+    self_contained: false
+resources:
+  exclude:
+    data
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(comment = "##", collapse = TRUE, cache = TRUE)
+```
+
+```{r harry-potter-sentiment-packages, echo = FALSE}
+# Run the script "data/harry-potter-sentiment.R" first.
+library(dplyr)
+library(purrr)
+library(tidyr)
+library(ggplot2)
+library(directlabels)
+library(tokenizers)
+library(stringi)
+library(here)
+```
+
+This post applies [Julia Silge](http://juliasilge.com/blog/)'s amazing story-arc
+[sentiment](http://juliasilge.com/blog/Life-Changing-Magic/)
+[analyses](http://juliasilge.com/blog/Life-Changing-Magic/) to the *Harry
+Potter* books.
+
+It also busts the myth that "turned on his heel" is the series' most common
+phrase.
+
+Here is a related [shiny
+app](https://duncan-garmonsway.shinyapps.io/harry-potter) to explore the ideas
+futher.
+
+## Super-easy text-munging
+
+Casual text-munging is no longer a pain, thanks to a couple of new packages,
+[tidytext](https://github.com/juliasilge/tidytext) and
+[tokenizers](https://github.com/lmullen/tokenizers), and a not-so-new one,
+[stringi](https://github.com/gagolews/stringi).
+
+When I last analysed Harry Potter a few years ago, the
+[tm](https://cran.r-project.org/web/packages/tm/index.html) package, though
+powerful, was frustrating, partly due to its unusual data format, which was
+tricky to traverse.  But these new packages operate on ordinary data frames,
+using nesting to great effect.
+
+The outcome is that n-grams can be created incredibly quickly, easily avoiding
+sentence boundaries.  The code is as simple as this:
+
+```{r harry-potter-sentiment-ngramming, eval = FALSE, echo = TRUE}
+readRDS(here("data", "books-raw.Rds")) %>%
+  # One row per paragraph. Two columns: title and text
+  # First, break into sentences so that ngrams don't cross sentence boundaries
+  group_by(title) %>%
+  summarise(sentence = list(unlist(map(text, tokenize_sentences)))) %>%
+  unnest %>%
+  # Then create 4-grams
+  group_by(title) %>%
+  summarise(fourgram = list(unlist(tokenize_ngrams(sentence, n = 4)))) %>%
+  unnest
+```
+
+## Most-common phrases in *Harry Potter*
+
+Did you hear that the most common phrase in *Harry Potter* is "turned on his
+heel"?  I can finally bust that myth.  It does appear quite often -- 12 times at
+most, if you include 'turning' and 'her', but the most-common four-word phrase,
+by *miles*, is "Harry, Ron and Hermione".  Big surprise.
+
+```{r harry-potter-sentiment-fourgrams, echo = FALSE}
+readRDS(here("data", "ngrams.Rds")) %>%
+  filter(words == 4) %>%
+  arrange(rank) %>%
+  slice(1:30) %>%
+  arrange(desc(rank)) %>%
+  mutate(ngram = factor(ngram, levels = ngram)) %>%
+  ggplot(aes(ngram, n)) +
+  coord_flip() +
+  geom_text(aes(label = ngram), hjust = 0) +
+  scale_y_continuous(limits = c(0, 310), expand = c(0, 0)) +
+  xlab("") +
+  theme_minimal() +
+  ylab("Occurrences (left-justified)") +
+  theme(axis.text.y = element_blank(),
+        axis.ticks.y = element_blank(),
+        panel.grid = element_blank()) +
+  ggtitle("Top 30 Harry Potter 4-grams")
+```
+
+A few of these are predictable nouns (Defence Against the Dark Arts, the
+Ministry of Magic, the Room of Requirement).  He Who Must Not Be Named makes it
+into the top 40.  There are a bunch of phrases that describe where things are
+(at the end of, etc.).  But the most intriguing phrase is "said Hermione in a"
+-- why is Hermione singled out by that construction?
+
+There's a [shiny
+app](https://duncan-garmonsway.shinyapps.io/harry-potter/#n-grams) to explore
+lots more n-grams, from 2-grams to 10-grams.
+
+[Slate](http://www.slate.com/articles/arts/culturebox/2013/11/hunger_games_catching_fire_a_textual_analysis_of_suzanne_collins_novels.html?wpisrc=burger_bar)
+did a similar analysis, though they looked at the most-common *sentences*,
+comparing *Harry Potter* with *The Hunger Games* and the *Twilight* series.
+
+They seem to have edited their list somewhat, since "He waited" appears only
+three times, and "Something he didn't have last time" only twice, while I find
+that "Harry nodded" tops my list (of complete sentences) with 14 occurences,
+one more than Slate's top sentence, "Nothing happened."
+
+Here are my top 30, many of which are not complete sentences.
+
+```{r harry-potter-sentiment-sentences, echo = FALSE}
+sentences <-
+  readRDS(here("data", "sentences.Rds")) %>%
+  count(sentence) %>%
+  arrange(desc(n)) %>%
+  mutate(rank = min_rank(-n))
+
+sentences %>%
+  slice(1:30) %>%
+  arrange(desc(rank)) %>%
+  mutate(sentence = factor(sentence, levels = sentence)) %>%
+  ggplot(aes(sentence, n)) +
+  coord_flip() +
+  geom_text(aes(label = sentence), hjust = 0) +
+  scale_y_continuous(limits = c(0, 61), expand = c(0, 0)) +
+  xlab("") +
+  ylab("Occurrences (left-justified)") +
+  theme_minimal() +
+  theme(axis.text.y = element_blank(),
+        axis.ticks.y = element_blank(),
+        panel.grid = element_blank()) +
+  ggtitle("Top 30 Harry Potter sentences")
+```
+
+Part of the difficulty is that written English speech isn't unambiguously
+punctuated.  This has bugged me since primary school.  See what happens here.
+
+```{r harry-potter-sentiment-ambiguous, echo = TRUE}
+tokenize_sentences(c("'Are you going?' Harry asked.",
+                     "Ron asked, 'Are you going?' Harry shrugged.",
+                     "'You should go,' Harry said",
+                     "'Go now.' Harry went."))
+```
+
+Were I king, I'd decree the following unambiguous style.
+
+```{r harry-potter-sentiment-decree, echo = TRUE}
+tokenize_sentences(c("Ron asked, 'Are you going?'. Harry shrugged.",
+                     "'You should go.', Harry said"))
+```
+
+## Most-important characters
+
+If importance is proportional to mentions of first names, then Hermione and Ron
+are not as equal as you might expect.
+
+```{r harry-potter-sentiment-characters, echo = FALSE, message = FALSE}
+books <- readRDS(here("data", "books.Rds"))
+
+booksplot <-
+  books %>%
+  ungroup %>%
+  # Count occurrences of name
+  arrange(title, chapter, linenumber, wordnumber) %>%
+  mutate(harry = cumsum(stri_detect(word, regex = "harry")),
+         ron = cumsum(stri_detect(word, regex = "ron")),
+         hermione = cumsum(stri_detect(word, regex = "hermione"))) %>%
+  # Take only the end-of-chapter numbers (fewer data points for slow ggplot2)
+  group_by(title, chapter, linenumber) %>%
+  summarise_at(vars(harry, ron, hermione), last) %>%
+  ungroup %>%
+  # Plot
+  mutate(linenumber = row_number()) %>%
+  gather(character, mentions, harry, ron, hermione) %>%
+  mutate(character = factor(character,
+                            levels = c("harry", "ron", "hermione"),
+                            labels = c("Harry ", "Ron ", "Hermione "))) %>%
+  ggplot(aes(linenumber, mentions, colour = character)) +
+  geom_line() +
+  scale_colour_discrete("") +
+  xlim(0, 40000) +
+  xlab("Progress through the series") +
+  ylab("Number of mentions of name (the exact name in the legend)") +
+  theme(axis.ticks.x = element_blank(),
+        axis.text.x = element_blank())
+booksplot %>% direct.label(method = "last.polygons")
+```
+
+## Sentiment-driven story arcs
+
+Ever since I read [Julia Silge](http://juliasilge.com/blog/)'s amazing story-arc
+[sentiment](http://juliasilge.com/blog/Life-Changing-Magic/)
+[analyses](http://juliasilge.com/blog/Life-Changing-Magic/), I wanted to apply
+the method to the *Harry Potter* books.
+
+There's a [shiny
+app](https://duncan-garmonsway.shinyapps.io/harry-potter/#sentiment) to explore
+this interactively, but here is a still for the blog.
+
+```{r harry-potter-sentiment-arcs, echo = FALSE}
+arcs <- readRDS(here("data", "dashboard", "arcs.Rds"))
+
+ranges <-
+  arcs %>%
+  filter(low_pass_size >= 3, low_pass_size <= 10) %>%
+  group_by(title, row) %>%
+  summarise(min = min(transformed), max = max(transformed))
+
+main <-
+  ggplot() +
+  ylim(-3.5, 3.5) +
+  facet_wrap(~title, ncol = 2, dir = "v") +
+  theme_minimal() +
+  ylab("Transformed Sentiment Value") +
+  labs(title = "Sentiment in Harry Potter") +
+  scale_x_discrete(expand=c(0,0)) +
+  theme(plot.title = element_text(size = 20)) +
+  theme(strip.text = element_text(hjust = 0)) +
+  theme(strip.text = element_text(face = "italic")) +
+  theme(strip.text = element_text(size = 14)) +
+  theme(axis.text.y = element_text(margin = margin(r = -10))) +
+  theme(legend.position = "none") +
+  theme(axis.title.y = element_text(size = 14)) +
+  theme(axis.title.x = element_blank()) +
+  theme(axis.ticks.x = element_blank()) +
+  theme(axis.text.x = element_blank())
+
+hline <-
+  geom_hline(yintercept = 0, alpha = .3)
+
+ribbon <-
+  geom_ribbon(aes(row, ymin = min, ymax = max),
+              fill = "grey85",
+              data = ranges)
+
+arcline <-
+  geom_line(aes(row, transformed),
+            colour = "#2780E3",
+            size = 1,
+            data = arcs %>% filter(low_pass_size == 3))
+
+arcarea <-
+  geom_area(aes(row, transformed),
+            fill = "#2780E3",
+            alpha = .5,
+            data = arcs %>% filter(low_pass_size == 3))
+
+main_arcarea <- main + arcarea
+main_ribbon <- main + ribbon + hline
+main_ribbon_arcline <- main + ribbon + arcline + hline
+```
+
+```{r harry-potter-sentiment-arcarea, echo = FALSE}
+main_arcarea
+```
+
+If there's anything to interpret here, then it's that the first three books
+play the game "fortunately, unfortunately", while the later books are a little
+different, especially *Order of the Phoenix*, which is the grumpy one.
+
+Perhaps the Fourier transform is too sensitive to a magic number that I call the
+'wiggliness' parameter.  To see how sensitive, I calculated the arcs for
+'wiggliness' values from 3 to 10, and described the range of the arcs with a
+ribbon -- a little like the standard-error-ribbon on a `geom_smooth`.  I think
+the ribbons show a more reliable story arc, and reveal that narrow wobbles, of
+the order of a chapter or so, are probably misleading.
+
+```{r harry-potter-sentiment-ribbon, echo = FALSE}
+main_ribbon
+```
+
+And to see where the 'wiggliness = 3' arc lies in the range, I superimpose it as a line.
+
+```{r harry-potter-sentiment-ribbon-arcline, echo = FALSE}
+main_ribbon_arcline
+```
+
+The code is, as always, on [GitHub](https://github.com/nacnudus/crossprod), but
+you need to supply your own copies of the books.
+
