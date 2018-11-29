@@ -1,7 +1,7 @@
 ---
 title: "Creating nests without tidyr"
 description: |
-  "How to construct nested data frames from scratch, without tidyr"
+  How to construct nested data frames from scratch, without tidyr
 author: "Duncan Garmonsway"
 date: June 22, 2016
 output:

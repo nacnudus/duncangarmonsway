@@ -51,7 +51,7 @@
   {
     "path": "posts/2016-06-22-nests/",
     "title": "Creating nests without tidyr",
-    "description": "\"How to construct nested data frames from scratch, without tidyr\"",
+    "description": "How to construct nested data frames from scratch, without tidyr",
     "author": [
       {
         "name": "Duncan Garmonsway",
@@ -61,7 +61,7 @@
     "date": "2016-06-22",
     "categories": [],
     "preview": {},
-    "last_modified": "2018-11-29T00:40:59+00:00"
+    "last_modified": "2018-11-29T22:36:17+00:00"
   },
   {
     "path": "posts/2016-06-13-brexit/",

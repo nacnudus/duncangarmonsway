@@ -44,7 +44,7 @@
       <title>Creating nests without tidyr</title>
       <dc:creator>Duncan Garmonsway</dc:creator>
       <link>https://nacnudus.github.io/duncangarmonsway/posts/2016-06-22-nests</link>
-      <description>"How to construct nested data frames from scratch, without tidyr"</description>
+      <description>How to construct nested data frames from scratch, without tidyr</description>
       <guid>https://nacnudus.github.io/duncangarmonsway/posts/2016-06-22-nests</guid>
       <pubDate>Wed, 22 Jun 2016 00:00:00 +0000</pubDate>
     </item>
