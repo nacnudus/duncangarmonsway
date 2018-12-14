@@ -4,7 +4,7 @@ description: |
   How to parameterise a prior when all you know is the mean and one other
   percentile.
 author: Duncan Garmonsway
-date: December 13, 2018
+date: December 14, 2018
 preview: expert.jpg
 output:
   radix::radix_article:
@@ -25,6 +25,10 @@ prior for a Bayesian A/B test, for example.
 > * As you can see in the plot, this distribution lies almost entirely within
 > (.2,.35)- the reasonable range for a batting average.
 > -- [David Robinson](http://varianceexplained.org/statistics/beta_distribution_and_baseball/)
+
+<aside>
+![A drawing of an expert saying "I think Beta(81,219) is about right".](expert-small.jpg)
+</aside>
 
 What David Robinson is doing is best-practice for choosing a prior -- ask an
 expert.  But he makes a huge leap from what the expert says to what the
