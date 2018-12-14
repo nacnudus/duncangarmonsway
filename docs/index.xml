@@ -12,7 +12,17 @@
       <link>https://nacnudus.github.io/duncangarmonsway</link>
     </image>
     <generator>Radix</generator>
-    <lastBuildDate>Wed, 20 Jul 2016 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Thu, 13 Dec 2018 00:00:00 +0000</lastBuildDate>
+    <item>
+      <title>Choose a prior's parameters</title>
+      <dc:creator>Duncan Garmonsway</dc:creator>
+      <link>https://nacnudus.github.io/duncangarmonsway/posts/2018-12-14-choose-a-priors-parameters</link>
+      <description>How to parameterise a prior when all you know is the mean and one other
+percentile.</description>
+      <guid>https://nacnudus.github.io/duncangarmonsway/posts/2018-12-14-choose-a-priors-parameters</guid>
+      <pubDate>Thu, 13 Dec 2018 00:00:00 +0000</pubDate>
+      <media:content url="https://nacnudus.github.io/duncangarmonsway/posts/2018-12-14-choose-a-priors-parameters/expert.jpg" medium="image" type="image/jpeg"/>
+    </item>
     <item>
       <title>More Harry Potter story arcs (they get darker)</title>
       <dc:creator>Duncan Garmonsway</dc:creator>

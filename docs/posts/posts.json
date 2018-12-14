@@ -1,5 +1,20 @@
 [
   {
+    "path": "posts/2018-12-14-choose-a-priors-parameters/",
+    "title": "Choose a prior's parameters",
+    "description": "How to parameterise a prior when all you know is the mean and one other\npercentile.",
+    "author": [
+      {
+        "name": "Duncan Garmonsway",
+        "url": {}
+      }
+    ],
+    "date": "2018-12-13",
+    "categories": [],
+    "preview": "posts/2018-12-14-choose-a-priors-parameters/expert.jpg",
+    "last_modified": "2018-12-14T13:47:47+00:00"
+  },
+  {
     "path": "posts/2016-07-20-harry-potter-arcs/",
     "title": "More Harry Potter story arcs (they get darker)",
     "description": "Reproducing *Harry Potter* sentiment arcs by some real wizards",

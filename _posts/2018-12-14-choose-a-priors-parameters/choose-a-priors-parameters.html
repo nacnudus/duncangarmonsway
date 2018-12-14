@@ -7,7 +7,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1"/>
   <meta name="generator" content="radix" />
-  <link rel="alternate" type="application/rss+xml" href="https://nacnudus.github.io/duncangarmonsway/index.xml" />
 
   <style type="text/css">
   /* Hide doc at startup (prevent jankiness while JS renders/transforms) */
@@ -20,373 +19,39 @@
  <!--/radix_placeholder_import_source-->
 
   <!--radix_placeholder_meta_tags-->
-  <title>Duncan Garmonsway</title>
+  <title>Choose a prior's parameters</title>
   
-  <meta property="description" itemprop="description" content="The personal website of Duncan Garmonsway, data scientist and UK civil&#10;servant."/>
+  <meta property="description" itemprop="description" content="How to parameterise a prior when all you know is the mean and one other&#10;percentile."/>
   
-  <link rel="license" href="https://creativecommons.org/licenses/by/4.0/"/>
-  <link rel="icon" type="image/png" href="images/favicon.png"/>
   
+  <!--  https://schema.org/Article -->
+  <meta property="article:published" itemprop="datePublished" content="2018-12-13"/>
+  <meta property="article:created" itemprop="dateCreated" content="2018-12-13"/>
+  <meta name="article:author" content="Duncan Garmonsway"/>
   
   <!--  https://developers.facebook.com/docs/sharing/webmasters#markup -->
-  <meta property="og:title" content="Duncan Garmonsway"/>
+  <meta property="og:title" content="Choose a prior&#39;s parameters"/>
   <meta property="og:type" content="article"/>
-  <meta property="og:description" content="The personal website of Duncan Garmonsway, data scientist and UK civil&#10;servant."/>
+  <meta property="og:description" content="How to parameterise a prior when all you know is the mean and one other&#10;percentile."/>
   <meta property="og:locale" content="en_US"/>
-  <meta property="og:site_name" content="Duncan Garmonsway"/>
   
   <!--  https://dev.twitter.com/cards/types/summary -->
   <meta property="twitter:card" content="summary"/>
-  <meta property="twitter:title" content="Duncan Garmonsway"/>
-  <meta property="twitter:description" content="The personal website of Duncan Garmonsway, data scientist and UK civil&#10;servant."/>
-  <meta property="twitter:site" content="@nacnudus"/>
+  <meta property="twitter:title" content="Choose a prior&#39;s parameters"/>
+  <meta property="twitter:description" content="How to parameterise a prior when all you know is the mean and one other&#10;percentile."/>
   
   <!--/radix_placeholder_meta_tags-->
   <!--radix_placeholder_rmarkdown_metadata-->
   
   <script type="text/json" id="radix-rmarkdown-metadata">
-  {"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["title","description","site","listing"]}},"value":[{"type":"character","attributes":{},"value":["Duncan Garmonsway"]},{"type":"character","attributes":{},"value":["The personal website of Duncan Garmonsway, data scientist and UK civil\nservant.\n"]},{"type":"character","attributes":{},"value":["radix::radix_website"]},{"type":"character","attributes":{},"value":["posts"]}]}
+  {"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["title","description","author","date","preview","output"]}},"value":[{"type":"character","attributes":{},"value":["Choose a prior's parameters"]},{"type":"character","attributes":{},"value":["How to parameterise a prior when all you know is the mean and one other\npercentile.\n"]},{"type":"list","attributes":{},"value":[{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name"]}},"value":[{"type":"character","attributes":{},"value":["Duncan Garmonsway"]}]}]},{"type":"character","attributes":{},"value":["December 13, 2018"]},{"type":"character","attributes":{},"value":["expert.jpg"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["radix::radix_article"]}},"value":[{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["self_contained"]}},"value":[{"type":"logical","attributes":{},"value":[false]}]}]}]}
   </script>
   <!--/radix_placeholder_rmarkdown_metadata-->
-  <!--radix_placeholder_navigation_in_header-->
   
-  <script type="application/javascript">
-  
-    window.headroom_prevent_pin = false;
-  
-    window.document.addEventListener("DOMContentLoaded", function (event) {
-  
-      // initialize headroom for banner
-      var header = $('header').get(0);
-      var headerHeight = header.offsetHeight;
-      var headroom = new Headroom(header, {
-        onPin : function() {
-          if (window.headroom_prevent_pin) {
-            window.headroom_prevent_pin = false;
-            headroom.unpin();
-          }
-        }
-      });
-      headroom.init();
-      if(window.location.hash)
-        headroom.unpin();
-      $(header).addClass('headroom--transition');
-  
-      // offset scroll location for banner on hash change
-      // (see: https://github.com/WickyNilliams/headroom.js/issues/38)
-      window.addEventListener("hashchange", function(event) {
-        window.scrollTo(0, window.pageYOffset - (headerHeight + 25));
-      });
-  
-      // responsive menu
-      $('.radix-site-header').each(function(i, val) {
-        var topnav = $(this);
-        var toggle = topnav.find('.nav-toggle');
-        toggle.on('click', function() {
-          topnav.toggleClass('responsive');
-        });
-      });
-  
-      // nav dropdowns
-      $('.nav-dropbtn').click(function(e) {
-        $(this).next('.nav-dropdown-content').toggleClass('nav-dropdown-active');
-        $(this).parent().siblings('.nav-dropdown')
-           .children('.nav-dropdown-content').removeClass('nav-dropdown-active');
-      });
-      $("body").click(function(e){
-        $('.nav-dropdown-content').removeClass('nav-dropdown-active');
-      });
-      $(".nav-dropdown").click(function(e){
-        e.stopPropagation();
-      });
-    });
+  <script type="text/json" id="radix-resource-manifest">
+  {"type":"character","attributes":{},"value":["choose-a-priors-parameters_files/bowser-1.9.3/bowser.min.js","choose-a-priors-parameters_files/distill-2.2.21/template.v2.js","choose-a-priors-parameters_files/figure-html5/unnamed-chunk-1-1.png","choose-a-priors-parameters_files/figure-html5/unnamed-chunk-2-1.png","choose-a-priors-parameters_files/figure-html5/unnamed-chunk-3-1.png","choose-a-priors-parameters_files/figure-html5/unnamed-chunk-5-1.png","choose-a-priors-parameters_files/figure-html5/unnamed-chunk-7-1.png","choose-a-priors-parameters_files/figure-html5/unnamed-chunk-8-1.png","choose-a-priors-parameters_files/jquery-1.11.3/jquery.min.js","choose-a-priors-parameters_files/webcomponents-2.0.0/webcomponents.js","expert.jpg"]}
   </script>
-  
-  <style type="text/css">
-  
-  /* Theme (user-documented overrideables for nav appearance) */
-  
-  .radix-site-nav {
-    color: rgba(255, 255, 255, 0.8);
-    background-color: #455a64;
-    font-size: 15px;
-    font-weight: 300;
-  }
-  
-  .radix-site-nav a {
-    color: inherit;
-    text-decoration: none;
-  }
-  
-  .radix-site-nav a:hover {
-    color: white;
-  }
-  
-  @media print {
-    .radix-site-nav {
-      display: none;
-    }
-  }
-  
-  .radix-site-header {
-  
-  }
-  
-  .radix-site-footer {
-  
-  }
-  
-  
-  /* Site Header */
-  
-  .radix-site-header {
-    width: 100%;
-    box-sizing: border-box;
-    z-index: 3;
-  }
-  
-  .radix-site-header .nav-left {
-    display: inline-block;
-    margin-left: 8px;
-  }
-  
-  @media screen and (max-width: 768px) {
-    .radix-site-header .nav-left {
-      margin-left: 0;
-    }
-  }
-  
-  
-  .radix-site-header .nav-right {
-    float: right;
-    margin-right: 8px;
-  }
-  
-  .radix-site-header a,
-  .radix-site-header .title {
-    display: inline-block;
-    text-align: center;
-    padding: 14px 10px 14px 10px;
-  }
-  
-  .radix-site-header .title {
-    font-size: 18px;
-  }
-  
-  .radix-site-header .logo {
-    padding: 0;
-  }
-  
-  .radix-site-header .logo img {
-    display: none;
-    max-height: 20px;
-    width: auto;
-    margin-bottom: -4px;
-  }
-  
-  .radix-site-header .nav-image img {
-    max-height: 18px;
-    width: auto;
-    display: inline-block;
-    margin-bottom: -3px;
-  }
-  
-  
-  
-  @media screen and (min-width: 1000px) {
-    .radix-site-header .logo img {
-      display: inline-block;
-    }
-    .radix-site-header .nav-left {
-      margin-left: 20px;
-    }
-    .radix-site-header .nav-right {
-      margin-right: 20px;
-    }
-    .radix-site-header .title {
-      padding-left: 12px;
-    }
-  }
-  
-  
-  .radix-site-header .nav-toggle {
-    display: none;
-  }
-  
-  .nav-dropdown {
-    display: inline-block;
-    position: relative;
-  }
-  
-  .nav-dropdown .nav-dropbtn {
-    border: none;
-    outline: none;
-    color: rgba(255, 255, 255, 0.8);
-    padding: 16px 10px;
-    background-color: transparent;
-    font-family: inherit;
-    font-size: inherit;
-    font-weight: inherit;
-    margin: 0;
-    margin-top: 1px;
-    z-index: 2;
-  }
-  
-  .nav-dropdown-content {
-    display: none;
-    position: absolute;
-    background-color: white;
-    min-width: 200px;
-    border: 1px solid rgba(0,0,0,0.15);
-    border-radius: 4px;
-    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.1);
-    z-index: 1;
-    margin-top: 2px;
-    white-space: nowrap;
-    padding-top: 4px;
-    padding-bottom: 4px;
-  }
-  
-  .nav-dropdown-content hr {
-    margin-top: 4px;
-    margin-bottom: 4px;
-    border: none;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-  }
-  
-  .nav-dropdown-active {
-    display: block;
-  }
-  
-  .nav-dropdown-content a, .nav-dropdown-content .nav-dropdown-header {
-    color: black;
-    padding: 6px 24px;
-    text-decoration: none;
-    display: block;
-    text-align: left;
-  }
-  
-  .nav-dropdown-content .nav-dropdown-header {
-    display: block;
-    padding: 5px 24px;
-    padding-bottom: 0;
-    text-transform: uppercase;
-    font-size: 14px;
-    color: #999999;
-    white-space: nowrap;
-  }
-  
-  .nav-dropdown:hover .nav-dropbtn {
-    color: white;
-  }
-  
-  .nav-dropdown-content a:hover {
-    background-color: #ddd;
-    color: black;
-  }
-  
-  .nav-right .nav-dropdown-content {
-    margin-left: -45%;
-    right: 0;
-  }
-  
-  @media screen and (max-width: 768px) {
-    .radix-site-header a, .radix-site-header .nav-dropdown  {display: none;}
-    .radix-site-header a.nav-toggle {
-      float: right;
-      display: block;
-    }
-    .radix-site-header .title {
-      margin-left: 0;
-    }
-    .radix-site-header .nav-right {
-      margin-right: 0;
-    }
-    .radix-site-header {
-      overflow: hidden;
-    }
-    .nav-right .nav-dropdown-content {
-      margin-left: 0;
-    }
-  }
-  
-  
-  @media screen and (max-width: 768px) {
-    .radix-site-header.responsive {position: relative;}
-    .radix-site-header.responsive a.nav-toggle {
-      position: absolute;
-      right: 0;
-      top: 0;
-    }
-    .radix-site-header.responsive a,
-    .radix-site-header.responsive .nav-dropdown {
-      display: block;
-      text-align: left;
-    }
-    .radix-site-header.responsive .nav-left,
-    .radix-site-header.responsive .nav-right {
-      width: 100%;
-    }
-    .radix-site-header.responsive .nav-dropdown {float: none;}
-    .radix-site-header.responsive .nav-dropdown-content {position: relative;}
-    .radix-site-header.responsive .nav-dropdown .nav-dropbtn {
-      display: block;
-      width: 100%;
-      text-align: left;
-    }
-  }
-  
-  /* Site Footer */
-  
-  .radix-site-footer {
-    width: 100%;
-    overflow: hidden;
-    box-sizing: border-box;
-    z-index: 3;
-    margin-top: 30px;
-    padding-top: 30px;
-    padding-bottom: 30px;
-    text-align: center;
-  }
-  
-  /* Headroom */
-  
-  d-title {
-    padding-top: 6rem;
-  }
-  
-  @media print {
-    d-title {
-      padding-top: 4rem;
-    }
-  }
-  
-  .headroom {
-    z-index: 1000;
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-  }
-  
-  .headroom--transition {
-    transition: all .4s ease-in-out;
-  }
-  
-  .headroom--unpinned {
-    top: -100px;
-  }
-  
-  .headroom--pinned {
-    top: 0;
-  }
-  
-  </style>
-  
-  <link href="site_libs/font-awesome-5.0.13/css/fa-svg-with-js.css" rel="stylesheet"/>
-  <script src="site_libs/font-awesome-5.0.13/js/fontawesome-all.min.js"></script>
-  <script src="site_libs/font-awesome-5.0.13/js/fa-v4-shims.min.js"></script>
-  <script src="site_libs/headroom-0.9.4/headroom.min.js"></script>
+  <!--radix_placeholder_navigation_in_header-->
   <!--/radix_placeholder_navigation_in_header-->
   <!--radix_placeholder_distill-->
   
@@ -1262,556 +927,159 @@
   </script>
   
   <!--/radix_placeholder_distill-->
-  <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
-  <script src="site_libs/bowser-1.9.3/bowser.min.js"></script>
-  <script src="site_libs/webcomponents-2.0.0/webcomponents.js"></script>
-  <script src="site_libs/distill-2.2.21/template.v2.js"></script>
+  <script src="choose-a-priors-parameters_files/jquery-1.11.3/jquery.min.js"></script>
+  <script src="choose-a-priors-parameters_files/bowser-1.9.3/bowser.min.js"></script>
+  <script src="choose-a-priors-parameters_files/webcomponents-2.0.0/webcomponents.js"></script>
+  <script src="choose-a-priors-parameters_files/distill-2.2.21/template.v2.js"></script>
   <!--radix_placeholder_site_in_header-->
   <!--/radix_placeholder_site_in_header-->
 
 
 </head>
 
-<body class="layout-listing">
+<body>
 
 <!--radix_placeholder_front_matter-->
 
 <script id="distill-front-matter" type="text/json">
-{"title":"Duncan Garmonsway","description":"The personal website of Duncan Garmonsway, data scientist and UK civil\nservant.","authors":[]}
+{"title":"Choose a prior's parameters","description":"How to parameterise a prior when all you know is the mean and one other\npercentile.","authors":[{"author":"Duncan Garmonsway","authorURL":"#","affiliation":"&nbsp;","affiliationURL":"#"}],"publishedDate":"2018-12-13T00:00:00.000+00:00","citationText":"Garmonsway, 2018"}
 </script>
 
 <!--/radix_placeholder_front_matter-->
 <!--radix_placeholder_navigation_before_body-->
-<header class="header header--fixed" role="banner">
-<nav class="radix-site-nav radix-site-header">
-<div class="nav-left">
-<a href="index.html" class="title">Duncan Garmonsway</a>
-</div>
-<div class="nav-right">
-<a href="index.html">Home</a>
-<a href="about.html">About</a>
-<a href="index.xml">
-<i class="fa fa-rss"></i>
-</a>
-<a href="https://github.com/nacnudus">
-<i class="fab fa-github"></i>
-</a>
-<a href="https://twitter.com/nacnudus">
-<i class="fab fa-twitter"></i>
-</a>
-<a href="javascript:void(0);" class="nav-toggle">&#9776;</a>
-</div>
-</nav>
-</header>
 <!--/radix_placeholder_navigation_before_body-->
 <!--radix_placeholder_site_before_body-->
 <!--/radix_placeholder_site_before_body-->
-<!--radix_placeholder_article_listing-->
-
-<style type="text/css">
-
-/* Styles for listing layout (hide title) */
-.layout-listing d-title, .layout-listing .d-title {
-  display: none;
-}
-
-/* Styles for posts lists (not auto-injected) */
-
-
-.posts-with-sidebar {
-  padding-left: 45px;
-  padding-right: 45px;
-}
-
-.posts-list .description h2,
-.posts-list .description p {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", Arial, sans-serif;
-}
-
-.posts-list .description h2 {
-  font-weight: 700;
-  border-bottom: none;
-  padding-bottom: 0;
-}
-
-.posts-list h2.post-tag {
-  border-bottom: 1px solid rgba(0, 0, 0, 0.2);
-  padding-bottom: 12px;
-}
-.posts-list {
-  margin-top: 60px;
-  margin-bottom: 24px;
-}
-
-.posts-list .post-preview {
-  text-decoration: none;
-  overflow: hidden;
-  display: block;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-  padding: 24px 0;
-}
-
-.post-preview-last {
-  border-bottom: none !important;
-}
-
-.posts-list .posts-list-caption {
-  grid-column: screen;
-  font-weight: 400;
-}
-
-.posts-list .post-preview h2 {
-  margin: 0 0 6px 0;
-  line-height: 1.2em;
-  font-style: normal;
-  font-size: 24px;
-}
-
-.posts-list .post-preview p {
-  margin: 0 0 12px 0;
-  line-height: 1.4em;
-  font-size: 16px;
-}
-
-.posts-list .post-preview .thumbnail {
-  box-sizing: border-box;
-  margin-bottom: 24px;
-  position: relative;
-  max-width: 500px;
-}
-.posts-list .post-preview img {
-  width: 100%;
-  display: block;
-}
-
-.posts-list .metadata {
-  font-size: 12px;
-  line-height: 1.4em;
-  margin-bottom: 18px;
-}
-
-.posts-list .metadata > * {
-  display: inline-block;
-}
-
-.posts-list .metadata .publishedDate {
-  margin-right: 1em;
-}
-
-.posts-list .metadata .tags {
-  margin-top: 1em;
-}
-
-.posts-list .tags .tag {
-  color: rgba(0,0,0,0.67);
-  padding: 0.3em 0.5em;
-  margin: 0;
-  font-size: 80%;
-  border: 1px solid rgba(0,0,0,0.4);
-  border-radius: 3px;
-  text-transform: uppercase;
-  font-weight: 500;
-}
-
-.posts-list img {
-  opacity: 1;
-}
-
-.posts-list img[data-src] {
-  opacity: 0;
-}
-
-.posts-more {
-  clear: both;
-}
-
-
-.posts-sidebar {
-  font-size: 16px;
-}
-
-.posts-sidebar h3 {
-  font-size: 16px;
-  margin-top: 0;
-  margin-bottom: 0.5em;
-  font-weight: 400;
-  text-transform: uppercase;
-}
-
-.sidebar-section {
-  margin-bottom: 30px;
-}
-
-.categories ul {
-  list-style-type: none;
-  margin: 0;
-  padding: 0;
-}
-
-.categories li {
-  color: rgba(0, 0, 0, 0.8);
-  margin-bottom: 0;
-}
-
-.categories li>a {
-  border-bottom: none;
-}
-
-.categories li>a:hover {
-  border-bottom: 1px solid rgba(0, 0, 0, 0.4);
-}
-
-.categories .active {
-  font-weight: 600;
-}
-
-.categories .category-count {
-  color: rgba(0, 0, 0, 0.4);
-}
-
-
-@media(min-width: 768px) {
-  .posts-list .post-preview h2 {
-    font-size: 26px;
-  }
-  .posts-list .post-preview .thumbnail {
-    float: right;
-    width: 35%;
-    margin-bottom: 0;
-  }
-  .posts-list .post-preview .description {
-    float: left;
-    width: 45%;
-  }
-  .posts-list .post-preview .metadata {
-    float: left;
-    width: 15%;
-    margin-top: 8px;
-  }
-  .posts-list .post-preview p {
-    margin: 0 0 12px 0;
-    line-height: 1.5em;
-    font-size: 16px;
-  }
-  .posts-with-sidebar .posts-list {
-    float: left;
-    width: 72%;
-  }
-  .posts-with-sidebar .posts-sidebar {
-    float: right;
-    width: 20%;
-    margin-top: 60px;
-    padding-top: 24px;
-    padding-bottom: 24px;
-  }
-}
-
-.downlevel .posts-list .post-preview {
-  color: inherit;
-}
-
-</style>
-
-<script type="application/javascript">
-
-function init_posts_list() {
-
-  function load_image(img) {
-    var src = $(img).attr('data-src');
-    if (src) {
-      $(img).attr('src', src);
-      $(img).load(function() {
-        img.removeAttribute('data-src');
-      });
-    }
-  }
-
-  function set_posts_visible(posts, visible) {
-    if (visible) {
-
-      // show bottom border by default
-      $(posts).removeClass('post-preview-last');
-
-      // apply limits if need be
-      var max_posts = 25;
-      var apply_limits = $('.posts-container').hasClass('posts-apply-limit');
-      if (apply_limits && posts.length > max_posts) {
-        posts = $(posts).slice(0, max_posts);
-      } else {
-        $('.posts-more a').addClass('hidden');
-      }
-
-      // apply last style
-      $(posts.slice(-1)[0]).addClass('post-preview-last');
-
-      $(posts).removeClass('hidden');
-      $(posts).find('img[data-src]').each(function(i, img) {
-        load_image(img);
-      });
-    } else {
-      $(posts).addClass('hidden');
-    }
-  }
-
-  function apply_hash_filter() {
-
-    // clear active state
-    $('.categories .active').removeClass('active');
-
-    // mark all posts invisible to start
-    set_posts_visible($('.posts-list').children('a'), false);
-
-    // if we have a hash filter
-    if (window.location.hash) {
-
-      // mark posts that match the category visible
-      var page_category = window.location.hash.replace("#", "");
-      var posts = $('.post-metadata').map(function(idx, script) {
-        var metadata = $.parseJSON($(script).html());
-        var post = null;
-        $.each(metadata.categories, function(idx, category) {
-          category = category.replace(/ /g,"_");
-          if (category == page_category) {
-            post = $(script).parent().get();
-            return false;
-          }
-        });
-        return post;
-      });
-      set_posts_visible(posts, true);
-
-      // mark the hash active
-      $('.categories li>a[href="' + window.location.hash + '"]').addClass('active');
-
-    } else {
-
-      // no hash filter, make all posts visible (subject to max display)
-      set_posts_visible($('.posts-list').children(), true);
-
-    }
-  }
-
-  // more articles
-  function apply_post_limits(apply) {
-    if (apply) {
-      $('.posts-container').addClass('posts-apply-limit');
-      $('.posts-more a').removeClass('hidden');
-    } else {
-      $('.posts-container').removeClass('posts-apply-limit');
-      $('.posts-more a').addClass('hidden');
-    }
-  }
-
-  // hash filter handling
-  apply_hash_filter();
-  $(window).on('hashchange',function() {
-    apply_post_limits(true);
-    apply_hash_filter();
-  });
-
-  // more articles link
-  $('.posts-more a').click(function(e) {
-    e.preventDefault();
-    apply_post_limits(false);
-    apply_hash_filter();
-    return false;
-  });
-
-}
-
-</script>
-
-
-
-<div class="posts-container posts-with-sidebar posts-apply-limit l-screen-inset">
-<div class="posts-list">
-<h1 class="posts-list-caption">Duncan Garmonsway</h1>
-<a href="posts/2018-12-14-choose-a-priors-parameters/" class="post-preview">
-<script class="post-metadata" type="text/json">{"categories":[]}</script>
-<div class="metadata">
-<div class="publishedDate">Dec. 13, 2018</div>
-</div>
-<div class="thumbnail">
-<img data-src="posts/2018-12-14-choose-a-priors-parameters/expert.jpg"/>
-</div>
-<div class="description">
-<h2>Choose a prior's parameters</h2>
-<p>How to parameterise a prior when all you know is the mean and one other
-percentile.</p>
-</div>
-</a>
-<a href="posts/2016-07-20-harry-potter-arcs/" class="post-preview">
-<script class="post-metadata" type="text/json">{"categories":[]}</script>
-<div class="metadata">
-<div class="publishedDate">July 20, 2016</div>
-</div>
-<div class="thumbnail">
-<img data-src="posts/2016-07-20-harry-potter-arcs/harry-potter-arcs-wizards.jpg"/>
-</div>
-<div class="description">
-<h2>More Harry Potter story arcs (they get darker)</h2>
-<p>Reproducing *Harry Potter* sentiment arcs by some real wizards</p>
-</div>
-</a>
-<a href="posts/2016-07-13-harry-potter-sentiment/" class="post-preview">
-<script class="post-metadata" type="text/json">{"categories":[]}</script>
-<div class="metadata">
-<div class="publishedDate">July 13, 2016</div>
-</div>
-<div class="thumbnail">
-<img data-src="posts/2016-07-13-harry-potter-sentiment/harry-potter-sentiment.png"/>
-</div>
-<div class="description">
-<h2>Harry Potter and the N-Grams of Sentiment</h2>
-<p>*Harry Potter* cliches and story arcs by n-grams and sentiment analysis</p>
-</div>
-</a>
-<a href="posts/2016-06-28-radar/" class="post-preview">
-<script class="post-metadata" type="text/json">{"categories":[]}</script>
-<div class="metadata">
-<div class="publishedDate">June 28, 2016</div>
-</div>
-<div class="thumbnail">
-<img data-src="posts/2016-06-28-radar/radar-perfect.png"/>
-</div>
-<div class="description">
-<h2>Hacking the Data Science Radar with Data Science</h2>
-<p>Get a perfect score in the Mango Solution Data Science Radar</p>
-</div>
-</a>
-<a href="posts/2016-06-22-nests/" class="post-preview">
-<script class="post-metadata" type="text/json">{"categories":[]}</script>
-<div class="metadata">
-<div class="publishedDate">June 22, 2016</div>
-</div>
-<div class="thumbnail">
-<img/>
-</div>
-<div class="description">
-<h2>Creating nests without tidyr</h2>
-<p>How to construct nested data frames from scratch, without tidyr</p>
-</div>
-</a>
-<a href="posts/2016-06-13-brexit/" class="post-preview">
-<script class="post-metadata" type="text/json">{"categories":[]}</script>
-<div class="metadata">
-<div class="publishedDate">June 13, 2016</div>
-</div>
-<div class="thumbnail">
-<img data-src="posts/2016-06-13-brexit/brexit.png"/>
-</div>
-<div class="description">
-<h2>Brexit poll of polls</h2>
-<p>Analysis of Brexit polls by visualisation and a linear model</p>
-</div>
-</a>
-<a href="posts/2016-06-06-simmer-bank-2/" class="post-preview">
-<script class="post-metadata" type="text/json">{"categories":[]}</script>
-<div class="metadata">
-<div class="publishedDate">June 6, 2016</div>
-</div>
-<div class="thumbnail">
-<img/>
-</div>
-<div class="description">
-<h2>Simmer vs SimPy: The Bank, Part II</h2>
-<p>Porting a SimPy tutorial to the R package Simmer</p>
-</div>
-</a>
-<a href="posts/2016-05-11-simmer-bank-1/" class="post-preview">
-<script class="post-metadata" type="text/json">{"categories":[]}</script>
-<div class="metadata">
-<div class="publishedDate">May 11, 2016</div>
-</div>
-<div class="thumbnail">
-<img/>
-</div>
-<div class="description">
-<h2>Simmer vs SimPy: The Bank, Part I</h2>
-<p>Porting a SimPy tutorial to the R package Simmer</p>
-</div>
-</a>
-<a href="posts/2016-05-02-statsblogs/" class="post-preview">
-<script class="post-metadata" type="text/json">{"categories":[]}</script>
-<div class="metadata">
-<div class="publishedDate">May 2, 2016</div>
-</div>
-<div class="thumbnail">
-<img data-src="posts/2016-05-02-statsblogs/2016-05-02-statsblogs_files/figure-html5/statsblogs-periodical-1.png"/>
-</div>
-<div class="description">
-<h2>How many StatsBloggers are there?</h2>
-<p>Parsing the daily digest emails and thinking about modelling</p>
-</div>
-</a>
-<a href="posts/2016-04-25-rounding/" class="post-preview">
-<script class="post-metadata" type="text/json">{"categories":[]}</script>
-<div class="metadata">
-<div class="publishedDate">April 25, 2016</div>
-</div>
-<div class="thumbnail">
-<img data-src="posts/2016-04-25-rounding/rounding.png"/>
-</div>
-<div class="description">
-<h2>R rounding is weird?  Try JavaScript!</h2>
-<p>Reproducing browser rounding in R</p>
-</div>
-</a>
-<a href="posts/2016-04-18-rbloggers/" class="post-preview">
-<script class="post-metadata" type="text/json">{"categories":[]}</script>
-<div class="metadata">
-<div class="publishedDate">April 18, 2016</div>
-</div>
-<div class="thumbnail">
-<img data-src="posts/2016-04-18-rbloggers/rbloggers.png"/>
-</div>
-<div class="description">
-<h2>How many R-Bloggers are there?</h2>
-<p>Parsing the daily digest emails</p>
-</div>
-</a>
-<a href="posts/2015-07-13-nzcrash/" class="post-preview">
-<script class="post-metadata" type="text/json">{"categories":[]}</script>
-<div class="metadata">
-<div class="publishedDate">July 13, 2015</div>
-</div>
-<div class="thumbnail">
-<img data-src="posts/2015-07-13-nzcrash/nzcrash.png"/>
-</div>
-<div class="description">
-<h2>New R package: nzcrash</h2>
-<p>Redistributing New Zealand crash data in tidy form</p>
-</div>
-</a>
-</div>
-<div class="posts-sidebar">
-<div class="sidebar-section subscribe">
-<h3>Subscribe</h3>
-<form method='post' action='https://blogtrottr.com'>
-  <p>Enjoy this blog? Get notified of new posts via email:</p>
-  <input type='text' name='btr_email' />
-  <input type='hidden' name='btr_url'
-         value='https://nacnudus.github.io/duncangarmonsway/index.html'/>
-  <input type='hidden' name='schedule_type' value='0' />
-  <input type='submit' value='Subscribe' />
-</form>
-
-</div>
-</div>
-<div class="posts-more">
-<a href="#">More articles &raquo;</a>
-</div>
-</div>
-<!--/radix_placeholder_article_listing-->
 
 <div class="d-title">
-<h1>Duncan Garmonsway</h1>
-<p>The personal website of Duncan Garmonsway, data scientist and UK civil servant.</p>
+<h1>Choose a prior’s parameters</h1>
+<p>How to parameterise a prior when all you know is the mean and one other percentile.</p>
 </div>
 
+<div class="d-byline">
+  
+  Duncan Garmonsway
+  
+<br/>December 13, 2018
+</div>
 
 <div class="d-article">
-
+<p>Given a distribution, how do you find the parameters? When choosing a beta prior for a Bayesian A/B test, for example.</p>
+<blockquote>
+<p>I came up with these parameters for two reasons:</p>
+<ul>
+<li><p>The mean is <span class="math inline">\(\frac{\alpha}{\alpha + \beta} = \frac{81}{81 + 219} = .270\)</span></p></li>
+<li><p>As you can see in the plot, this distribution lies almost entirely within (.2,.35)- the reasonable range for a batting average. – <a href="http://varianceexplained.org/statistics/beta_distribution_and_baseball/">David Robinson</a></p></li>
+</ul>
+</blockquote>
+<p>What David Robinson is doing is best-practice for choosing a prior – ask an expert. But he makes a huge leap from what the expert says to what the parameters are. Normally you’d use <code>dbeta(shape1, shape2)</code> to get the distribution for given parameters, but here the problem is reversed: find the parameters for a distribution with a mean of .270 and a cumulative density of, say, .99 between .2 and .35.</p>
+<p>How did David Robinson come up with the parameters 81 and 219? There aren’t tools for that. Perhaps he’s brainy enough to do the maths in his head and think, “Hmm, beta with mean = .270 and most of it between .2 and .35, in that case 81 and 219 should be about right.” Or perhaps he just tried some numbers and adjusted them until they worked. There are online tools for that, or you can use R. For example, here’s a beta distribution with an initial guess of the parameters <code>shape1 = 2</code> and <code>shape2 = 4</code>).</p>
+<aside>
+In <a href="http://varianceexplained.org/r/empirical_bayes_baseball/">later posts</a> David Robinson fits a beta prior to some data with <code>MASS::fitdistr()</code>, but I don’t have that luxury – I have historical data, but it isn’t stationary enough.
+</aside>
+<div class="layout-chunk" data-layout="l-body">
+<pre class="r"><code>
+curve(dbeta(x, 2, 4), from = 0, to = 1, type = &quot;l&quot;)</code></pre>
+<p><img src="choose-a-priors-parameters_files/figure-html5/unnamed-chunk-1-1.png" width="624" /></p>
+</div>
+<p>Not quite right – the parameters need adjusting. And it turns out to be fairly straightforward to find parameters that get exactly the right mean by working with the formula for the mean <span class="math inline">\(\frac{\alpha}{\alpha + \beta}\)</span>. The mean can be interpreted as a number of successes divided by a number of attempts (successes + failures), so a mean of .270 successes every 1 attempt is like 270 successes every 1000 attempts. R’s parameterisation of the beta distribution is <code>shape1</code> successes and <code>shape2</code> failures, so a simple subtraction converts 270 successes and 100 attempts into (1000 - 270) failures.</p>
+<div class="layout-chunk" data-layout="l-body">
+<pre class="r"><code>
+curve(dbeta(x, 270, (1000 - 270)), from = 0, to = 1, type = &quot;l&quot;)</code></pre>
+<p><img src="choose-a-priors-parameters_files/figure-html5/unnamed-chunk-2-1.png" width="624" /></p>
+</div>
+<p>Now the distribution has correct mean, but the peak is too narrow – most of it lies above 0.25, whereas David Robinson only aimed for it to be above .2 and below .35. Unfortunately the cumulative density function is to complicated to hack, but using a handy property – smaller parameters make wider peaks – let’s divide the parameters by a factor of, say, 3.</p>
+<aside>
+<p>The <a href="https://en.wikipedia.org/wiki/Beta_function#Incomplete_beta_function">cumulative density function</a> is a ratio of the <em>incomplete beta function</em> and the <em>beta function</em></p>
+<p><span class="math display">\[
+I_x(a, b) = \frac{\mathrm{B}(x; a, b)}{\mathrm{B}(a, b)}
+\]</span></p>
+<p>where</p>
+<span class="math display">\[
+\mathrm{B}(x; a, b) = \int_{0}^{x} t^{a - 1} (1 - t)^{b - 1} dt \\
+\mathrm{B}(a, b) = \int_{0}^{1} t^{a - 1} (1 - t)^{b - 1} dt
+\]</span>
+</aside>
+<div class="layout-chunk" data-layout="l-body">
+<pre class="r"><code>
+curve(dbeta(x, 270 / 3, (1000 - 270) / 3), from = 0, to = 1, type = &quot;l&quot;)</code></pre>
+<p><img src="choose-a-priors-parameters_files/figure-html5/unnamed-chunk-3-1.png" width="624" /></p>
+</div>
+<p>270 / 3 is 90 for <span class="math inline">\(\alpha\)</span>, and (1000 - 270) / 3 is about 243 for <span class="math inline">\(\beta\)</span>, so this is in the ballpark of David Robinson’s parameters 81 and 219, and we could stop here.</p>
+<p><strong>No don’t stop! Don’t you see? What just happened was tedious trial and error; manual optimisation of the parameters to get the desired shape! The computer <em>used you as a labour-saving device</em>. Give a taste of its own medicine! Make the computer do the trial and error with <code>optim()</code>!</strong></p>
+<p>Here’s a function that plugs various values of <code>shape1</code> and <code>shape2</code> into <code>qbeta()</code> until it finds a curve with the properties we want: a mean of .270 and, say, 1% of the distribution to be below .2.</p>
+<p>Effectively this re-parameterises the beta distribution to use “mean” and “amount below x” instead of <code>shape1</code> “successes” and <code>shape2</code> “failures.” Call it the <em>Gimme Beta</em> for ‘Gimme the beta I want’. But because I <del>am lazy</del> have a computer, instead of sweating over algebra to translate “mean” and “amount below x” into <code>shape1</code> and <code>shape2</code>, I use <code>optim()</code> to find values of <code>shape1</code> and <code>shape2</code> that create a distribution that <em>also satisifies</em> my “mean” and “amount below x”. And then I can use <code>shape1</code> and <code>shape2</code> to do the A/B test, or whatever the prior is for.</p>
+<p><span class="math display">\[
+\mathrm{Gimme~Beta}(\mathrm{mean}, \mathrm{amount~below~}x) \sim \mathrm{Beta}(\mathrm{shape1}, \mathrm{shape2})
+\]</span></p>
+<div class="layout-chunk" data-layout="l-body">
+<pre class="r"><code>
+gimme_beta &lt;- function(mean, cumulative_density, below, par_start = c(2, 2),
+                       plot_from_to = NULL) {
+  error &lt;- function(x) {
+    alpha1 &lt;- x[1]
+    beta1  &lt;- x[2]
+    fitted_mean &lt;- alpha1 / (alpha1 + beta1)
+    fitted_cumulative_density &lt;- pbeta(below, alpha1, beta1)
+    squared_diffs  &lt;- sum((c(fitted_mean, fitted_cumulative_density )
+                           - c(mean, cumulative_density))^2)
+    squared_diffs
+  }
+  estimate &lt;- optim(par_start, error)
+  alpha1 = estimate$par[1]
+  beta1 = estimate$par[2]
+  if (is.null(plot_from_to)) {
+    plot_from_to &lt;- c(qbeta(0.00005, alpha1, beta1),
+                      qbeta(0.99995, alpha1, beta1))
+  }
+  y &lt;- curve(dbeta(x, alpha1, beta1),
+             from = plot_from_to[1],
+             to = plot_from_to[2],
+             type = &quot;l&quot;)
+  c(shape1 = alpha1, shape2 = beta1)
+}</code></pre>
+</div>
+<aside>
+Note that the function doesn’t allow three parameters, which is what David Robinson kind of suggested. We can only ask for the mean and that most of the distribution is above a certain amount; we can’t say that most of is between two values, because that would be an extra, third parameter, and we’re limited by how many parameters the original beta distribution has. Once the first two parameters have been met, there’s nothing left to move to meet a third parameter.
+</aside>
+<p>How well does <code>gimme_beta()</code> do on David Robinson’s task?</p>
+<div class="layout-chunk" data-layout="l-body">
+<pre class="r"><code>
+gimme_beta(mean = .270, cumulative_density = .01, below = .2)</code></pre>
+<p><img src="choose-a-priors-parameters_files/figure-html5/unnamed-chunk-5-1.png" width="624" /></p>
+<pre><code>
+   shape1    shape2 
+ 52.76072 142.63995 </code></pre>
+</div>
+<p>That isn’t far off the 81 and 219 that David Robinson came up with, but then we don’t know exactly what David Robinson meant by “lies almost entirely within”. What if we work out the <span class="math inline">\(\mu\)</span> and <span class="math inline">\(\theta\)</span> parameters of David Robinson’s actual distribution, plug them back into <code>gimme_beta()</code> and check again.</p>
+<div class="layout-chunk" data-layout="l-body">
+<pre class="r"><code>
+81 / (81 + 219) # mu, the mean</code></pre>
+<pre><code>
+[1] 0.27</code></pre>
+<pre class="r"><code>
+pbeta(.2, 81, 219) # theta, the percentage of the distribution that is below 0.2</code></pre>
+<pre><code>
+[1] 0.001897932</code></pre>
+</div>
+<p>So plugging the (kinda) mean and the percentage-that-is-below-0.2 into <code>gimme_beta()</code>, does it give us David Robinson’s parameters back?</p>
+<div class="layout-chunk" data-layout="l-body">
+<pre class="r"><code>
+gimme_beta(mean = .270, cumulative_density = .001897932, below = .2)</code></pre>
+<p><img src="choose-a-priors-parameters_files/figure-html5/unnamed-chunk-7-1.png" width="624" /></p>
+<pre><code>
+   shape1    shape2 
+ 81.12597 219.34148 </code></pre>
+</div>
+<p>Close enough for government work. And more importantly, <code>gimme_beta()</code> will gimme the parameters I need for my A/B test, which happen to be a mean of .23 with 5% of the distribution below 0.2.</p>
+<div class="layout-chunk" data-layout="l-body">
+<pre class="r"><code>
+gimme_beta(.23, .05, .2)</code></pre>
+<p><img src="choose-a-priors-parameters_files/figure-html5/unnamed-chunk-8-1.png" width="624" /></p>
+<pre><code>
+  shape1   shape2 
+117.5303 393.5115 </code></pre>
+</div>
 <!--radix_placeholder_article_footer-->
 <!--/radix_placeholder_article_footer-->
 </div>
@@ -1819,16 +1087,20 @@ percentile.</p>
 <div class="d-appendix">
 </div>
 
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
 
 <!--radix_placeholder_site_after_body-->
 <!--/radix_placeholder_site_after_body-->
 <!--radix_placeholder_appendices-->
-<div class="appendix-bottom">
-<h3 id="updates-and-corrections">Corrections</h3>
-<p>If you see mistakes or want to suggest changes, please <a href="https://github.com/nacnudus/duncangarmonsway/issues/new">create an issue</a> on the source repository.</p>
-<h3 id="reuse">Reuse</h3>
-<p>Text and figures are licensed under Creative Commons Attribution <a rel="license" href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>. Source code is available at <a href="https://github.com/nacnudus/duncangarmonsway">https://github.com/nacnudus/duncangarmonsway</a>, unless otherwise noted. The figures that have been reused from other sources don't fall under this license and can be recognized by a note in their caption: "Figure from ...".</p>
-</div>
+<div class="appendix-bottom"></div>
 <!--/radix_placeholder_appendices-->
 <!--radix_placeholder_navigation_after_body-->
 <!--/radix_placeholder_navigation_after_body-->
