@@ -5,6 +5,7 @@ description: |
 output_dir: "docs"
 favicon: images/favicon.png
 base_url: https://nacnudus.github.io/duncangarmonsway
+google_analytics: "UA-45097885-3"
 repository_url: https://github.com/nacnudus/duncangarmonsway
 creative_commons: CC BY
 twitter:
