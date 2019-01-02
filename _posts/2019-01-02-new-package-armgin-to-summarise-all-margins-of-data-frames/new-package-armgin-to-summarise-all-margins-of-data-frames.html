@@ -7,7 +7,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1"/>
   <meta name="generator" content="radix" />
-  <link rel="alternate" type="application/rss+xml" href="https://nacnudus.github.io/duncangarmonsway/index.xml" />
 
   <style type="text/css">
   /* Hide doc at startup (prevent jankiness while JS renders/transforms) */
@@ -20,373 +19,39 @@
  <!--/radix_placeholder_import_source-->
 
   <!--radix_placeholder_meta_tags-->
-  <title>Duncan Garmonsway</title>
+  <title>New package {armgin} to summarise all margins of data frames</title>
   
-  <meta property="description" itemprop="description" content="The personal website of Duncan Garmonsway, data scientist and UK civil&#10;servant."/>
+  <meta property="description" itemprop="description" content="A one-liner for when they want everything by everything."/>
   
-  <link rel="license" href="https://creativecommons.org/licenses/by/4.0/"/>
-  <link rel="icon" type="image/png" href="images/favicon.png"/>
   
+  <!--  https://schema.org/Article -->
+  <meta property="article:published" itemprop="datePublished" content="2019-01-02"/>
+  <meta property="article:created" itemprop="dateCreated" content="2019-01-02"/>
+  <meta name="article:author" content="Duncan Garmonsway"/>
   
   <!--  https://developers.facebook.com/docs/sharing/webmasters#markup -->
-  <meta property="og:title" content="Duncan Garmonsway"/>
+  <meta property="og:title" content="New package {armgin} to summarise all margins of data frames"/>
   <meta property="og:type" content="article"/>
-  <meta property="og:description" content="The personal website of Duncan Garmonsway, data scientist and UK civil&#10;servant."/>
+  <meta property="og:description" content="A one-liner for when they want everything by everything."/>
   <meta property="og:locale" content="en_US"/>
-  <meta property="og:site_name" content="Duncan Garmonsway"/>
   
   <!--  https://dev.twitter.com/cards/types/summary -->
   <meta property="twitter:card" content="summary"/>
-  <meta property="twitter:title" content="Duncan Garmonsway"/>
-  <meta property="twitter:description" content="The personal website of Duncan Garmonsway, data scientist and UK civil&#10;servant."/>
-  <meta property="twitter:site" content="@nacnudus"/>
+  <meta property="twitter:title" content="New package {armgin} to summarise all margins of data frames"/>
+  <meta property="twitter:description" content="A one-liner for when they want everything by everything."/>
   
   <!--/radix_placeholder_meta_tags-->
   <!--radix_placeholder_rmarkdown_metadata-->
   
   <script type="text/json" id="radix-rmarkdown-metadata">
-  {"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["title","description","site","listing"]}},"value":[{"type":"character","attributes":{},"value":["Duncan Garmonsway"]},{"type":"character","attributes":{},"value":["The personal website of Duncan Garmonsway, data scientist and UK civil\nservant.\n"]},{"type":"character","attributes":{},"value":["radix::radix_website"]},{"type":"character","attributes":{},"value":["posts"]}]}
+  {"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["title","description","author","date","output"]}},"value":[{"type":"character","attributes":{},"value":["New package {armgin} to summarise all margins of data frames"]},{"type":"character","attributes":{},"value":["A one-liner for when they want everything by everything.\n"]},{"type":"list","attributes":{},"value":[{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name"]}},"value":[{"type":"character","attributes":{},"value":["Duncan Garmonsway"]}]}]},{"type":"character","attributes":{},"value":["January 2, 2019"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["radix::radix_article"]}},"value":[{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["self_contained"]}},"value":[{"type":"logical","attributes":{},"value":[false]}]}]}]}
   </script>
   <!--/radix_placeholder_rmarkdown_metadata-->
-  <!--radix_placeholder_navigation_in_header-->
   
-  <script type="application/javascript">
-  
-    window.headroom_prevent_pin = false;
-  
-    window.document.addEventListener("DOMContentLoaded", function (event) {
-  
-      // initialize headroom for banner
-      var header = $('header').get(0);
-      var headerHeight = header.offsetHeight;
-      var headroom = new Headroom(header, {
-        onPin : function() {
-          if (window.headroom_prevent_pin) {
-            window.headroom_prevent_pin = false;
-            headroom.unpin();
-          }
-        }
-      });
-      headroom.init();
-      if(window.location.hash)
-        headroom.unpin();
-      $(header).addClass('headroom--transition');
-  
-      // offset scroll location for banner on hash change
-      // (see: https://github.com/WickyNilliams/headroom.js/issues/38)
-      window.addEventListener("hashchange", function(event) {
-        window.scrollTo(0, window.pageYOffset - (headerHeight + 25));
-      });
-  
-      // responsive menu
-      $('.radix-site-header').each(function(i, val) {
-        var topnav = $(this);
-        var toggle = topnav.find('.nav-toggle');
-        toggle.on('click', function() {
-          topnav.toggleClass('responsive');
-        });
-      });
-  
-      // nav dropdowns
-      $('.nav-dropbtn').click(function(e) {
-        $(this).next('.nav-dropdown-content').toggleClass('nav-dropdown-active');
-        $(this).parent().siblings('.nav-dropdown')
-           .children('.nav-dropdown-content').removeClass('nav-dropdown-active');
-      });
-      $("body").click(function(e){
-        $('.nav-dropdown-content').removeClass('nav-dropdown-active');
-      });
-      $(".nav-dropdown").click(function(e){
-        e.stopPropagation();
-      });
-    });
+  <script type="text/json" id="radix-resource-manifest">
+  {"type":"character","attributes":{},"value":["new-package-armgin-to-summarise-all-margins-of-data-frames_files/bowser-1.9.3/bowser.min.js","new-package-armgin-to-summarise-all-margins-of-data-frames_files/distill-2.2.21/template.v2.js","new-package-armgin-to-summarise-all-margins-of-data-frames_files/jquery-1.11.3/jquery.min.js","new-package-armgin-to-summarise-all-margins-of-data-frames_files/webcomponents-2.0.0/webcomponents.js","organogram.csv"]}
   </script>
-  
-  <style type="text/css">
-  
-  /* Theme (user-documented overrideables for nav appearance) */
-  
-  .radix-site-nav {
-    color: rgba(255, 255, 255, 0.8);
-    background-color: #455a64;
-    font-size: 15px;
-    font-weight: 300;
-  }
-  
-  .radix-site-nav a {
-    color: inherit;
-    text-decoration: none;
-  }
-  
-  .radix-site-nav a:hover {
-    color: white;
-  }
-  
-  @media print {
-    .radix-site-nav {
-      display: none;
-    }
-  }
-  
-  .radix-site-header {
-  
-  }
-  
-  .radix-site-footer {
-  
-  }
-  
-  
-  /* Site Header */
-  
-  .radix-site-header {
-    width: 100%;
-    box-sizing: border-box;
-    z-index: 3;
-  }
-  
-  .radix-site-header .nav-left {
-    display: inline-block;
-    margin-left: 8px;
-  }
-  
-  @media screen and (max-width: 768px) {
-    .radix-site-header .nav-left {
-      margin-left: 0;
-    }
-  }
-  
-  
-  .radix-site-header .nav-right {
-    float: right;
-    margin-right: 8px;
-  }
-  
-  .radix-site-header a,
-  .radix-site-header .title {
-    display: inline-block;
-    text-align: center;
-    padding: 14px 10px 14px 10px;
-  }
-  
-  .radix-site-header .title {
-    font-size: 18px;
-  }
-  
-  .radix-site-header .logo {
-    padding: 0;
-  }
-  
-  .radix-site-header .logo img {
-    display: none;
-    max-height: 20px;
-    width: auto;
-    margin-bottom: -4px;
-  }
-  
-  .radix-site-header .nav-image img {
-    max-height: 18px;
-    width: auto;
-    display: inline-block;
-    margin-bottom: -3px;
-  }
-  
-  
-  
-  @media screen and (min-width: 1000px) {
-    .radix-site-header .logo img {
-      display: inline-block;
-    }
-    .radix-site-header .nav-left {
-      margin-left: 20px;
-    }
-    .radix-site-header .nav-right {
-      margin-right: 20px;
-    }
-    .radix-site-header .title {
-      padding-left: 12px;
-    }
-  }
-  
-  
-  .radix-site-header .nav-toggle {
-    display: none;
-  }
-  
-  .nav-dropdown {
-    display: inline-block;
-    position: relative;
-  }
-  
-  .nav-dropdown .nav-dropbtn {
-    border: none;
-    outline: none;
-    color: rgba(255, 255, 255, 0.8);
-    padding: 16px 10px;
-    background-color: transparent;
-    font-family: inherit;
-    font-size: inherit;
-    font-weight: inherit;
-    margin: 0;
-    margin-top: 1px;
-    z-index: 2;
-  }
-  
-  .nav-dropdown-content {
-    display: none;
-    position: absolute;
-    background-color: white;
-    min-width: 200px;
-    border: 1px solid rgba(0,0,0,0.15);
-    border-radius: 4px;
-    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.1);
-    z-index: 1;
-    margin-top: 2px;
-    white-space: nowrap;
-    padding-top: 4px;
-    padding-bottom: 4px;
-  }
-  
-  .nav-dropdown-content hr {
-    margin-top: 4px;
-    margin-bottom: 4px;
-    border: none;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-  }
-  
-  .nav-dropdown-active {
-    display: block;
-  }
-  
-  .nav-dropdown-content a, .nav-dropdown-content .nav-dropdown-header {
-    color: black;
-    padding: 6px 24px;
-    text-decoration: none;
-    display: block;
-    text-align: left;
-  }
-  
-  .nav-dropdown-content .nav-dropdown-header {
-    display: block;
-    padding: 5px 24px;
-    padding-bottom: 0;
-    text-transform: uppercase;
-    font-size: 14px;
-    color: #999999;
-    white-space: nowrap;
-  }
-  
-  .nav-dropdown:hover .nav-dropbtn {
-    color: white;
-  }
-  
-  .nav-dropdown-content a:hover {
-    background-color: #ddd;
-    color: black;
-  }
-  
-  .nav-right .nav-dropdown-content {
-    margin-left: -45%;
-    right: 0;
-  }
-  
-  @media screen and (max-width: 768px) {
-    .radix-site-header a, .radix-site-header .nav-dropdown  {display: none;}
-    .radix-site-header a.nav-toggle {
-      float: right;
-      display: block;
-    }
-    .radix-site-header .title {
-      margin-left: 0;
-    }
-    .radix-site-header .nav-right {
-      margin-right: 0;
-    }
-    .radix-site-header {
-      overflow: hidden;
-    }
-    .nav-right .nav-dropdown-content {
-      margin-left: 0;
-    }
-  }
-  
-  
-  @media screen and (max-width: 768px) {
-    .radix-site-header.responsive {position: relative;}
-    .radix-site-header.responsive a.nav-toggle {
-      position: absolute;
-      right: 0;
-      top: 0;
-    }
-    .radix-site-header.responsive a,
-    .radix-site-header.responsive .nav-dropdown {
-      display: block;
-      text-align: left;
-    }
-    .radix-site-header.responsive .nav-left,
-    .radix-site-header.responsive .nav-right {
-      width: 100%;
-    }
-    .radix-site-header.responsive .nav-dropdown {float: none;}
-    .radix-site-header.responsive .nav-dropdown-content {position: relative;}
-    .radix-site-header.responsive .nav-dropdown .nav-dropbtn {
-      display: block;
-      width: 100%;
-      text-align: left;
-    }
-  }
-  
-  /* Site Footer */
-  
-  .radix-site-footer {
-    width: 100%;
-    overflow: hidden;
-    box-sizing: border-box;
-    z-index: 3;
-    margin-top: 30px;
-    padding-top: 30px;
-    padding-bottom: 30px;
-    text-align: center;
-  }
-  
-  /* Headroom */
-  
-  d-title {
-    padding-top: 6rem;
-  }
-  
-  @media print {
-    d-title {
-      padding-top: 4rem;
-    }
-  }
-  
-  .headroom {
-    z-index: 1000;
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-  }
-  
-  .headroom--transition {
-    transition: all .4s ease-in-out;
-  }
-  
-  .headroom--unpinned {
-    top: -100px;
-  }
-  
-  .headroom--pinned {
-    top: 0;
-  }
-  
-  </style>
-  
-  <link href="site_libs/font-awesome-5.0.13/css/fa-svg-with-js.css" rel="stylesheet"/>
-  <script src="site_libs/font-awesome-5.0.13/js/fontawesome-all.min.js"></script>
-  <script src="site_libs/font-awesome-5.0.13/js/fa-v4-shims.min.js"></script>
-  <script src="site_libs/headroom-0.9.4/headroom.min.js"></script>
+  <!--radix_placeholder_navigation_in_header-->
   <!--/radix_placeholder_navigation_in_header-->
   <!--radix_placeholder_distill-->
   
@@ -1262,576 +927,362 @@
   </script>
   
   <!--/radix_placeholder_distill-->
-  <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
-  <script src="site_libs/bowser-1.9.3/bowser.min.js"></script>
-  <script src="site_libs/webcomponents-2.0.0/webcomponents.js"></script>
-  <script src="site_libs/distill-2.2.21/template.v2.js"></script>
+  <script src="new-package-armgin-to-summarise-all-margins-of-data-frames_files/jquery-1.11.3/jquery.min.js"></script>
+  <script src="new-package-armgin-to-summarise-all-margins-of-data-frames_files/bowser-1.9.3/bowser.min.js"></script>
+  <script src="new-package-armgin-to-summarise-all-margins-of-data-frames_files/webcomponents-2.0.0/webcomponents.js"></script>
+  <script src="new-package-armgin-to-summarise-all-margins-of-data-frames_files/distill-2.2.21/template.v2.js"></script>
   <!--radix_placeholder_site_in_header-->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-45097885-3"></script>
-  <script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'UA-45097885-3');
-  </script>
   <!--/radix_placeholder_site_in_header-->
 
 
 </head>
 
-<body class="layout-listing">
+<body>
 
 <!--radix_placeholder_front_matter-->
 
 <script id="distill-front-matter" type="text/json">
-{"title":"Duncan Garmonsway","description":"The personal website of Duncan Garmonsway, data scientist and UK civil\nservant.","authors":[]}
+{"title":"New package {armgin} to summarise all margins of data frames","description":"A one-liner for when they want everything by everything.","authors":[{"author":"Duncan Garmonsway","authorURL":"#","affiliation":"&nbsp;","affiliationURL":"#"}],"publishedDate":"2019-01-02T00:00:00.000+00:00","citationText":"Garmonsway, 2019"}
 </script>
 
 <!--/radix_placeholder_front_matter-->
 <!--radix_placeholder_navigation_before_body-->
-<header class="header header--fixed" role="banner">
-<nav class="radix-site-nav radix-site-header">
-<div class="nav-left">
-<a href="index.html" class="title">Duncan Garmonsway</a>
-</div>
-<div class="nav-right">
-<a href="index.html">Home</a>
-<a href="about.html">About</a>
-<a href="index.xml">
-<i class="fa fa-rss"></i>
-</a>
-<a href="https://github.com/nacnudus">
-<i class="fab fa-github"></i>
-</a>
-<a href="https://twitter.com/nacnudus">
-<i class="fab fa-twitter"></i>
-</a>
-<a href="javascript:void(0);" class="nav-toggle">&#9776;</a>
-</div>
-</nav>
-</header>
 <!--/radix_placeholder_navigation_before_body-->
 <!--radix_placeholder_site_before_body-->
 <!--/radix_placeholder_site_before_body-->
-<!--radix_placeholder_article_listing-->
-
-<style type="text/css">
-
-/* Styles for listing layout (hide title) */
-.layout-listing d-title, .layout-listing .d-title {
-  display: none;
-}
-
-/* Styles for posts lists (not auto-injected) */
-
-
-.posts-with-sidebar {
-  padding-left: 45px;
-  padding-right: 45px;
-}
-
-.posts-list .description h2,
-.posts-list .description p {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", Arial, sans-serif;
-}
-
-.posts-list .description h2 {
-  font-weight: 700;
-  border-bottom: none;
-  padding-bottom: 0;
-}
-
-.posts-list h2.post-tag {
-  border-bottom: 1px solid rgba(0, 0, 0, 0.2);
-  padding-bottom: 12px;
-}
-.posts-list {
-  margin-top: 60px;
-  margin-bottom: 24px;
-}
-
-.posts-list .post-preview {
-  text-decoration: none;
-  overflow: hidden;
-  display: block;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-  padding: 24px 0;
-}
-
-.post-preview-last {
-  border-bottom: none !important;
-}
-
-.posts-list .posts-list-caption {
-  grid-column: screen;
-  font-weight: 400;
-}
-
-.posts-list .post-preview h2 {
-  margin: 0 0 6px 0;
-  line-height: 1.2em;
-  font-style: normal;
-  font-size: 24px;
-}
-
-.posts-list .post-preview p {
-  margin: 0 0 12px 0;
-  line-height: 1.4em;
-  font-size: 16px;
-}
-
-.posts-list .post-preview .thumbnail {
-  box-sizing: border-box;
-  margin-bottom: 24px;
-  position: relative;
-  max-width: 500px;
-}
-.posts-list .post-preview img {
-  width: 100%;
-  display: block;
-}
-
-.posts-list .metadata {
-  font-size: 12px;
-  line-height: 1.4em;
-  margin-bottom: 18px;
-}
-
-.posts-list .metadata > * {
-  display: inline-block;
-}
-
-.posts-list .metadata .publishedDate {
-  margin-right: 1em;
-}
-
-.posts-list .metadata .tags {
-  margin-top: 1em;
-}
-
-.posts-list .tags .tag {
-  color: rgba(0,0,0,0.67);
-  padding: 0.3em 0.5em;
-  margin: 0;
-  font-size: 80%;
-  border: 1px solid rgba(0,0,0,0.4);
-  border-radius: 3px;
-  text-transform: uppercase;
-  font-weight: 500;
-}
-
-.posts-list img {
-  opacity: 1;
-}
-
-.posts-list img[data-src] {
-  opacity: 0;
-}
-
-.posts-more {
-  clear: both;
-}
-
-
-.posts-sidebar {
-  font-size: 16px;
-}
-
-.posts-sidebar h3 {
-  font-size: 16px;
-  margin-top: 0;
-  margin-bottom: 0.5em;
-  font-weight: 400;
-  text-transform: uppercase;
-}
-
-.sidebar-section {
-  margin-bottom: 30px;
-}
-
-.categories ul {
-  list-style-type: none;
-  margin: 0;
-  padding: 0;
-}
-
-.categories li {
-  color: rgba(0, 0, 0, 0.8);
-  margin-bottom: 0;
-}
-
-.categories li>a {
-  border-bottom: none;
-}
-
-.categories li>a:hover {
-  border-bottom: 1px solid rgba(0, 0, 0, 0.4);
-}
-
-.categories .active {
-  font-weight: 600;
-}
-
-.categories .category-count {
-  color: rgba(0, 0, 0, 0.4);
-}
-
-
-@media(min-width: 768px) {
-  .posts-list .post-preview h2 {
-    font-size: 26px;
-  }
-  .posts-list .post-preview .thumbnail {
-    float: right;
-    width: 35%;
-    margin-bottom: 0;
-  }
-  .posts-list .post-preview .description {
-    float: left;
-    width: 45%;
-  }
-  .posts-list .post-preview .metadata {
-    float: left;
-    width: 15%;
-    margin-top: 8px;
-  }
-  .posts-list .post-preview p {
-    margin: 0 0 12px 0;
-    line-height: 1.5em;
-    font-size: 16px;
-  }
-  .posts-with-sidebar .posts-list {
-    float: left;
-    width: 72%;
-  }
-  .posts-with-sidebar .posts-sidebar {
-    float: right;
-    width: 20%;
-    margin-top: 60px;
-    padding-top: 24px;
-    padding-bottom: 24px;
-  }
-}
-
-.downlevel .posts-list .post-preview {
-  color: inherit;
-}
-
-</style>
-
-<script type="application/javascript">
-
-function init_posts_list() {
-
-  function load_image(img) {
-    var src = $(img).attr('data-src');
-    if (src) {
-      $(img).attr('src', src);
-      $(img).load(function() {
-        img.removeAttribute('data-src');
-      });
-    }
-  }
-
-  function set_posts_visible(posts, visible) {
-    if (visible) {
-
-      // show bottom border by default
-      $(posts).removeClass('post-preview-last');
-
-      // apply limits if need be
-      var max_posts = 25;
-      var apply_limits = $('.posts-container').hasClass('posts-apply-limit');
-      if (apply_limits && posts.length > max_posts) {
-        posts = $(posts).slice(0, max_posts);
-      } else {
-        $('.posts-more a').addClass('hidden');
-      }
-
-      // apply last style
-      $(posts.slice(-1)[0]).addClass('post-preview-last');
-
-      $(posts).removeClass('hidden');
-      $(posts).find('img[data-src]').each(function(i, img) {
-        load_image(img);
-      });
-    } else {
-      $(posts).addClass('hidden');
-    }
-  }
-
-  function apply_hash_filter() {
-
-    // clear active state
-    $('.categories .active').removeClass('active');
-
-    // mark all posts invisible to start
-    set_posts_visible($('.posts-list').children('a'), false);
-
-    // if we have a hash filter
-    if (window.location.hash) {
-
-      // mark posts that match the category visible
-      var page_category = window.location.hash.replace("#", "");
-      var posts = $('.post-metadata').map(function(idx, script) {
-        var metadata = $.parseJSON($(script).html());
-        var post = null;
-        $.each(metadata.categories, function(idx, category) {
-          category = category.replace(/ /g,"_");
-          if (category == page_category) {
-            post = $(script).parent().get();
-            return false;
-          }
-        });
-        return post;
-      });
-      set_posts_visible(posts, true);
-
-      // mark the hash active
-      $('.categories li>a[href="' + window.location.hash + '"]').addClass('active');
-
-    } else {
-
-      // no hash filter, make all posts visible (subject to max display)
-      set_posts_visible($('.posts-list').children(), true);
-
-    }
-  }
-
-  // more articles
-  function apply_post_limits(apply) {
-    if (apply) {
-      $('.posts-container').addClass('posts-apply-limit');
-      $('.posts-more a').removeClass('hidden');
-    } else {
-      $('.posts-container').removeClass('posts-apply-limit');
-      $('.posts-more a').addClass('hidden');
-    }
-  }
-
-  // hash filter handling
-  apply_hash_filter();
-  $(window).on('hashchange',function() {
-    apply_post_limits(true);
-    apply_hash_filter();
-  });
-
-  // more articles link
-  $('.posts-more a').click(function(e) {
-    e.preventDefault();
-    apply_post_limits(false);
-    apply_hash_filter();
-    return false;
-  });
-
-}
-
-</script>
-
-
-
-<div class="posts-container posts-with-sidebar posts-apply-limit l-screen-inset">
-<div class="posts-list">
-<h1 class="posts-list-caption">Duncan Garmonsway</h1>
-<a href="posts/2019-01-02-new-package-armgin-to-summarise-all-margins-of-data-frames/" class="post-preview">
-<script class="post-metadata" type="text/json">{"categories":[]}</script>
-<div class="metadata">
-<div class="publishedDate">Jan. 2, 2019</div>
-</div>
-<div class="thumbnail">
-<img/>
-</div>
-<div class="description">
-<h2>New package {armgin} to summarise all margins of data frames</h2>
-<p>A one-liner for when they want everything by everything.</p>
-</div>
-</a>
-<a href="posts/2018-12-14-choose-a-priors-parameters/" class="post-preview">
-<script class="post-metadata" type="text/json">{"categories":[]}</script>
-<div class="metadata">
-<div class="publishedDate">Dec. 14, 2018</div>
-</div>
-<div class="thumbnail">
-<img data-src="posts/2018-12-14-choose-a-priors-parameters/expert.jpg"/>
-</div>
-<div class="description">
-<h2>Choose a prior's parameters</h2>
-<p>How to parameterise a prior when all you know is the mean and one other
-percentile.</p>
-</div>
-</a>
-<a href="posts/2016-07-20-harry-potter-arcs/" class="post-preview">
-<script class="post-metadata" type="text/json">{"categories":[]}</script>
-<div class="metadata">
-<div class="publishedDate">July 20, 2016</div>
-</div>
-<div class="thumbnail">
-<img data-src="posts/2016-07-20-harry-potter-arcs/harry-potter-arcs-wizards.jpg"/>
-</div>
-<div class="description">
-<h2>More Harry Potter story arcs (they get darker)</h2>
-<p>Reproducing *Harry Potter* sentiment arcs by some real wizards</p>
-</div>
-</a>
-<a href="posts/2016-07-13-harry-potter-sentiment/" class="post-preview">
-<script class="post-metadata" type="text/json">{"categories":[]}</script>
-<div class="metadata">
-<div class="publishedDate">July 13, 2016</div>
-</div>
-<div class="thumbnail">
-<img data-src="posts/2016-07-13-harry-potter-sentiment/harry-potter-sentiment.png"/>
-</div>
-<div class="description">
-<h2>Harry Potter and the N-Grams of Sentiment</h2>
-<p>*Harry Potter* cliches and story arcs by n-grams and sentiment analysis</p>
-</div>
-</a>
-<a href="posts/2016-06-28-radar/" class="post-preview">
-<script class="post-metadata" type="text/json">{"categories":[]}</script>
-<div class="metadata">
-<div class="publishedDate">June 28, 2016</div>
-</div>
-<div class="thumbnail">
-<img data-src="posts/2016-06-28-radar/radar-perfect.png"/>
-</div>
-<div class="description">
-<h2>Hacking the Data Science Radar with Data Science</h2>
-<p>Get a perfect score in the Mango Solution Data Science Radar</p>
-</div>
-</a>
-<a href="posts/2016-06-22-nests/" class="post-preview">
-<script class="post-metadata" type="text/json">{"categories":[]}</script>
-<div class="metadata">
-<div class="publishedDate">June 22, 2016</div>
-</div>
-<div class="thumbnail">
-<img/>
-</div>
-<div class="description">
-<h2>Creating nests without tidyr</h2>
-<p>How to construct nested data frames from scratch, without tidyr</p>
-</div>
-</a>
-<a href="posts/2016-06-13-brexit/" class="post-preview">
-<script class="post-metadata" type="text/json">{"categories":[]}</script>
-<div class="metadata">
-<div class="publishedDate">June 13, 2016</div>
-</div>
-<div class="thumbnail">
-<img data-src="posts/2016-06-13-brexit/brexit.png"/>
-</div>
-<div class="description">
-<h2>Brexit poll of polls</h2>
-<p>Analysis of Brexit polls by visualisation and a linear model</p>
-</div>
-</a>
-<a href="posts/2016-06-06-simmer-bank-2/" class="post-preview">
-<script class="post-metadata" type="text/json">{"categories":[]}</script>
-<div class="metadata">
-<div class="publishedDate">June 6, 2016</div>
-</div>
-<div class="thumbnail">
-<img/>
-</div>
-<div class="description">
-<h2>Simmer vs SimPy: The Bank, Part II</h2>
-<p>Porting a SimPy tutorial to the R package Simmer</p>
-</div>
-</a>
-<a href="posts/2016-05-11-simmer-bank-1/" class="post-preview">
-<script class="post-metadata" type="text/json">{"categories":[]}</script>
-<div class="metadata">
-<div class="publishedDate">May 11, 2016</div>
-</div>
-<div class="thumbnail">
-<img/>
-</div>
-<div class="description">
-<h2>Simmer vs SimPy: The Bank, Part I</h2>
-<p>Porting a SimPy tutorial to the R package Simmer</p>
-</div>
-</a>
-<a href="posts/2016-05-02-statsblogs/" class="post-preview">
-<script class="post-metadata" type="text/json">{"categories":[]}</script>
-<div class="metadata">
-<div class="publishedDate">May 2, 2016</div>
-</div>
-<div class="thumbnail">
-<img data-src="posts/2016-05-02-statsblogs/2016-05-02-statsblogs_files/figure-html5/statsblogs-periodical-1.png"/>
-</div>
-<div class="description">
-<h2>How many StatsBloggers are there?</h2>
-<p>Parsing the daily digest emails and thinking about modelling</p>
-</div>
-</a>
-<a href="posts/2016-04-25-rounding/" class="post-preview">
-<script class="post-metadata" type="text/json">{"categories":[]}</script>
-<div class="metadata">
-<div class="publishedDate">April 25, 2016</div>
-</div>
-<div class="thumbnail">
-<img data-src="posts/2016-04-25-rounding/rounding.png"/>
-</div>
-<div class="description">
-<h2>R rounding is weird?  Try JavaScript!</h2>
-<p>Reproducing browser rounding in R</p>
-</div>
-</a>
-<a href="posts/2016-04-18-rbloggers/" class="post-preview">
-<script class="post-metadata" type="text/json">{"categories":[]}</script>
-<div class="metadata">
-<div class="publishedDate">April 18, 2016</div>
-</div>
-<div class="thumbnail">
-<img data-src="posts/2016-04-18-rbloggers/rbloggers.png"/>
-</div>
-<div class="description">
-<h2>How many R-Bloggers are there?</h2>
-<p>Parsing the daily digest emails</p>
-</div>
-</a>
-<a href="posts/2015-07-13-nzcrash/" class="post-preview">
-<script class="post-metadata" type="text/json">{"categories":[]}</script>
-<div class="metadata">
-<div class="publishedDate">July 13, 2015</div>
-</div>
-<div class="thumbnail">
-<img data-src="posts/2015-07-13-nzcrash/nzcrash.png"/>
-</div>
-<div class="description">
-<h2>New R package: nzcrash</h2>
-<p>Redistributing New Zealand crash data in tidy form</p>
-</div>
-</a>
-</div>
-<div class="posts-sidebar">
-<div class="sidebar-section subscribe">
-<h3>Subscribe</h3>
-<form method='post' action='https://blogtrottr.com'>
-  <p>Enjoy this blog? Get notified of new posts via email:</p>
-  <input type='text' name='btr_email' />
-  <input type='hidden' name='btr_url'
-         value='https://nacnudus.github.io/duncangarmonsway/index.html'/>
-  <input type='hidden' name='schedule_type' value='0' />
-  <input type='submit' value='Subscribe' />
-</form>
-
-</div>
-</div>
-<div class="posts-more">
-<a href="#">More articles &raquo;</a>
-</div>
-</div>
-<!--/radix_placeholder_article_listing-->
 
 <div class="d-title">
-<h1>Duncan Garmonsway</h1>
-<p>The personal website of Duncan Garmonsway, data scientist and UK civil servant.</p>
+<h1>New package {armgin} to summarise all margins of data frames</h1>
+<p>A one-liner for when they want everything by everything.</p>
 </div>
 
+<div class="d-byline">
+  
+  Duncan Garmonsway
+  
+<br/>January 2, 2019
+</div>
 
 <div class="d-article">
+<p>Some people want everything summarised by everything else. Who are we to refuse? So here’s a one-liner to deliver what they want, and you can take the rest of 2019 off.</p>
+<p>[<em>This is also useful in Shiny apps to replace a slow <code>summarise()</code> with fast <code>filter()</code>.</em>]</p>
+<p><code>armgin::margins()</code> is a function in the <a href="https://github.com/nacnudus/armgin"><code>armgin</code> R package</a> to summarise all combinations of grouping variables at once. For example, vote counts by</p>
+<pre><code>
+* voting place, ward, constituency, party, candidate
+* voting place, ward, constituency, party
+* voting place, ward, constituency
+* voting place, ward,
+* voting place</code></pre>
+<p>Or with <code>hierarchy = FALSE</code> and grouping by only voting place, ward and constituency (for brevity)</p>
+<pre><code>
+* voting place, ward, constituency
 
+* voting place, ward
+* voting place, constituency
+* ward, constituency
+
+* voting place
+* ward
+* constituency</code></pre>
+<p>Groups are defined as normal by <code>dplyr::group_by()</code> and then piped into <code>armgin::margins()</code>.</p>
+<div class="layout-chunk" data-layout="l-body">
+<pre class="r"><code>
+library(dplyr)
+library(armgin)
+
+mtcars %&gt;%
+  group_by(cyl, gear, am) %&gt;%
+  margins(mpg = mean(mpg),
+          hp = min(hp)) %&gt;%
+  print(n = Inf)</code></pre>
+<pre><code>
+# A tibble: 21 x 5
+# Groups:   cyl [3]
+     cyl  gear    am   mpg    hp
+   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+ 1     4    NA    NA  26.7    52
+ 2     6    NA    NA  19.7   105
+ 3     8    NA    NA  15.1   150
+ 4     4     3    NA  21.5    97
+ 5     4     4    NA  26.9    52
+ 6     4     5    NA  28.2    91
+ 7     6     3    NA  19.8   105
+ 8     6     4    NA  19.8   110
+ 9     6     5    NA  19.7   175
+10     8     3    NA  15.0   150
+11     8     5    NA  15.4   264
+12     4     3     0  21.5    97
+13     4     4     0  23.6    62
+14     4     4     1  28.0    52
+15     4     5     1  28.2    91
+16     6     3     0  19.8   105
+17     6     4     0  18.5   123
+18     6     4     1  21     110
+19     6     5     1  19.7   175
+20     8     3     0  15.0   150
+21     8     5     1  15.4   264</code></pre>
+</div>
+<p>Output individual data frames with <code>bind = FALSE</code>.</p>
+<div class="layout-chunk" data-layout="l-body">
+<pre class="r"><code>
+mtcars %&gt;%
+  group_by(cyl, gear, am) %&gt;%
+  margins(mpg = mean(mpg),
+          hp = min(hp),
+          bind = FALSE)</code></pre>
+<pre><code>
+[[1]]
+# A tibble: 3 x 3
+# Groups:   cyl [3]
+    cyl   mpg    hp
+  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+1     4  26.7    52
+2     6  19.7   105
+3     8  15.1   150
+
+[[2]]
+# A tibble: 8 x 4
+# Groups:   cyl, gear [8]
+    cyl  gear   mpg    hp
+  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+1     4     3  21.5    97
+2     4     4  26.9    52
+3     4     5  28.2    91
+4     6     3  19.8   105
+5     6     4  19.8   110
+6     6     5  19.7   175
+7     8     3  15.0   150
+8     8     5  15.4   264
+
+[[3]]
+# A tibble: 10 x 5
+# Groups:   cyl, gear, am [10]
+     cyl  gear    am   mpg    hp
+   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+ 1     4     3     0  21.5    97
+ 2     4     4     0  23.6    62
+ 3     4     4     1  28.0    52
+ 4     4     5     1  28.2    91
+ 5     6     3     0  19.8   105
+ 6     6     4     0  18.5   123
+ 7     6     4     1  21     110
+ 8     6     5     1  19.7   175
+ 9     8     3     0  15.0   150
+10     8     5     1  15.4   264</code></pre>
+</div>
+<h2 id="installation">Installation</h2>
+<p>You can install the development version from <a href="https://github.com/nacnudus/armgin">GitHub</a> with devtools or remotes.</p>
+<pre class="r"><code>
+install.packages(&quot;devtools&quot;)
+devtools::install_github(&quot;nacnudus/armgin&quot;)</code></pre>
+<h2 id="motivating-example">Motivating example</h2>
+<p>What are the salaries of various jobs, grades and professions in the UK’s Joint Nature Conservation Committee?</p>
+<div class="layout-chunk" data-layout="l-body">
+<pre class="r"><code>
+library(armgin)
+
+library(dplyr)
+library(tidyr)
+library(readr)
+
+# organogram.csv is from &quot;https://data.gov.uk/sites/default/files/organogram/joint-nature-conservation-committee/30/9/2018/20180930%20JNCC-junior.csv&quot;,
+
+organogram &lt;-
+  read_csv(&quot;organogram.csv&quot;) %&gt;%
+  replace_na(list(Grade = &quot;Other&quot;))</code></pre>
+</div>
+<p>It could be a hierarchy with the whole JNCC Organisation at the top, then Grade within that, then Profession as the bottom grouping.</p>
+<div class="layout-chunk" data-layout="l-body">
+<pre class="r"><code>
+organogram  %&gt;%
+  group_by(Organisation, Grade, `Professional/Occupational Group`) %&gt;%
+  margins(min = min(`Payscale Minimum (£)`),
+          max = max(`Payscale Maximum (£)`),
+          fte = sum(`Number of Posts in FTE`)) %&gt;%
+  mutate_if(is.character, replace_na, &quot;All&quot;) %&gt;%
+  print(n = Inf)</code></pre>
+<pre><code>
+# A tibble: 33 x 6
+# Groups:   Organisation [1]
+   Organisation        Grade `Professional/Occupat…   min   max    fte
+   &lt;chr&gt;               &lt;chr&gt; &lt;chr&gt;                  &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;
+ 1 Joint Nature Conse… All   All                    16284 63271 179.  
+ 2 Joint Nature Conse… AA    All                    16284 17560   1   
+ 3 Joint Nature Conse… AO    All                    18515 21226   9.3 
+ 4 Joint Nature Conse… H     All                    27398 33159  62   
+ 5 Joint Nature Conse… O     All                    22143 26945  19.6 
+ 6 Joint Nature Conse… Other All                    44671 63271  25.8 
+ 7 Joint Nature Conse… S     All                    35175 41889  61.1 
+ 8 Joint Nature Conse… AA    Knowledge and Informa… 16284 17560   1   
+ 9 Joint Nature Conse… AO    Finance                18515 21226   1   
+10 Joint Nature Conse… AO    Human Resources        18515 21226   1   
+11 Joint Nature Conse… AO    Information Technology 18515 21226   1   
+12 Joint Nature Conse… AO    Knowledge and Informa… 18515 21226   5.3 
+13 Joint Nature Conse… AO    Science and Engineeri… 18515 21226   1   
+14 Joint Nature Conse… H     Communications         27398 33159   1.5 
+15 Joint Nature Conse… H     Finance                27398 33159   1.89
+16 Joint Nature Conse… H     Human Resources        27398 33159   2   
+17 Joint Nature Conse… H     Knowledge and Informa… 27398 33159   8.64
+18 Joint Nature Conse… H     Science and Engineeri… 27398 33159  48.0 
+19 Joint Nature Conse… O     Communications         22143 26945   1   
+20 Joint Nature Conse… O     Finance                22143 26945   1   
+21 Joint Nature Conse… O     Human Resources        22143 26945   1.6 
+22 Joint Nature Conse… O     Knowledge and Informa… 22143 26945   5   
+23 Joint Nature Conse… O     Science and Engineeri… 22143 26945  11   
+24 Joint Nature Conse… Other Finance                44671 53196   1   
+25 Joint Nature Conse… Other Human Resources        44671 53196   1   
+26 Joint Nature Conse… Other Information Technology 44671 53196   2   
+27 Joint Nature Conse… Other Knowledge and Informa… 44671 53196   2   
+28 Joint Nature Conse… Other Science and Engineeri… 44671 63271  19.8 
+29 Joint Nature Conse… S     Communications         35175 41889   2   
+30 Joint Nature Conse… S     Finance                35175 41889   2   
+31 Joint Nature Conse… S     Human Resources        35175 41889   0.69
+32 Joint Nature Conse… S     Information Technology 35175 41889   1   
+33 Joint Nature Conse… S     Science and Engineeri… 35175 41889  55.4 </code></pre>
+</div>
+<p>Or it could be a different hierarchy, with Grade grouped inside Profession.</p>
+<div class="layout-chunk" data-layout="l-body">
+<pre class="r"><code>
+organogram  %&gt;%
+  group_by(Organisation, `Professional/Occupational Group`, Grade) %&gt;%
+  margins(min = min(`Payscale Minimum (£)`),
+          max = max(`Payscale Maximum (£)`),
+          fte = sum(`Number of Posts in FTE`)) %&gt;%
+  mutate_if(is.character, replace_na, &quot;All&quot;) %&gt;%
+  print(n = Inf)</code></pre>
+<pre><code>
+# A tibble: 33 x 6
+# Groups:   Organisation [1]
+   Organisation        `Professional/Occupat… Grade   min   max    fte
+   &lt;chr&gt;               &lt;chr&gt;                  &lt;chr&gt; &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;
+ 1 Joint Nature Conse… All                    All   16284 63271 179.  
+ 2 Joint Nature Conse… Communications         All   22143 41889   4.5 
+ 3 Joint Nature Conse… Finance                All   18515 53196   6.89
+ 4 Joint Nature Conse… Human Resources        All   18515 53196   6.29
+ 5 Joint Nature Conse… Information Technology All   18515 53196   4   
+ 6 Joint Nature Conse… Knowledge and Informa… All   16284 53196  21.9 
+ 7 Joint Nature Conse… Science and Engineeri… All   18515 63271 135.  
+ 8 Joint Nature Conse… Communications         H     27398 33159   1.5 
+ 9 Joint Nature Conse… Communications         O     22143 26945   1   
+10 Joint Nature Conse… Communications         S     35175 41889   2   
+11 Joint Nature Conse… Finance                AO    18515 21226   1   
+12 Joint Nature Conse… Finance                H     27398 33159   1.89
+13 Joint Nature Conse… Finance                O     22143 26945   1   
+14 Joint Nature Conse… Finance                Other 44671 53196   1   
+15 Joint Nature Conse… Finance                S     35175 41889   2   
+16 Joint Nature Conse… Human Resources        AO    18515 21226   1   
+17 Joint Nature Conse… Human Resources        H     27398 33159   2   
+18 Joint Nature Conse… Human Resources        O     22143 26945   1.6 
+19 Joint Nature Conse… Human Resources        Other 44671 53196   1   
+20 Joint Nature Conse… Human Resources        S     35175 41889   0.69
+21 Joint Nature Conse… Information Technology AO    18515 21226   1   
+22 Joint Nature Conse… Information Technology Other 44671 53196   2   
+23 Joint Nature Conse… Information Technology S     35175 41889   1   
+24 Joint Nature Conse… Knowledge and Informa… AA    16284 17560   1   
+25 Joint Nature Conse… Knowledge and Informa… AO    18515 21226   5.3 
+26 Joint Nature Conse… Knowledge and Informa… H     27398 33159   8.64
+27 Joint Nature Conse… Knowledge and Informa… O     22143 26945   5   
+28 Joint Nature Conse… Knowledge and Informa… Other 44671 53196   2   
+29 Joint Nature Conse… Science and Engineeri… AO    18515 21226   1   
+30 Joint Nature Conse… Science and Engineeri… H     27398 33159  48.0 
+31 Joint Nature Conse… Science and Engineeri… O     22143 26945  11   
+32 Joint Nature Conse… Science and Engineeri… Other 44671 63271  19.8 
+33 Joint Nature Conse… Science and Engineeri… S     35175 41889  55.4 </code></pre>
+</div>
+<p>Or there could be no hierarchy, with all combinations of Organisation, Grade and Profession equally valid subsets.</p>
+<div class="layout-chunk" data-layout="l-body">
+<pre class="r"><code>
+organogram %&gt;%
+  group_by(Organisation, Grade, `Professional/Occupational Group`) %&gt;%
+  margins(min = min(`Payscale Minimum (£)`),
+          max = max(`Payscale Maximum (£)`),
+          fte = sum(`Number of Posts in FTE`),
+          hierarchy = FALSE) %&gt;%
+  mutate_if(is.character, replace_na, &quot;All&quot;) %&gt;%
+  print(n = Inf)</code></pre>
+<pre><code>
+# A tibble: 77 x 6
+# Groups:   Organisation [2]
+   Organisation        Grade `Professional/Occupat…   min   max    fte
+   &lt;chr&gt;               &lt;chr&gt; &lt;chr&gt;                  &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;
+ 1 Joint Nature Conse… All   All                    16284 63271 179.  
+ 2 &lt;NA&gt;                AA    All                    16284 17560   1   
+ 3 &lt;NA&gt;                AO    All                    18515 21226   9.3 
+ 4 &lt;NA&gt;                H     All                    27398 33159  62   
+ 5 &lt;NA&gt;                O     All                    22143 26945  19.6 
+ 6 &lt;NA&gt;                Other All                    44671 63271  25.8 
+ 7 &lt;NA&gt;                S     All                    35175 41889  61.1 
+ 8 &lt;NA&gt;                All   Communications         22143 41889   4.5 
+ 9 &lt;NA&gt;                All   Finance                18515 53196   6.89
+10 &lt;NA&gt;                All   Human Resources        18515 53196   6.29
+11 &lt;NA&gt;                All   Information Technology 18515 53196   4   
+12 &lt;NA&gt;                All   Knowledge and Informa… 16284 53196  21.9 
+13 &lt;NA&gt;                All   Science and Engineeri… 18515 63271 135.  
+14 Joint Nature Conse… AA    All                    16284 17560   1   
+15 Joint Nature Conse… AO    All                    18515 21226   9.3 
+16 Joint Nature Conse… H     All                    27398 33159  62   
+17 Joint Nature Conse… O     All                    22143 26945  19.6 
+18 Joint Nature Conse… Other All                    44671 63271  25.8 
+19 Joint Nature Conse… S     All                    35175 41889  61.1 
+20 Joint Nature Conse… All   Communications         22143 41889   4.5 
+21 Joint Nature Conse… All   Finance                18515 53196   6.89
+22 Joint Nature Conse… All   Human Resources        18515 53196   6.29
+23 Joint Nature Conse… All   Information Technology 18515 53196   4   
+24 Joint Nature Conse… All   Knowledge and Informa… 16284 53196  21.9 
+25 Joint Nature Conse… All   Science and Engineeri… 18515 63271 135.  
+26 &lt;NA&gt;                AA    Knowledge and Informa… 16284 17560   1   
+27 &lt;NA&gt;                AO    Finance                18515 21226   1   
+28 &lt;NA&gt;                AO    Human Resources        18515 21226   1   
+29 &lt;NA&gt;                AO    Information Technology 18515 21226   1   
+30 &lt;NA&gt;                AO    Knowledge and Informa… 18515 21226   5.3 
+31 &lt;NA&gt;                AO    Science and Engineeri… 18515 21226   1   
+32 &lt;NA&gt;                H     Communications         27398 33159   1.5 
+33 &lt;NA&gt;                H     Finance                27398 33159   1.89
+34 &lt;NA&gt;                H     Human Resources        27398 33159   2   
+35 &lt;NA&gt;                H     Knowledge and Informa… 27398 33159   8.64
+36 &lt;NA&gt;                H     Science and Engineeri… 27398 33159  48.0 
+37 &lt;NA&gt;                O     Communications         22143 26945   1   
+38 &lt;NA&gt;                O     Finance                22143 26945   1   
+39 &lt;NA&gt;                O     Human Resources        22143 26945   1.6 
+40 &lt;NA&gt;                O     Knowledge and Informa… 22143 26945   5   
+41 &lt;NA&gt;                O     Science and Engineeri… 22143 26945  11   
+42 &lt;NA&gt;                Other Finance                44671 53196   1   
+43 &lt;NA&gt;                Other Human Resources        44671 53196   1   
+44 &lt;NA&gt;                Other Information Technology 44671 53196   2   
+45 &lt;NA&gt;                Other Knowledge and Informa… 44671 53196   2   
+46 &lt;NA&gt;                Other Science and Engineeri… 44671 63271  19.8 
+47 &lt;NA&gt;                S     Communications         35175 41889   2   
+48 &lt;NA&gt;                S     Finance                35175 41889   2   
+49 &lt;NA&gt;                S     Human Resources        35175 41889   0.69
+50 &lt;NA&gt;                S     Information Technology 35175 41889   1   
+51 &lt;NA&gt;                S     Science and Engineeri… 35175 41889  55.4 
+52 Joint Nature Conse… AA    Knowledge and Informa… 16284 17560   1   
+53 Joint Nature Conse… AO    Finance                18515 21226   1   
+54 Joint Nature Conse… AO    Human Resources        18515 21226   1   
+55 Joint Nature Conse… AO    Information Technology 18515 21226   1   
+56 Joint Nature Conse… AO    Knowledge and Informa… 18515 21226   5.3 
+57 Joint Nature Conse… AO    Science and Engineeri… 18515 21226   1   
+58 Joint Nature Conse… H     Communications         27398 33159   1.5 
+59 Joint Nature Conse… H     Finance                27398 33159   1.89
+60 Joint Nature Conse… H     Human Resources        27398 33159   2   
+61 Joint Nature Conse… H     Knowledge and Informa… 27398 33159   8.64
+62 Joint Nature Conse… H     Science and Engineeri… 27398 33159  48.0 
+63 Joint Nature Conse… O     Communications         22143 26945   1   
+64 Joint Nature Conse… O     Finance                22143 26945   1   
+65 Joint Nature Conse… O     Human Resources        22143 26945   1.6 
+66 Joint Nature Conse… O     Knowledge and Informa… 22143 26945   5   
+67 Joint Nature Conse… O     Science and Engineeri… 22143 26945  11   
+68 Joint Nature Conse… Other Finance                44671 53196   1   
+69 Joint Nature Conse… Other Human Resources        44671 53196   1   
+70 Joint Nature Conse… Other Information Technology 44671 53196   2   
+71 Joint Nature Conse… Other Knowledge and Informa… 44671 53196   2   
+72 Joint Nature Conse… Other Science and Engineeri… 44671 63271  19.8 
+73 Joint Nature Conse… S     Communications         35175 41889   2   
+74 Joint Nature Conse… S     Finance                35175 41889   2   
+75 Joint Nature Conse… S     Human Resources        35175 41889   0.69
+76 Joint Nature Conse… S     Information Technology 35175 41889   1   
+77 Joint Nature Conse… S     Science and Engineeri… 35175 41889  55.4 </code></pre>
+</div>
 <!--radix_placeholder_article_footer-->
 <!--/radix_placeholder_article_footer-->
 </div>
@@ -1843,12 +1294,7 @@ percentile.</p>
 <!--radix_placeholder_site_after_body-->
 <!--/radix_placeholder_site_after_body-->
 <!--radix_placeholder_appendices-->
-<div class="appendix-bottom">
-<h3 id="updates-and-corrections">Corrections</h3>
-<p>If you see mistakes or want to suggest changes, please <a href="https://github.com/nacnudus/duncangarmonsway/issues/new">create an issue</a> on the source repository.</p>
-<h3 id="reuse">Reuse</h3>
-<p>Text and figures are licensed under Creative Commons Attribution <a rel="license" href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>. Source code is available at <a href="https://github.com/nacnudus/duncangarmonsway">https://github.com/nacnudus/duncangarmonsway</a>, unless otherwise noted. The figures that have been reused from other sources don't fall under this license and can be recognized by a note in their caption: "Figure from ...".</p>
-</div>
+<div class="appendix-bottom"></div>
 <!--/radix_placeholder_appendices-->
 <!--radix_placeholder_navigation_after_body-->
 <!--/radix_placeholder_navigation_after_body-->

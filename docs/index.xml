@@ -12,7 +12,15 @@
       <link>https://nacnudus.github.io/duncangarmonsway</link>
     </image>
     <generator>Radix</generator>
-    <lastBuildDate>Fri, 14 Dec 2018 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Wed, 02 Jan 2019 00:00:00 +0000</lastBuildDate>
+    <item>
+      <title>New package {armgin} to summarise all margins of data frames</title>
+      <dc:creator>Duncan Garmonsway</dc:creator>
+      <link>https://nacnudus.github.io/duncangarmonsway/posts/2019-01-02-new-package-armgin-to-summarise-all-margins-of-data-frames</link>
+      <description>A one-liner for when they want everything by everything.</description>
+      <guid>https://nacnudus.github.io/duncangarmonsway/posts/2019-01-02-new-package-armgin-to-summarise-all-margins-of-data-frames</guid>
+      <pubDate>Wed, 02 Jan 2019 00:00:00 +0000</pubDate>
+    </item>
     <item>
       <title>Choose a prior's parameters</title>
       <dc:creator>Duncan Garmonsway</dc:creator>

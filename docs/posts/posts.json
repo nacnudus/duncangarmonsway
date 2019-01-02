@@ -1,5 +1,20 @@
 [
   {
+    "path": "posts/2019-01-02-new-package-armgin-to-summarise-all-margins-of-data-frames/",
+    "title": "New package {armgin} to summarise all margins of data frames",
+    "description": "A one-liner for when they want everything by everything.",
+    "author": [
+      {
+        "name": "Duncan Garmonsway",
+        "url": {}
+      }
+    ],
+    "date": "2019-01-02",
+    "categories": [],
+    "preview": {},
+    "last_modified": "2019-01-02T11:44:47+00:00"
+  },
+  {
     "path": "posts/2018-12-14-choose-a-priors-parameters/",
     "title": "Choose a prior's parameters",
     "description": "How to parameterise a prior when all you know is the mean and one other\npercentile.",
