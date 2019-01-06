@@ -1,0 +1,434 @@
+---
+title: "Food Nutrition and Price"
+author: Duncan Garmonsway
+description: |
+  Explore a supermarket of food nutrition and price (renders slowly)
+date: January 7, 2019
+preview: tweet.png
+output:
+  radix::radix_article:
+    self_contained: false
+    code_folding: hide
+---
+
+After feasting, thoughts turn to diets.  Diets mean optimisation.  Optimisation
+requires data.  For myself, I want to know:
+
+* What is the cheapest protein, fat and carbohydrate per 100g?
+* What is the general distribution of nutritional value?
+* What is the sweeter condiment: sauce or jam?
+
+So I scraped a supermarket.
+
+Specifically, I scraped the grocery section of the website of a major UK
+supermarket, and then I sat on the data for nearly two years because it's so
+untidy.
+
+## Getting nutritional information in bulk
+
+There are strict [labelling requirements on
+food](https://www.gov.uk/food-labelling-and-packaging), its nutritional value
+in particular, so almost all food packaging gives carbohydrate, fat and protein
+content per 100g or 100ml.  This should make it straightforward to learn about
+food, because the data already exists.
+
+> ![Table of nutritional information for Sainsbury's Brocolli Cheese ready
+meal](./nutritional-information.png)
+
+Unfortunately, the government doesn't collect the data, though the Office for
+National Statistics [scraped three supermarked
+websites](https://www.ons.gov.uk/file?uri=/economy/inflationandpriceindices/articles/researchindicesusingwebscrapedpricedata/may2016update/researchindicesusingwebscrapeddatamay2016.pdf)
+for the Consumer Price Index.  I tried to do the same and regretted that the ONS
+hadn't pubished its code, because it was a pain.  A couple of packages have made
+the task tractable; [htmltab](https://cran.r-project.org/package=htmltab) is
+helps with spanning rows and columns html tables, my own
+[unpivotr](https://nacnudus.github.io/unpivotr) has improved since 2016, and
+[reticulate](https://rstudio.github.io/reticulate/index.html) makes it trivial
+to call the Python package [quantulum3](https://github.com/nielstron/quantulum3)
+for extracting units like grams and kilocalories from free text.  The result
+isn't perfectly clean data -- you'll notice some obvious glitches -- but it's
+good for shopping.
+
+<aside>
+This is the least reproducible work I have ever done.  If
+I were to do it again I would use the
+[`polite`](https://github.com/dmi3kno/polite) to be nice to the supermarket, and
+[`furrr`](https://cran.r-project.org/package=furrr) to get it done faster (it
+ran overnight).  I haven't published the data because I don't think it belongs
+to me, but if you really want it then contact me.  You could get some of it from
+this web page anyway, but you won't get the vitamins and minerals etc. in the
+raw data.
+</aside>
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+
+library(tidyverse)
+library(scales)
+library(crosstalk)
+library(plotly)
+library(DT)
+library(here)
+
+nutrients <- readRDS(here("data", "nutrients.Rds"))
+
+prices <-
+  readRDS(here("data", "prices.Rds")) %>%
+  dplyr::filter(!is.na(price_per_100g)) %>%
+  group_by(filename) %>%
+  slice(1L) %>%
+  ungroup() %>%
+  rename(product = filename) %>%
+  mutate(product = str_replace(product, "^.*\\|", ""),
+         product = str_replace(product, "\\.html$", "")) %>%
+  select(product, price_per_100g) %>%
+  rename(price = price_per_100g)
+
+basic_nutrients <-
+  nutrients %>%
+  dplyr::filter(!str_detect(filename, fixed("sainsburys-indian-meal--taste-the-difference-143kg-%28serves-2%29"))) %>%
+  dplyr::filter(unit %in% c("gram", "kilocalorie"),
+                !(unit == "gram" & amount > 100),
+                !(nutrient == "energy" & amount > 1000),
+                str_detect(nutrient,
+                           regex("carbohydrate|energy|fat|protein|sugar",
+                                 ignore_case = TRUE))) %>%
+  # left_join(prices_per_100g, by = "filename") %>%
+  rename(product = filename) %>%
+  mutate(product = str_replace(product, "^.*\\|", ""),
+         product = str_replace(product, "\\.html$", ""),
+         nutrient = str_extract(nutrient,
+                                regex("carbohydrate|energy|fat|protein|sugar", ignore_case = TRUE))) %>%
+  select(-unit) %>%
+  group_by(product, nutrient) %>%
+  slice(1) %>%
+  ungroup() %>%
+  spread(nutrient, amount) %>%
+  replace_na(list(carbohydrate = 0,
+                  energy = 0,
+                  fat = 0,
+                  protein = 0,
+                  sugar = 0)) %>%
+  dplyr::filter(energy > 0) %>%
+  select(product, carbohydrate, fat, protein, energy) %>%
+  left_join(prices, by = "product") %>%
+  mutate(`£/carbohydrate` = price / carbohydrate,
+         `£/fat` = price / fat,
+         `£/protein` = price / protein,
+         `£/energy` = price / energy)
+```
+
+## The cheapest food by nutritional value
+
+The cheapest grocery overall, by mass, was own-brand diet lemonade.  All the top
+ten were soft drinks.  But what you're buying when you buy diet pop is basically
+water, so it's far from the cheapest for any kind of nutrition.  The cheapest
+energy and cheapest carbohydrate is flour, with bread and sugar filling out the
+top ten (wine is probably a mistake).  The cheapest fat is lard, with non-butter
+spread, oil, and mayonnaise (mostly oil) filling out the top ten.
+
+The cheapest protein?  Also flour.  But you could splash out and get 25kg of
+chicken portions.
+
+Expand the headings below to see the top 10 in each category.
+
+<details><summary>Price per unit mass</summary>
+
+```{r price-mass}
+basic_nutrients %>%
+  arrange(price) %>%
+  slice(1:10)
+```
+</details>
+
+<details><summary>Price per unit energy</summary>
+
+```{r price-energy}
+basic_nutrients %>%
+  arrange(`£/energy`) %>%
+  slice(1:10)
+```
+</details>
+
+<details><summary>Price per unit carbohydrate</summary>
+
+```{r price-carbohydrate}
+basic_nutrients %>%
+  arrange(`£/carbohydrate`) %>%
+  slice(1:10)
+```
+</details>
+
+<details><summary>Price per unit fat</summary>
+
+```{r price-fat}
+basic_nutrients %>%
+  arrange(`£/fat`) %>%
+  slice(1:10)
+```
+</details>
+
+<details><summary>Price per unit protein</summary>
+
+```{r price-protein}
+basic_nutrients %>%
+  arrange(`£/protein`) %>%
+  slice(1:10)
+```
+</details>
+
+<p/>
+
+Unsurprisingly, protein is the most expensive nutritional component, then fat,
+then carbohydrate.  But now you can tell when you're paying over the odds.
+There's a lot of choice for less than 10p per gram of protein or fat, or less
+than 1p per gram of carbohydrate.  If you're paying more than £1 per gram of
+anything then it isn't for the nutritional value (unless it's for something I
+haven't explored, such as fibre and vitamins).
+
+```{r price, warning = FALSE}
+basic_nutrients %>%
+  select(product, starts_with("£"), -`£/energy`) %>%
+  gather(unit, price, starts_with("£")) %>%
+  mutate(unit = str_sub(unit, 3L)) %>%
+  ggplot(aes(price, fill = unit)) +
+  geom_density(alpha = .5, colour = NA) +
+  scale_x_log10(labels = dollar_format(prefix = "£"),
+                limits = c(NA, 100),
+                breaks = log_breaks()(c(1e-2, 1e-1, 1, 1e1))) +
+  scale_fill_brewer(name = "", palette = "Dark2") +
+  xlab("Price per gram (log scale)") +
+  ylab("") +
+  theme_minimal() +
+  ggtitle("Price of food by nutrition",
+          subtitle = "Distribution of price per gram of carbohydrate, fat and protein") +
+  theme(axis.text.y = element_blank(),
+        axis.ticks.y = element_blank(),
+        panel.grid = element_blank(),
+        legend.position = c(0.7, .7))
+```
+
+## Distribution of nutritional value
+
+You can explore an interactive 3d graph at the bottom of the post, but first I
+want to use ternary plots to compare particular groups of foods.  A little light
+curation before taking the lazy option.
+
+Ternary plots compress three-dimensional data onto two dimensions by exploiting
+a loophole: when the dimensions are ratios that add to 100%, there are only two
+degrees of freedom.  Once you know the proportions of two dimensions, then you
+know the third.  This doesn't work for carbohydrate, fat and protein because
+they don't necessarily sum to 100% of the mass of the food -- diet soda drinks
+are 0% everything.  So to make the food fit the graph, I create fake ratios:
+carbohydrate divided by (carbohydrate plus fat plus sugar), and so on.  When
+reading the graphs below, a point that is near to the "carbohydrate" corner has
+more carbohydrate than fat or protein, but it doesn't necessarily have much of
+any of them -- it could be mostly water.  Finally, the colour is the amount of
+energy, with turquoise for lots of energy and purple for not much (or missing
+data).  Mouse over for the names of the products.
+
+```{r ternary-data, include = FALSE}
+ternary_df <-
+  basic_nutrients %>%
+  select(product, price, energy, carbohydrate, fat, protein) %>%
+  # get carb, fat, protein as proportions of carb + fat + protein
+  mutate(sum = (carbohydrate + fat + protein) / 100) %>%
+  gather(nutrient, amount, carbohydrate, fat, protein) %>%
+  group_by(product, energy, sum) %>%
+  mutate(amount = amount / sum(amount)) %>%
+  ungroup() %>%
+  replace_na(list(amount = 0)) %>%
+  spread(nutrient, amount)
+```
+
+```{r ternary-energy, warning = FALSE}
+ternary_df %>%
+  plot_ly() %>%
+  add_trace(
+    type = "scatterternary",
+    mode = "markers",
+    marker = list(size = 2,
+                  color = ~energy,
+                  colorscale = "Viridis"),
+    a = ~carbohydrate,
+    b = ~fat,
+    c = ~protein,
+    text = ~product
+  ) %>%
+  layout(
+    ternary = list(
+      sum = 100,
+      aaxis = list(title = "carbohydrate"),
+      baxis = list(title = "fat"),
+      caxis = list(title = "protein")
+    )
+  )
+```
+
+You might wonder about a data glitch in that plot.  Why do there seem to be so
+many foods that despite having proportions of carbohydrate don't have much
+energy?  That's because the purple foods on the right are comparitively high in
+water content -- meat, bread, soup, cooked rice and pasta -- whereas the
+turquoise foods on the left are more substantial -- biscuits, crisps, sticky
+cake.  Of course there is probably some missing data too.
+
+```{r ternary-pairplot, include = FALSE}
+ternary_pairplot <- function(.data) {
+  .data %>%
+    plot_ly(color = ~group, colors = c("#F8766D", "#00BFC4")) %>%
+    add_trace(
+      type = "scatterternary",
+      mode = "markers",
+      marker = list(size = 4), # opacity per point isn't supported
+      a = ~carbohydrate,
+      b = ~fat,
+      c = ~protein,
+      text = ~product
+    ) %>%
+    layout(
+      ternary = list(
+        sum = 100,
+        aaxis = list(title = "carbohydrate"),
+        baxis = list(title = "fat"),
+        caxis = list(title = "protein")
+      )
+    )
+}
+```
+
+Ternary plots are good for comparing groups of foods, and here they reveal some
+surprises.  Crisps and biscuits are roughly equivalent, nutritionally.  Some
+crisps are fattier, and some biscuits are more sugary, but there is a
+substantial overlap.
+
+```{r crisps-biscuits-plotly}
+ternary_df %>%
+  mutate(group = str_extract(product, "(crisps)|(biscuits)")) %>%
+  dplyr::filter(!is.na(group)) %>%
+  ternary_pairplot()
+```
+
+You might pay closer attention to food labelling when you compare sauces with
+jams.  Fair enough, most of the jams are overplotted in the carbohydrate corner,
+but lots of sauces are terribly sugary.
+
+<aside>
+The data distinguishes between carbohydrates and "of which, sugar", but I
+haven't here.
+</aside>
+
+```{r jam-sauce}
+basic_nutrients %>%
+  mutate(group = str_extract(product, "(-jam-)|(sauce)")) %>%
+  dplyr::filter(!is.na(group)) %>%
+  ternary_pairplot()
+```
+
+'Lite' yoghurt is not so much less fatty as less carbohydrate-y than normal
+yoghurt.
+
+```{r yoghurt}
+basic_nutrients %>%
+  dplyr::filter(str_detect(product, "yog[h]?urt")) %>%
+  mutate(group = str_extract(product, "(fat-free)|(low-fat)|(sugar-free)|(low-sugar)|(light)|(lite)")) %>%
+  replace_na(list(group = "normal")) %>%
+  mutate(group = if_else(group == "normal", "normal", "lite")) %>%
+  ternary_pairplot()
+```
+
+## Free exploration
+
+It's your turn to explore the data.  Perhaps you'd like to check that my
+findings above are still valid as absolutes rather than proportions.  Or perhaps
+you've resolved to bulk up and want to sort the data by protein content (egg
+white powder, then dried meat).  The highest energy content?  Peppermint extract
+is in sixth place, being almost 100% fat.  You can filter the table, e.g.  to
+find the lowest-sugar sugar (molasses, 94%), and click on rows (hold down shift
+to select a range) to filter the charts as well.  Finally, select a region of
+the 2d graphs to filter the other graphs and the table.  Be patient -- the
+browser has a lot of data to deal with.
+
+<aside>
+The interactivity within graphs [plotly](https://plot.ly/r/) and the
+interactivity between graphs and the table is
+[crosstalk](https://rstudio.github.io/crosstalk/).  Everything runs in the
+browser; there is no server.  [Matt Dray's blog
+post](https://www.rostrum.blog/2018/09/12/crosstalk-memes/) and
+[slides](https://matt-dray.github.io/earl18-presentation/#1) are persuasive and
+fun.
+</aside>
+
+```{r 3d, warning = FALSE}
+food_df <- SharedData$new(basic_nutrients, ~product, group = "food")
+
+food_df %>%
+  plot_ly(x = ~carbohydrate, y = ~fat, z = ~protein, color = ~energy,
+          type = "scatter3d",
+          mode = "markers",
+          marker = list(size = 1.25),
+          text = ~product) %>%
+  layout(scene = list(xaxis = list(title = 'carbohydrate'),
+                      yaxis = list(title = 'fat'),
+                      zaxis = list(title = 'protein'),
+                      dragmode = "turntable")) %>%
+  highlight(opacityDim = 0.01, on = "plotly_selected", off = "plotly_deselect")
+
+```
+
+```{r 2d, fig.width = 9.5}
+food_df %>%
+  # Control y-axis lengths until https://github.com/plotly/plotly.js/issues/1876
+  plot_ly(height = figWidth() / 3) %>%
+  add_trace(x = ~carbohydrate, y = ~fat, color = ~energy,
+            type = "scatter",
+            mode = "markers",
+            marker = list(size = 1.25),
+            text = ~product) %>%
+  add_trace(x = ~protein, y = ~carbohydrate, color = ~energy,
+            xaxis = "x2",
+            yaxis = "y2",
+            type = "scatter",
+            mode = "markers",
+            marker = list(size = 1.25),
+            text = ~product) %>%
+  add_trace(x = ~fat, y = ~protein, color = ~energy,
+            xaxis = "x3",
+            yaxis = "y3",
+            type = "scatter",
+            mode = "markers",
+            marker = list(size = 1.25),
+            text = ~product) %>%
+  layout(xaxis = list(title = "carbohydrate",
+                      domain = c(0, 0.3),
+                      range = c(0, 100)),
+         xaxis2 = list(title = "protein",
+                       domain = c(0.33, 0.66),
+                       range = c(0, 100)),
+         xaxis3 = list(title = "fat",
+                       domain = c(0.7, 1),
+                       range = c(0, 100)),
+         yaxis = list(title = "fat",
+                      domain = 0:1,
+                      range = c(0, 100),
+                      anchor = "x",
+                      scaleanchor = "x"),
+         yaxis2 = list(title = "carbohydrate",
+                       domain = 0:1,
+                       range = c(0, 100),
+                       anchor = "x2",
+                       scaleanchor = "x2"),
+         yaxis3 = list(title = "protein",
+                       domain = 0:1,
+                       range = c(0, 100),
+                       anchor = "x3",
+                       scaleanchor = "x3"),
+         showlegend = FALSE) %>%
+  highlight(opacityDim = 0.01,
+            on = "plotly_selected",
+            off = "plotly_doubleclick") %>%
+  hide_colorbar()
+```
+
+```{r datatable, layout = "l-screen-inset"}
+datatable(food_df)
+```
