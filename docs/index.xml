@@ -12,7 +12,16 @@
       <link>https://nacnudus.github.io/duncangarmonsway</link>
     </image>
     <generator>Radix</generator>
-    <lastBuildDate>Wed, 02 Jan 2019 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Mon, 07 Jan 2019 00:00:00 +0000</lastBuildDate>
+    <item>
+      <title>Food Nutrition and Price</title>
+      <dc:creator>Duncan Garmonsway</dc:creator>
+      <link>https://nacnudus.github.io/duncangarmonsway/posts/2019-01-07-food-nutrition-and-price</link>
+      <description>Explore a supermarket of food nutrition and price (renders slowly)</description>
+      <guid>https://nacnudus.github.io/duncangarmonsway/posts/2019-01-07-food-nutrition-and-price</guid>
+      <pubDate>Mon, 07 Jan 2019 00:00:00 +0000</pubDate>
+      <media:content url="https://nacnudus.github.io/duncangarmonsway/posts/2019-01-07-food-nutrition-and-price/tweet.png" medium="image" type="image/png" width="704" height="384"/>
+    </item>
     <item>
       <title>New package {armgin} to summarise all margins of data frames</title>
       <dc:creator>Duncan Garmonsway</dc:creator>

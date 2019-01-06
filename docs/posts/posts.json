@@ -1,5 +1,22 @@
 [
   {
+    "path": "posts/2019-01-07-food-nutrition-and-price/",
+    "title": "Food Nutrition and Price",
+    "description": "Explore a supermarket of food nutrition and price (renders slowly)",
+    "author": [
+      {
+        "name": "Duncan Garmonsway",
+        "url": {}
+      }
+    ],
+    "date": "2019-01-07",
+    "categories": [],
+    "preview": "posts/2019-01-07-food-nutrition-and-price/tweet.png",
+    "last_modified": "2019-01-06T20:36:59+00:00",
+    "preview_width": 704,
+    "preview_height": 384
+  },
+  {
     "path": "posts/2019-01-02-new-package-armgin-to-summarise-all-margins-of-data-frames/",
     "title": "New package {armgin} to summarise all margins of data frames",
     "description": "A one-liner for when they want everything by everything.",
