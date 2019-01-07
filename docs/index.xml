@@ -12,7 +12,16 @@
       <link>https://nacnudus.github.io/duncangarmonsway</link>
     </image>
     <generator>Radix</generator>
-    <lastBuildDate>Mon, 07 Jan 2019 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Mon, 14 Jan 2019 00:00:00 +0000</lastBuildDate>
+    <item>
+      <title>Import ragged data with readr::melt_csv()</title>
+      <dc:creator>Duncan Garmonsway</dc:creator>
+      <link>https://nacnudus.github.io/duncangarmonsway/posts/2018-12-29-meltcsv</link>
+      <description>Melt it down and start again</description>
+      <guid>https://nacnudus.github.io/duncangarmonsway/posts/2018-12-29-meltcsv</guid>
+      <pubDate>Mon, 14 Jan 2019 00:00:00 +0000</pubDate>
+      <media:content url="https://nacnudus.github.io/duncangarmonsway/posts/2018-12-29-meltcsv/im_melting_wicked_witch_of_the_west.jpg" medium="image" type="image/jpeg"/>
+    </item>
     <item>
       <title>Food Nutrition and Price</title>
       <dc:creator>Duncan Garmonsway</dc:creator>

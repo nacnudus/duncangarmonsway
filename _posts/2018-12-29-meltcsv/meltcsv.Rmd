@@ -1,0 +1,190 @@
+---
+title: "Import ragged data with readr::melt_csv()"
+description: |
+  Melt it down and start again
+author: Duncan Garmonsway
+date: January 14, 2019
+preview: "im_melting_wicked_witch_of_the_west.jpg"
+output:
+  radix::radix_article:
+    self_contained: false
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r library, include = FALSE}
+library(tidyverse)
+library(here)
+```
+
+Standard tools like `readr::read_csv()` can cope to some extent with unusual
+inputs, like files with empty rows or newlines embedded in strings.  But some
+files are so whacky that standard tools don't work at all, and instead you have
+to take the file to pieces and reassemble it in a standard design.
+
+The [*readr*](https://readr.tidyverse.org) package has [recently
+acquired](https://www.tidyverse.org/articles/2018/12/readr-1-3-1/) a set of
+tools for taking a file to bits.  They are the
+[`melt_*()`](https://readr.tidyverse.org/reference/melt_delim.html) family.
+
+* [`melt_csv()`](https://readr.tidyverse.org/reference/melt_delim.html), [`melt_csv_chunked()`](https://readr.tidyverse.org/reference/melt_delim.html)
+* [`melt_csv2()`](https://readr.tidyverse.org/reference/melt_delim.html), [`melt_csv2_chunked()`](https://readr.tidyverse.org/reference/melt_delim.html)
+* [`melt_tsv()`](https://readr.tidyverse.org/reference/melt_delim.html), [`melt_tsv_chunked()`](https://readr.tidyverse.org/reference/melt_delim.html)
+* [`melt_delim()`](https://readr.tidyverse.org/reference/melt_delim.html), [`melt_delim_chunked()`](https://readr.tidyverse.org/reference/melt_delim.html)
+* [`melt_table()`](https://readr.tidyverse.org/reference/melt_table.html), [`melt_table2()`](https://readr.tidyverse.org/reference/melt_table.html)
+* [`melt_fwf()`](https://readr.tidyverse.org/reference/melt_fwf.html)
+
+<aside>
+![Take it to pieces and start again.  Rubik's Cube disassembled, from
+[Wikipedia](https://en.wikipedia.org/wiki/File:Disassembled-rubix-1.jpg).](rubik-cube-disassembled.jpg)
+</aside>
+
+The `melt_*()` family separates delimited text files into individual cells.  So
+"melt" isn't quite the right name -- it should be "disassemble" because it's
+about separating the pieces, but "melt" is much shorter to type
+
+<aside>
+The term "melt" also has heritage from [`reshape2::melt()`](https://github.com/hadley/reshape2), although it doesn't do quite the same thing.
+</aside>
+
+## The problem with non-rectangular data
+
+Here's a contrived example that breaks two assumptions made by common tools like
+`readr::read_csv()`.
+
+1. There are more cells in some rows than others.
+1. There are mixed data types within each column.
+
+```
+Help,,007,I'm
+1960-09-30,FALSE,trapped in,7,1.21
+non-rectangular,data,NA
+```
+
+```{r help-im-trapped-data, include = FALSE}
+data <-
+"Help,,007,I'm
+1960-09-30,FALSE,trapped in,7,1.21
+non-rectangular,data,NA"
+```
+
+To force that data into a data frame, `readr::read_csv()` must make drastic
+adjustments.
+
+1. It omits the cell "1.21".
+1. It invents an `NA` cell to fill a gap (row 3 column 4).
+1. It promotes the data type of every cell to character so that it can combine
+   them in columns.
+
+```{r read-csv}
+readr::read_csv(data, col_names = FALSE)
+```
+
+Omission of cells is a big problem because it could occur silently.  You can
+force `readr()` to read the `1.21` cell by specifiying column names for five
+columns, but then it has to invent `NA` cells to plug the gaps in the fifth
+column.
+
+```{r read-csv-colnames}
+readr::read_csv(data, col_names = letters[1:5])
+```
+
+The invention of `NA` cells is a problem when you need to know the difference
+between a cell being missing altogether, and a cell that contains a 'missing'
+value.  This is a bit niche, but a short row (fewer cells) could mark a
+different table within the same file (it happens), whereas `NA` means that a
+value might have existed yet wasn't recorded.
+
+Type promotion is the least of the problems because it's lossless -- the file is
+a text file in the first place.  But it would be nice to traverse the cells and
+pluck out, say, any dates.
+
+## Introducing `readr::melt_csv()`
+
+Now see what `melt_csv()` does.  Remember the csv file looks like this.
+
+```
+Help,,007,I'm
+1960-09-30,FALSE,trapped in,7,1.21
+non-rectangular,data,NA
+```
+
+The `melt_csv()` function reads the file one cell at a time, importing each cell
+of the file into a whole row of the final data frame.
+
+```{r melt-csv}
+readr::melt_csv(data)
+```
+
+Think of this output like painting-by-numbers.  In the same way that a
+painting-by-numbers stencil *describes* a painting (the colour, shape and
+position of each brush-stroke), this 'melted' form *describes* a CSV file (the
+value, datatype and position of each cell).  While a painting isn't structured
+data, a painting-by-numbers stencil *is* structured data about a painting, and
+while a CSV file isn't necessarily structured data, a melted CSV *is* structured
+data about a CSV file.
+
+<aside>
+You might have seen 'melted' data before in [David Robinson's
+article](http://rpubs.com/dgrtwo/tidying-enron), the
+[tidyr](https://nacnudus.github.io/tidyr) and
+[unpivotr](https://nacnudus.github.io/unpivotr) documentation, or [Spreadsheet
+Munging Strategies](https://nacnudus.github.io/spreadsheet-munging-strategieps).
+</aside>
+
+![Paint-by-numbers image of a house in the countryside, before and after
+painting.  Image from from *Paint by Number: The How-To Craze that Swept the
+Nation* by William L. Bird, via
+https://simanaitissays.com/2014/09/05/by-the-numbers/.](./paint-by-numbers.jpg)
+
+What the `melt_csv()` output means:
+
+* The output of `melt_csv()` is a data frame -- *structured* data about
+  *un*-structured data!
+* Each row of the data frame represents one cell of the input data.
+* The empty cell of row 1 is imported, but the *missing* cells at the ends of
+  rows 1 and 3 aren't.
+* No data type conversion is attempted -- every value is imported as a string,
+  and the `data_type` column merely gives *readr*'s best guess of what the data
+  types ought to be.
+
+How can you use this?  To begin with, you can do some simple manipulations with
+ordinary functions.  For example you could extract the words.
+
+```{r filter-for-character}
+data <- "Help,,007,I'm
+1960-09-30,FALSE,trapped in,7,1.21
+non-rectangular,data,NA"
+
+readr::melt_csv(data) %>%
+  dplyr::filter(data_type == "character")
+```
+
+Was any of the message lost in transmission?  Yes, two segments are missing.
+
+```{r filter-for-missing}
+readr::melt_csv(data) %>%
+  dplyr::filter(data_type == "missing")
+```
+
+## Using melted data
+
+Use-cases are hard to come by because this is a (relatively) new way to work
+with messy data.  Try out [New Zealand's election
+statistics](https://www.electionresults.org.nz/electionresults_2017/statistics/csv/candidate-votes-by-voting-place-1.csv)
+or some [UK civil servants'
+expenses](https://assets.publishing.service.gov.uk/government/uploads/system/uploads/attachment_data/file/413595/April-june-2014.csv)
+for yourself, or [watch me wrangle](https://www.youtube.com/watch?v=zUqwJuZPPPs)
+a [#TidyTuesday](https://github.com/rfordatascience/tidytuesday) dataset of US
+honey production with the help of my
+[unpivotr](https://nacnudus.github.io/unpivotr) package.
+
+My [tidyxl](https://nacnudus.github.io/tidyxl) package melts spreadsheets in a
+similar way, and [Spreadsheet Munging
+Strategies](https://nacnudus.github.io/spreadsheet-munging-strategies/) has many
+worked examples and case studies, most of which could apply to plain text files.
+
+![The Wicked Witch of the West, melting, from the film The Wizard of
+Oz.](im_melting_wicked_witch_of_the_west.jpg)
