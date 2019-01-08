@@ -43,7 +43,7 @@ tools for taking a file to bits.  They are the
 
 The `melt_*()` family separates delimited text files into individual cells.  So
 "melt" isn't quite the right name -- it should be "disassemble" because it's
-about separating the pieces, but "melt" is much shorter to type
+about separating the pieces, but "melt" is much shorter to type.
 
 <aside>
 The term "melt" also has heritage from [`reshape2::melt()`](https://github.com/hadley/reshape2), although it doesn't do quite the same thing.
