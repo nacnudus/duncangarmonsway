@@ -20,11 +20,12 @@ knitr::opts_chunk$set(comment = "##", collapse = TRUE, cache = TRUE)
 
 ## Simmer vs SimPy (rematch)
 
-In my [previous post](/post/2016-05-11-simmer-bank-1), I ported [Part
-I](https://pythonhosted.org/SimPy/Tutorials/TheBank.html) of `SimPy`'s flagship
-tutorial, *The Bank*, to `simmer`.  This post does the same for [Part
-II](https://pythonhosted.org/SimPy/Tutorials/TheBank2.html), which introduces
-tricky concepts for tricky customers.
+In my [previous
+post](https://nacnudus.github.io/duncangarmonsway/posts/2016-05-11-simmer-bank-1/),
+I ported [Part I](https://pythonhosted.org/SimPy/Tutorials/TheBank.html) of
+`SimPy`'s flagship tutorial, *The Bank*, to `simmer`.  This post does the same
+for [Part II](https://pythonhosted.org/SimPy/Tutorials/TheBank2.html), which
+introduces tricky concepts for tricky customers.
 
 This post does two things:
 

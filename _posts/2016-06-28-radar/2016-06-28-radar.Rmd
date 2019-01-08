@@ -386,8 +386,9 @@ answer-sets, and explore the distributions.  Well, almost -- it turns out that R
 and JavaScript handle rounding and floating-point arithmetic differently, so I
 had to use the [V8](https://github.com/jeroenooms/V8) package to implement the
 rounding steps in JavaScript, as the website does.  I give more details in a
-[previous post]({filename}./rounding.Rmd).  At least I got to display some
-'Technologist' skills.
+[previous
+post](https://nacnudus.github.io/duncangarmonsway/posts/2016-04-25-rounding/).
+At least I got to display some 'Technologist' skills.
 
 ```{r radar-roundjs, eval = TRUE, echo = TRUE}
 ct <- V8::v8()

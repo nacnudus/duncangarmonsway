@@ -1208,7 +1208,7 @@ lm(score ~ prepenalty + prepenalty:rank, data = rbind(best, worst))
 <p><span class="math display">\[\text{score}_{\text{attribute}} = \sum_{i = 1}^{4} \text{answer}_i \times
 \text{weight}_i\]</span> where <span class="math inline">\(\text{weight}_i\)</span> is taken from above.</p>
 <h2 id="implementation-and-simulation">Implementation and simulation</h2>
-<p>At last, we can implement the whole thing in R, run it on thousands of random answer-sets, and explore the distributions. Well, almost – it turns out that R and JavaScript handle rounding and floating-point arithmetic differently, so I had to use the <a href="https://github.com/jeroenooms/V8">V8</a> package to implement the rounding steps in JavaScript, as the website does. I give more details in a <a href="%7Bfilename%7D./rounding.Rmd">previous post</a>. At least I got to display some ‘Technologist’ skills.</p>
+<p>At last, we can implement the whole thing in R, run it on thousands of random answer-sets, and explore the distributions. Well, almost – it turns out that R and JavaScript handle rounding and floating-point arithmetic differently, so I had to use the <a href="https://github.com/jeroenooms/V8">V8</a> package to implement the rounding steps in JavaScript, as the website does. I give more details in a <a href="https://nacnudus.github.io/duncangarmonsway/posts/2016-04-25-rounding/">previous post</a>. At least I got to display some ‘Technologist’ skills.</p>
 <div class="layout-chunk" data-layout="l-body">
 <pre class="r"><code>
 ct &lt;- V8::v8()

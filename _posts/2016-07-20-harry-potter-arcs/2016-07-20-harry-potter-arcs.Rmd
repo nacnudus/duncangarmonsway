@@ -27,8 +27,9 @@ library(tokenizers)
 library(here)
 ```
 
-In my [previous post](/post/2016-07-13-harry-potter-sentiment), I applied [Julia
-Silge](http://juliasilge.com/blog/)'s story-arc
+In my [previous
+post](https://nacnudus.github.io/duncangarmonsway/posts/2016-07-13-harry-potter-sentiment/),
+I applied [Julia Silge](http://juliasilge.com/blog/)'s story-arc
 [sentiment](http://juliasilge.com/blog/Life-Changing-Magic/)
 [analysis](http://juliasilge.com/blog/Life-Changing-Magic/) method to the *Harry
 Potter* books. Twitter's response was a tweet about some very similar and
@@ -98,8 +99,9 @@ One thing on my graphs that Hedonometer doesn't provide is the chapter titles,
 so you can be reminded what is going on at each turn in the plot.
 
 Enjoy the plots below, otherwise that's it for this post.  The code is, as
-always, on [GitHub](https://github.com/nacnudus/crossprod), but you need to
-supply your own copies of the books.
+always, on
+[GitHub](https://github.com/nacnudus/duncangarmonsway/blob/master/_posts/2016-07-20-harry-potter-arcs/2016-07-20-harry-potter-arcs.Rmd),
+but you need to supply your own copies of the books.
 
 ```{r, echo = FALSE, message = FALSE, warning = FALSE}
 # Titles as factor in series order

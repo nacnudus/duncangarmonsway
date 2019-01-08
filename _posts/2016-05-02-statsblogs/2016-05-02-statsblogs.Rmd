@@ -19,8 +19,9 @@ knitr::opts_chunk$set(comment = "##", collapse = TRUE, cache = TRUE)
 
 This post does two things:
 
-* Reproduces my [R-Bloggers post](/post/2016-04-18-rbloggers)  on the
-  [StatsBlogs](http://www.statsblogs.com) website, to discover how many
+* Reproduces my [R-Bloggers
+  post](https://nacnudus.github.io/duncangarmonsway/posts/2016-04-18-rbloggers/)
+  on the [StatsBlogs](http://www.statsblogs.com) website, to discover how many
   StatsBlogs blogs there are *really*.
 * Considers how to interpret changes in diversity without knowingly observing
   births/deaths of blogs.
@@ -251,6 +252,6 @@ distributions.
 ## Code
 
 Nothing postworthy, so see
-[GitHub](https://github.com/nacnudus/crossprod/tree/master/content) if you're
-interested.
+[GitHub](https://github.com/nacnudus/duncangarmonsway/blob/master/_posts/2016-05-02-statsblogs/2016-05-02-statsblogs.Rmd)
+if you're interested.
 

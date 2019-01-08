@@ -285,6 +285,7 @@ And to see where the 'wiggliness = 3' arc lies in the range, I superimpose it as
 main_ribbon_arcline
 ```
 
-The code is, as always, on [GitHub](https://github.com/nacnudus/crossprod), but
-you need to supply your own copies of the books.
+The code is, as always, on
+[GitHub](https://github.com/nacnudus/duncangarmonsway/tree/master/_posts/2016-07-13-harry-potter-sentiment),
+but you need to supply your own copies of the books.
 
