@@ -12,14 +12,14 @@
       <link>https://nacnudus.github.io/duncangarmonsway</link>
     </image>
     <generator>Radix</generator>
-    <lastBuildDate>Mon, 14 Jan 2019 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Tue, 08 Jan 2019 00:00:00 +0000</lastBuildDate>
     <item>
       <title>Import ragged data with readr::melt_csv()</title>
       <dc:creator>Duncan Garmonsway</dc:creator>
       <link>https://nacnudus.github.io/duncangarmonsway/posts/2018-12-29-meltcsv</link>
       <description>Melt it down and start again</description>
       <guid>https://nacnudus.github.io/duncangarmonsway/posts/2018-12-29-meltcsv</guid>
-      <pubDate>Mon, 14 Jan 2019 00:00:00 +0000</pubDate>
+      <pubDate>Tue, 08 Jan 2019 00:00:00 +0000</pubDate>
       <media:content url="https://nacnudus.github.io/duncangarmonsway/posts/2018-12-29-meltcsv/im_melting_wicked_witch_of_the_west.jpg" medium="image" type="image/jpeg"/>
     </item>
     <item>
@@ -115,7 +115,7 @@ percentile.</description>
       <link>https://nacnudus.github.io/duncangarmonsway/posts/2016-05-02-statsblogs</link>
       <description>Parsing the daily digest emails and thinking about modelling</description>
       <guid>https://nacnudus.github.io/duncangarmonsway/posts/2016-05-02-statsblogs</guid>
-      <pubDate>Sun, 01 May 2016 00:00:00 +0000</pubDate>
+      <pubDate>Mon, 02 May 2016 00:00:00 +0000</pubDate>
       <media:content url="https://nacnudus.github.io/duncangarmonsway/posts/2016-05-02-statsblogs/2016-05-02-statsblogs_files/figure-html5/statsblogs-periodical-1.png" medium="image" type="image/png" width="1248" height="768"/>
     </item>
     <item>

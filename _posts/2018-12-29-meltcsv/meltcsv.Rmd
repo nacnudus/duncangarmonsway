@@ -3,7 +3,7 @@ title: "Import ragged data with readr::melt_csv()"
 description: |
   Melt it down and start again
 author: Duncan Garmonsway
-date: January 14, 2019
+date: January 8, 2019
 preview: "im_melting_wicked_witch_of_the_west.jpg"
 output:
   radix::radix_article:
