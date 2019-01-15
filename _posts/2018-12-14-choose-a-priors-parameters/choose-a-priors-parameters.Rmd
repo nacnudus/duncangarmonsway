@@ -48,7 +48,8 @@ parameters `shape1 = 2` and `shape2 = 4`).
 <aside>
 In [later posts](http://varianceexplained.org/r/empirical_bayes_baseball/) David
 Robinson fits a beta prior to some data with `MASS::fitdistr()`, but I don't
-have that luxury -- I have historical data, but it isn't stationary enough.
+have that luxury -- I have historical data, but it isn't stationary enough.  See
+also several other methods in `?ebbr::ebb_fit_prior()` in David Robonson's [package](https://github.com/dgrtwo/ebbr).
 </aside>
 
 ```{r}

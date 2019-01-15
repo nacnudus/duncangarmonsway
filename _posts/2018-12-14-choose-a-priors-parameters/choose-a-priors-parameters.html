@@ -978,7 +978,7 @@
 <p>What David Robinson is doing is best-practice for choosing a prior – ask an expert. But he makes a huge leap from what the expert says to what the parameters are. Normally you’d use <code>dbeta(shape1, shape2)</code> to get the distribution for given parameters, but here the problem is reversed: find the parameters for a distribution with a mean of .270 and a cumulative density of, say, .99 between .2 and .35.</p>
 <p>How did David Robinson come up with the parameters 81 and 219? There aren’t tools for that. Perhaps he’s brainy enough to do the maths in his head and think, “Hmm, beta with mean = .270 and most of it between .2 and .35, in that case 81 and 219 should be about right.” Or perhaps he just tried some numbers and adjusted them until they worked. There are online tools for that, or you can use R. For example, here’s a beta distribution with an initial guess of the parameters <code>shape1 = 2</code> and <code>shape2 = 4</code>).</p>
 <aside>
-In <a href="http://varianceexplained.org/r/empirical_bayes_baseball/">later posts</a> David Robinson fits a beta prior to some data with <code>MASS::fitdistr()</code>, but I don’t have that luxury – I have historical data, but it isn’t stationary enough.
+In <a href="http://varianceexplained.org/r/empirical_bayes_baseball/">later posts</a> David Robinson fits a beta prior to some data with <code>MASS::fitdistr()</code>, but I don’t have that luxury – I have historical data, but it isn’t stationary enough. See also several other methods in <code>?ebbr::ebb_fit_prior()</code> in David Robonson’s <a href="https://github.com/dgrtwo/ebbr">package</a>.
 </aside>
 <div class="layout-chunk" data-layout="l-body">
 <pre class="r"><code>
