@@ -14,6 +14,16 @@
     <generator>Radix</generator>
     <lastBuildDate>Fri, 25 Jan 2019 00:00:00 +0000</lastBuildDate>
     <item>
+      <title>{ggstraw}: A custom ggplot2 geom for deviations</title>
+      <dc:creator>Duncan Garmonsway</dc:creator>
+      <link>https://nacnudus.github.io/duncangarmonsway/posts/2019-01-25-a-custom-ggplot2-geom-for-deviations</link>
+      <description>ggstraw::geom_straw() is a custom ggplot2 geom for showing deviations from
+expected values, e.g. actual vs scheduled departure times.</description>
+      <guid>https://nacnudus.github.io/duncangarmonsway/posts/2019-01-25-a-custom-ggplot2-geom-for-deviations</guid>
+      <pubDate>Fri, 25 Jan 2019 00:00:00 +0000</pubDate>
+      <media:content url="https://nacnudus.github.io/duncangarmonsway/posts/2019-01-25-a-custom-ggplot2-geom-for-deviations/a-custom-ggplot2-geom-for-deviations_files/figure-html5/flights-1.png" medium="image" type="image/png" width="1248" height="768"/>
+    </item>
+    <item>
       <title>Who uses the GOV.UK Design System</title>
       <dc:creator>Duncan Garmonsway</dc:creator>
       <link>https://nacnudus.github.io/duncangarmonsway/posts/2019-01-25-who-uses-the-govuk-design-system</link>

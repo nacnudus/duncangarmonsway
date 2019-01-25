@@ -1,5 +1,22 @@
 [
   {
+    "path": "posts/2019-01-25-a-custom-ggplot2-geom-for-deviations/",
+    "title": "{ggstraw}: A custom ggplot2 geom for deviations",
+    "description": "ggstraw::geom_straw() is a custom ggplot2 geom for showing deviations from\nexpected values, e.g. actual vs scheduled departure times.",
+    "author": [
+      {
+        "name": "Duncan Garmonsway",
+        "url": {}
+      }
+    ],
+    "date": "2019-01-25",
+    "categories": [],
+    "preview": "posts/2019-01-25-a-custom-ggplot2-geom-for-deviations/a-custom-ggplot2-geom-for-deviations_files/figure-html5/flights-1.png",
+    "last_modified": "2019-01-25T23:36:50+00:00",
+    "preview_width": 1248,
+    "preview_height": 768
+  },
+  {
     "path": "posts/2019-01-25-who-uses-the-govuk-design-system/",
     "title": "Who uses the GOV.UK Design System",
     "description": "A mental note of which websites use components from the GOV.UK Design System\nand its predecessors.",
