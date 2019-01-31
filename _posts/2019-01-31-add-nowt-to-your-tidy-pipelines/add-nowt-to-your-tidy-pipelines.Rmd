@@ -71,12 +71,7 @@ ggplot(iris, aes(Sepal.Length, Sepal.Width)) +
 We can do better.  How about a single function for both situations, with documentation and a helpful name that means "nothing" in Northern English: `nowt()`.
 
 ```{r}
-nowt <- function(x) {
-  if (nargs()) {
-    return(identity(x))
-  }
-  NULL
-}
+nowt <- function(x = NULL) x
 
 iris %>%
   group_by(Species) %>%
@@ -96,7 +91,7 @@ documentation, unlike `NULL` or `{.}`.
 
 ## [Edit]
 
-Originally `nowt()` took dots `...`, but Hadley helpfully [pointed
-out](https://twitter.com/hadleywickham/status/1091038245775757312) "...
-identity() only has a single arg so as is you’ll get an unhelpful error message
-if accidentally passed multiple args".
+Originally `nowt()` took dots `...` and complicated things with `if (nargs())`,
+but Hadley helpfully [refactored
+it](https://twitter.com/hadleywickham/status/1091038245775757312).  Thanks
+Hadley!

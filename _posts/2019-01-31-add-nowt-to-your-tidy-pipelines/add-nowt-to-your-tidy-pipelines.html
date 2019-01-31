@@ -1036,12 +1036,7 @@ ggplot(iris, aes(Sepal.Length, Sepal.Width)) +
 <p>We can do better. How about a single function for both situations, with documentation and a helpful name that means “nothing” in Northern English: <code>nowt()</code>.</p>
 <div class="layout-chunk" data-layout="l-body">
 <pre class="r"><code>
-nowt &lt;- function(x) {
-  if (nargs()) {
-    return(identity(x))
-  }
-  NULL
-}
+nowt &lt;- function(x = NULL) x
 
 iris %&gt;%
   group_by(Species) %&gt;%
@@ -1064,7 +1059,7 @@ ggplot(iris, aes(Sepal.Length, Sepal.Width)) +
 </div>
 <p>Okay, so I didn’t document it because it’s in the .Rprofile rather than a packge. But if this idea were picked up by the tidyverse then it <em>could</em> have documentation, unlike <code>NULL</code> or <code>{.}</code>.</p>
 <h2 id="edit">[Edit]</h2>
-<p>Originally <code>nowt()</code> took dots <code>...</code>, but Hadley helpfully <a href="https://twitter.com/hadleywickham/status/1091038245775757312">pointed out</a> “… identity() only has a single arg so as is you’ll get an unhelpful error message if accidentally passed multiple args”.</p>
+<p>Originally <code>nowt()</code> took dots <code>...</code> and complicated things with <code>if (nargs())</code>, but Hadley helpfully <a href="https://twitter.com/hadleywickham/status/1091038245775757312">refactored it</a>. Thanks Hadley!</p>
 <!--radix_placeholder_article_footer-->
 <!--/radix_placeholder_article_footer-->
 </div>
