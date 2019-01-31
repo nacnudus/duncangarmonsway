@@ -12,7 +12,17 @@
       <link>https://nacnudus.github.io/duncangarmonsway</link>
     </image>
     <generator>Radix</generator>
-    <lastBuildDate>Fri, 25 Jan 2019 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Thu, 31 Jan 2019 00:00:00 +0000</lastBuildDate>
+    <item>
+      <title>Add nowt() to your tidy pipelines</title>
+      <dc:creator>Duncan Garmonsway</dc:creator>
+      <link>https://nacnudus.github.io/duncangarmonsway/posts/2019-01-31-add-nowt-to-your-tidy-pipelines</link>
+      <description>A simple function for your .Rprofile to make interactive coding with pipelines
+less of a faff.</description>
+      <guid>https://nacnudus.github.io/duncangarmonsway/posts/2019-01-31-add-nowt-to-your-tidy-pipelines</guid>
+      <pubDate>Thu, 31 Jan 2019 00:00:00 +0000</pubDate>
+      <media:content url="https://nacnudus.github.io/duncangarmonsway/posts/2019-01-31-add-nowt-to-your-tidy-pipelines/./nowt-so-queer-as-folk.jpg" medium="image" type="image/jpeg"/>
+    </item>
     <item>
       <title>{ggstraw}: A custom ggplot2 geom for deviations</title>
       <dc:creator>Duncan Garmonsway</dc:creator>

@@ -1,0 +1,96 @@
+---
+title: "Add nowt() to your tidy pipelines"
+description: |
+  A simple function for your .Rprofile to make interactive coding with pipelines
+  less of a faff.
+author: Duncan Garmonsway
+date: January 31, 2019
+output:
+  radix::radix_article:
+    self_contained: false
+preview: ./nowt-so-queer-as-folk.jpg
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+```
+
+Do you write perfect tidyverse pipelines first time?  Then like Cédric Scherer
+[\@CedScher](https://twitter.com/CedScherer/status/1090608766842798080) and Wei
+Yang Tham [\@wytham88](https://twitter.com/wytham88/status/1012085073368272903)
+you probably find yourself faffing with trailing `%>%` when removing or
+commenting the final operation in a pipeline.
+
+One way to get out of it is to
+append `identity()` or a rather cryptic `{.}` to the end of every pipeline.
+
+```{r}
+# Experimental code
+iris %>%
+  group_by(Species) %>%
+  summarise(Mean.Sepal.Length = mean(Sepal.Length)) %>%
+  filter(Mean.Sepal.Length > 6)
+```
+
+```{r, error = TRUE}
+# Comment out the final step
+iris %>%
+  group_by(Species) %>%
+  summarise(Mean.Sepal.Length = mean(Sepal.Length)) %>%
+  # filter(Mean.Sepal.Length > 6)
+```
+
+```{r}
+# Oops, forgot to deal with the trailing %>%
+iris %>%
+  group_by(Species) %>%
+  summarise(Mean.Sepal.Length = mean(Sepal.Length))
+```
+
+```{r}
+# Could have been avoided with identity() or {.}
+iris %>%
+  group_by(Species) %>%
+  summarise(Mean.Sepal.Length = mean(Sepal.Length)) %>%
+  # filter(Mean.Sepal.Length > 6) %>%
+  identity()
+
+# Adapted from @CedScherer's tweet
+```
+
+Unfortunately `identity()` and `{.}` don't work in ggplot2 piplines, so you have
+to use `NULL` instead.
+
+```{r}
+ggplot(iris, aes(Sepal.Length, Sepal.Width)) +
+  geom_point() +
+  # scale_y_continuous(position = "right") +
+  NULL
+```
+
+We can do better.  How about a single function for both situations, with documentation and a helpful name that means "nothing" in Northern English: `nowt()`.
+
+```{r}
+nowt <- function(...) {
+  if (nargs()) {
+    return(identity(...))
+  }
+  NULL
+}
+
+iris %>%
+  group_by(Species) %>%
+  summarise(Mean.Sepal.Length = mean(Sepal.Length)) %>%
+  # filter(Mean.Sepal.Length > 6) %>%
+  nowt()
+
+ggplot(iris, aes(Sepal.Length, Sepal.Width)) +
+  geom_point() +
+  # scale_y_continuous(position = "right") +
+  nowt()
+```
+
+Okay, so I didn't document it because it's in the .Rprofile rather than a
+packge.  But if this idea were picked up by the tidyverse then it _could_ have
+documentation, unlike `NULL` or `{.}`.

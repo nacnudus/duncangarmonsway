@@ -1,5 +1,20 @@
 [
   {
+    "path": "posts/2019-01-31-add-nowt-to-your-tidy-pipelines/",
+    "title": "Add nowt() to your tidy pipelines",
+    "description": "A simple function for your .Rprofile to make interactive coding with pipelines\nless of a faff.",
+    "author": [
+      {
+        "name": "Duncan Garmonsway",
+        "url": {}
+      }
+    ],
+    "date": "2019-01-31",
+    "categories": [],
+    "preview": "posts/2019-01-31-add-nowt-to-your-tidy-pipelines/./nowt-so-queer-as-folk.jpg",
+    "last_modified": "2019-01-31T13:04:15+00:00"
+  },
+  {
     "path": "posts/2019-01-25-a-custom-ggplot2-geom-for-deviations/",
     "title": "{ggstraw}: A custom ggplot2 geom for deviations",
     "description": "ggstraw::geom_straw() is a custom ggplot2 geom for showing deviations from\nexpected values, e.g. actual vs scheduled departure times.",
