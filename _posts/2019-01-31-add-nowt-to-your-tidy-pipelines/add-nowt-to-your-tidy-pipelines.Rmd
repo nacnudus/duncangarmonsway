@@ -1,8 +1,7 @@
 ---
 title: "Add nowt() to your tidy pipelines"
 description: |
-  A simple function for your .Rprofile to make interactive coding with pipelines
-  less of a faff.
+  Never faff with trailing pipes again %>%
 author: Duncan Garmonsway
 date: January 31, 2019
 output:
