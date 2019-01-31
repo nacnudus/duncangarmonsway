@@ -72,9 +72,9 @@ ggplot(iris, aes(Sepal.Length, Sepal.Width)) +
 We can do better.  How about a single function for both situations, with documentation and a helpful name that means "nothing" in Northern English: `nowt()`.
 
 ```{r}
-nowt <- function(...) {
+nowt <- function(x) {
   if (nargs()) {
-    return(identity(...))
+    return(identity(x))
   }
   NULL
 }
@@ -94,3 +94,10 @@ ggplot(iris, aes(Sepal.Length, Sepal.Width)) +
 Okay, so I didn't document it because it's in the .Rprofile rather than a
 packge.  But if this idea were picked up by the tidyverse then it _could_ have
 documentation, unlike `NULL` or `{.}`.
+
+## [Edit]
+
+Originally `nowt()` took dots `...`, but Hadley helpfully [pointed
+out](https://twitter.com/hadleywickham/status/1091038245775757312) "...
+identity() only has a single arg so as is you’ll get an unhelpful error message
+if accidentally passed multiple args".
