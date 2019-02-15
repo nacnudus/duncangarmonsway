@@ -1,0 +1,321 @@
+---
+title: "CRAN h-index"
+description: |
+  h-indexes of CRAN package maintainers.  Read to the end to find your own
+  h-index.
+author: Duncan Garmonsway
+date: February 15, 2019
+output:
+  radix::radix_article:
+    self_contained: false
+preview: cran-h-index_files/figure-html5/graph-1.png
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(cache = TRUE,
+                      echo = TRUE)
+
+library(tidyverse)
+library(cranly)
+library(DT)
+library(here)
+```
+
+People have blogged before about [the most prolific package maintainers on
+CRAN](https://blog.revolutionanalytics.com/2018/03/the-most-prolific-package-maintainers-on-cran.html)
+and the [top five R package
+maintainers](https://www.datacamp.com/community/blog/top-5-r-package-maintainers).
+But _quantity_ of publications is not the same as _quality_.  An alternative
+metric called the [*h*-index](https://en.wikipedia.org/wiki/H-index) summarises
+both the total number of a person's publications (quantity) as well as the
+number of times each publication has been cited in other publications (quality,
+kinda).
+
+> The *h*-index is an author-level metric that attempts to measure both the
+> productivity and citation impact of the publications of a scientist or
+> scholar. The index is based on the set of the scientist's most cited papers
+> and the number of citations that they have received in other publications. The
+> index can also be applied to the productivity and impact of a scholarly
+> journal[1] as well as a group of scientists, such as a department or
+> university or country.[2] The index was suggested in 2005 by Jorge E. Hirsch,
+> a physicist at UC San Diego, as a tool for determining theoretical physicists'
+> relative quality[3] and is sometimes called the Hirsch index or Hirsch number.
+> -- [Wikipedia](https://en.wikipedia.org/wiki/H-index)
+
+What would an H-index for CRAN packages look like?  I used the `DESCRIPTION`
+files of CRAN packages for some definitions:
+
+* Authors: people or companies listed in the `Author` and `Maintainer` fields.
+* Citations: packages listed in the `Depends` and `Imports` fields.
+
+`DESCRIPTION` files are available as structured data via
+`tools::CRAN_package_db()`.  The `Authors` field isn't really structured, but
+the [`cranly`](https://github.com/ikosmidis/cranly) package (GitHub only) does
+impressive work with RegEx to tidy it up.  Of course it can't do anything about
+[`Author: See AUTHORS
+file.`](https://github.com/ropensci/git2r/blob/master/DESCRIPTION)
+
+<aside>
+
+'Maintainer' is structured because CRAN uses it in an
+[API](https://cran.r-project.org/web/checks/check_summary_by_maintainer.html).
+'Author' isn't structured because CRAN doesn't use it in an API.  Lesson: the
+best data is the data that is used at the source.
+
+</aside>
+
+## Preparation
+
+```{r DESCRIPTION}
+pkglist <-
+  tools::CRAN_package_db() %>%
+  cranly::clean_CRAN_db() %>%
+  as_tibble()
+```
+
+<details><summary>Expand to glimpse the data</summary>
+
+```{r DESCRIPTION-glimpse}
+glimpse(pkglist)
+```
+
+</details>
+
+<p/>
+
+From that data you can combine the names of packages listed in `depends` and
+`imports`.
+
+```{r combine-depends-imports}
+# Depends and Imports count, Suggests and Enhances doesn't.
+packages <-
+  pkglist %>%
+  mutate(maintainer = clean_up_author(maintainer)) %>%
+  select(package, maintainer, author, depends, imports) %>%
+  mutate(author = map2(maintainer, author, c),
+         cites = map2(depends, imports, c)) %>%
+  select(package, author, cites) %>%
+  print()
+```
+
+That data frame has to be unnested in stages because both `author` and
+`cites` are ragged list-columns.  Separate data frames are created, one
+for the package--author pairs, the other for package--cited-package pairs.  Then
+they are joined to make a data frame with one row per package per author per
+citation.
+
+```{r split-authors-citations}
+package_citations <-
+  packages %>%
+  unnest(cites) %>%
+  dplyr::filter(!is.na(cites)) %>% # NAs occur when depends or imports is empty.
+  distinct() %>% # Duplicates occur when a package is in both depends and imports.
+  print()
+
+package_authors <-
+  packages %>%
+  unnest(author) %>%
+  distinct() %>% # Duplicates occur when a maintainer is also an author (often)
+  print()
+```
+
+Recombining authors and citations.  I did some extra work to detect
+self-citations.
+
+```{r recombine-authors-citations}
+citations <-
+  package_authors %>%
+  inner_join(package_citations, by = c("package" = "cites")) %>%
+  rename(cited_by_package = package.y) %>%
+  left_join(package_authors, by = c("cited_by_package" = "package")) %>%
+  rename(author = author.x,
+         cited_by_author = author.y) %>%
+  mutate(self_citation = cited_by_author == author) %>%
+  print()
+```
+
+Next this needs to be aggregated to one row per author per package, and the
+number of times that package is cited by other packages. Again I complicated
+this by doing it twice, once including self-citations and once excluding them,
+then joining the two.  This is now ready for h-indexing.
+
+```{r count-citations}
+author_citations_inc_self <-
+  citations %>%
+  distinct(package, author, cited_by_package) %>%
+  count(package, author) %>%
+  rename(citations_inc_self = n)
+
+author_citations_exc_self <-
+  citations %>%
+  dplyr::filter(!self_citation) %>%
+  distinct(package, author, cited_by_package) %>%
+  count(package, author) %>%
+  rename(citations_exc_self = n)
+
+author_citations <-
+  inner_join(author_citations_inc_self,
+             author_citations_exc_self,
+             by = c("package", "author")) %>%
+  right_join(package_authors, by = c("package", "author")) %>%
+  mutate_if(is.numeric, replace_na, 0L) %>%
+  print()
+```
+
+## *h*-index
+
+With the scutwork done, brace yourself for the fun algorithmic bit, the
+insignificant fraction of the code that calculates the h-indexes.  For each
+author, it calculates the largest `n` such that the author has `n` packages each
+cited at least `n` times.  So if their *h*-index is 10, then they have 10
+packages each cited at least 10 times, and they don't have 11 packages each
+cited at least 11 times.
+
+```{r define-h-index}
+h_index <- function(citations_per_package) {
+  packages_per_n_citations <- table(citations_per_package)
+  n_citations <- c(0L, seq_len(max(citations_per_package)))
+  n_packages <- integer(length(n_citations))
+  n_packages[as.integer(names(packages_per_n_citations)) + 1] <-
+    packages_per_n_citations
+  n_gte_n <- rev(cumsum(rev(n_packages))) # no. pkgs with >= no. citations
+  tail(c(0L, n_citations[n_gte_n >= n_citations]), 1L)
+}
+```
+
+Applying the *h*-index function to each author ...
+
+```{r apply-h-index}
+h_indexes <-
+  author_citations %>%
+  group_by(author) %>%
+  summarise(h_index_inc_self = h_index(citations_inc_self),
+            h_index_exc_self = h_index(citations_exc_self)) %>%
+  mutate(rank_inc_self = min_rank(-h_index_inc_self),
+         rank_exc_self = min_rank(-h_index_exc_self)) %>%
+  arrange(rank_inc_self, rank_exc_self, author)
+```
+
+Job done.  Before revealing the top authors, here are the ones that lose the
+most by discounting self-citations.  Richard Cotton is the only person to lose
+more than one *h*-index point.
+
+```{r self-citation-losers}
+# Biggest losses to excluding self-citations
+h_indexes %>%
+  dplyr::filter(h_index_exc_self != h_index_inc_self) %>%
+  mutate(h_index_loss = h_index_inc_self - h_index_exc_self) %>%
+  top_n(1, h_index_loss) %>%
+  arrange(desc(h_index_loss), rank_inc_self, rank_exc_self, author) %>%
+  knitr::kable()
+```
+
+Your reward for reading so far even though you'd already seen this graph
+in the tweet.
+
+```{r graph}
+annotate_authors <- function(x, y, label) {
+  annotate("text", x, y, angle = 90, hjust = 0, label = label)
+}
+
+h_indexes %>%
+  rename(h_index = h_index_inc_self) %>%
+  count(h_index) %>%
+  arrange(h_index) %>%
+  mutate(h_index = fct_inorder(as.character(h_index))) %>%
+  ggplot(aes(h_index, n)) +
+  geom_point() +
+  geom_segment(aes(xend = h_index, yend = 1)) +
+  geom_vline(xintercept = 15.5, linetype = 2, colour = "grey50") +
+  scale_y_log10(limits = c(1, NA)) +
+  annotation_logticks(sides = "l") +
+  annotate_authors("39", 1.5, "Wickham") +
+  annotate_authors("31", 1.5, "RStudio") +
+  annotate_authors("19", 1.5, "Hornik") +
+  annotate_authors("18", 3, "R Core, Maechler") +
+  annotate_authors("14", 1.5, "Zeileis") +
+  annotate_authors("13", 1.5, "Ripley") +
+  annotate_authors("12", 6, "Allaire, Bolker, Chang, Xie") +
+  xlab(expression(paste("CRAN ", italic("h"), "-index"))) +
+  ylab("Number of authors") +
+  theme_minimal() +
+  theme(panel.grid.minor.x = element_blank(),
+        panel.grid.minor.y = element_blank(),
+        panel.grid.major.x = element_blank(),
+        axis.ticks.x = element_blank()) +
+  ggtitle(expression(paste("CRAN ", italic("h"), "-index by number of authors")))
+```
+
+A couple of points:
+
+* The only women in at least the top 11 are employees of RStudio.
+* In the CRAN context the *h*-index rewards packages that are used by other
+  packages, so authors of foundational or 'back-end' packages are more likely to
+  have high *h*-indexes than authors of presentational or 'front-end' packages.
+
+Here are some authors with high numbers of downloads *of packages they maintain*
+but *h*-indexes of zero.
+
+<aside>
+
+Downloads from the RStudio CRAN mirror on 13 February 2019.
+
+</aside>
+
+* [archdata](https://cran.r-project.org/package=archdata) is the only CRAN
+  package maintained by [David L
+  Carlson](https://cran.r-project.org/web/checks/check_results_dcarlson_at_tamu.edu.html).
+  It was downloaded 1700 times on 13 February 2019, but isn't depended on or
+  imported by any other CRAN packages, perhaps because it provides data rather
+  than functions.  Carlson has no other CRAN packages.
+* [prophet](https://cran.r-project.org/web/packages/prophet/index.html) is the
+  only CRAN package maintained by [Sean
+  Taylor](https://cran.r-project.org/web/checks/check_results_sjt_at_fb.com.html).
+  It isn't depended on or imported by any other CRAN packages even though it
+  provides functions, perhaps because its function isn't primarily for
+  developers.
+
+```{r download-downloads, include = FALSE, eval = FALSE}
+download.file("http://cran-logs.rstudio.com/2019/2019-02-13.csv.gz",
+              here("downloads.csv.gz"))
+```
+
+```{r parse-downloads, include = FALSE}
+downloads <- read_csv(here("downloads.csv.gz"))
+```
+
+```{r join-downloads, echo = FALSE}
+package_maintainers <-
+  pkglist %>%
+  select(package, maintainer) %>%
+  mutate(maintainer = clean_up_author(maintainer)) %>%
+  unnest()
+
+downloads %>%
+  count(package) %>%
+  rename(downloads = n) %>%
+  inner_join(package_maintainers, by = "package") %>%
+  group_by(maintainer) %>%
+  summarise(downloads = sum(downloads)) %>%
+  inner_join(h_indexes, by = c("maintainer" = "author")) %>%
+  dplyr::filter(h_index_inc_self == 0) %>%
+  arrange(desc(downloads)) %>%
+  select(maintainer, downloads)
+```
+
+## Your CRAN *h*-index
+
+Search the full table for your own *h*-index.
+
+```{r datatable, echo = FALSE}
+datatable(h_indexes)
+```
+
+<details><summary>Expand for session info</summary>
+
+```{r session-info, tidy = FALSE}
+options(width = 80)
+session_info()
+```
+
+</details>

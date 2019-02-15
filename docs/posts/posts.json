@@ -1,5 +1,22 @@
 [
   {
+    "path": "posts/2019-02-08-cran-h-index/",
+    "title": "CRAN h-index",
+    "description": "h-indexes of CRAN package maintainers.  Read to the end to find your own\nh-index.",
+    "author": [
+      {
+        "name": "Duncan Garmonsway",
+        "url": {}
+      }
+    ],
+    "date": "2019-02-15",
+    "categories": [],
+    "preview": "posts/2019-02-08-cran-h-index/cran-h-index_files/figure-html5/graph-1.png",
+    "last_modified": "2019-02-15T17:11:07+00:00",
+    "preview_width": 1248,
+    "preview_height": 768
+  },
+  {
     "path": "posts/2019-01-31-add-nowt-to-your-tidy-pipelines/",
     "title": "Add nowt() to your tidy pipelines",
     "description": "Never faff with trailing pipes again %>%",
@@ -12,7 +29,7 @@
     "date": "2019-01-31",
     "categories": [],
     "preview": "posts/2019-01-31-add-nowt-to-your-tidy-pipelines/./nowt-so-queer-as-folk.jpg",
-    "last_modified": "2019-01-31T18:49:59+00:00"
+    "last_modified": "2019-01-31T18:50:00+00:00"
   },
   {
     "path": "posts/2019-01-25-a-custom-ggplot2-geom-for-deviations/",

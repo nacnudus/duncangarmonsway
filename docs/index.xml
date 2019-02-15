@@ -12,7 +12,17 @@
       <link>https://nacnudus.github.io/duncangarmonsway</link>
     </image>
     <generator>Radix</generator>
-    <lastBuildDate>Thu, 31 Jan 2019 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Fri, 15 Feb 2019 00:00:00 +0000</lastBuildDate>
+    <item>
+      <title>CRAN h-index</title>
+      <dc:creator>Duncan Garmonsway</dc:creator>
+      <link>https://nacnudus.github.io/duncangarmonsway/posts/2019-02-08-cran-h-index</link>
+      <description>h-indexes of CRAN package maintainers.  Read to the end to find your own
+h-index.</description>
+      <guid>https://nacnudus.github.io/duncangarmonsway/posts/2019-02-08-cran-h-index</guid>
+      <pubDate>Fri, 15 Feb 2019 00:00:00 +0000</pubDate>
+      <media:content url="https://nacnudus.github.io/duncangarmonsway/posts/2019-02-08-cran-h-index/cran-h-index_files/figure-html5/graph-1.png" medium="image" type="image/png" width="1248" height="768"/>
+    </item>
     <item>
       <title>Add nowt() to your tidy pipelines</title>
       <dc:creator>Duncan Garmonsway</dc:creator>
