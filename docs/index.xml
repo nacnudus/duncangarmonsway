@@ -12,7 +12,16 @@
       <link>https://nacnudus.github.io/duncangarmonsway</link>
     </image>
     <generator>Radix</generator>
-    <lastBuildDate>Fri, 15 Feb 2019 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Mon, 18 Feb 2019 00:00:00 +0000</lastBuildDate>
+    <item>
+      <title>Rebel Bayes Day 1</title>
+      <dc:creator>Duncan Garmonsway</dc:creator>
+      <link>https://nacnudus.github.io/duncangarmonsway/posts/2019-02-18-rebel-bayes-day-1</link>
+      <description>Prior beliefs about Bayesian statistics, updated by reading Statistical
+Rethinking by Richard McElreath.</description>
+      <guid>https://nacnudus.github.io/duncangarmonsway/posts/2019-02-18-rebel-bayes-day-1</guid>
+      <pubDate>Mon, 18 Feb 2019 00:00:00 +0000</pubDate>
+    </item>
     <item>
       <title>CRAN h-index</title>
       <dc:creator>Duncan Garmonsway</dc:creator>

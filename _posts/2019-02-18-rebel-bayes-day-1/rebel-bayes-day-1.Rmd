@@ -1,0 +1,231 @@
+---
+title: "Rebel Bayes Day 1"
+description: |
+  Prior beliefs about Bayesian statistics, updated by reading Statistical
+  Rethinking by Richard McElreath.
+author: Duncan Garmonsway
+date: February 18, 2019
+output:
+  radix::radix_article:
+    self_contained: false
+    exclude: ["local.utf-8.add", "local.utf-8.add.spl"]
+---
+
+## Reading week
+
+This week I am reading [Statistical
+Rethinking](https://www.crcpress.com/Statistical-Rethinking-A-Bayesian-Course-with-Examples-in-R-and-Stan/McElreath/p/book/9781482253443)
+by Richard McElreath.  Each day I post my prior beliefs about Bayesian
+Statistics, read a bit, and update them.
+
+## Prior beliefs
+
+1. Bayesian statistics is a way to combine distributions by a kind of averaging.
+1. Andrew Gelman is intimidating.
+1. Bayesian hypothesis testing is a thing Bayesians do in private when they
+   realise they still have to make decisions somehow.
+1. You can choose any prior you want as long as it doesn't really affect the
+   posterior.
+1. None of this has anything whatsoever to do with Monte Carlo or the
+   prosecutor's fallacy.  It's actually about baseball.
+1. Bayesian methods are easy to understand unless you've been brainwashed by the
+   frequentists.
+1. If computers had been invented before frequentist statistics, nobody would
+   have invented frequentist statistics.
+1. They don't teach Bayes to undergrads because it's embarrassingly easy.
+1. Only pedants think there's a meaningful difference between "confidence
+   intervals" and "credible intervals".
+1. Bayesian A/B testing is the acceptable face of early stopping, aka ethical
+   and pragmatic experimental design.
+1. The Bayesian revival was masterminded by publishers to double their market by
+   publishing Bayesian variants of everything.
+1. You can use Bayesian methods to account for measurement uncertainty.
+1. You can use Bayesian methods to account for prior beliefs.
+1. Physicists worked out all the useful Bayesian methods ages ago but they have
+   way cooler things to boast about.
+1. Researchers use Bayes as an excuse to play with code.
+1. WinBUGS is a leading indicator of a bad course.
+1. STAN is the man.
+1. Statistics is a science of guesswork; decision-making with uncertainty.
+1. MCMC stands for Monte Casino Molotov Cocktail.
+1. It's not about Bayes theorem.
+1. You can skip the calculus.
+
+## New data
+
+### Preface
+
+* "So the book assumes the reader is ready to try doing statistical inference
+  without *p*-values ... the disregard paid to *p*-values is not a uniquely
+  Bayesian attitude.  Indeed, significance testing can be -- and has been --
+  formulated as a Bayesian procedure as well."
+* "My generation was probably the last to have to learn some programming to use
+  a computer." [not in the UK it wasn't -- Ed.]
+
+### 1. The Golem of Prague
+
+#### 1.1 Statistical golems
+
+* "Statistics is neither mathematics nor a science, but rather a branch of
+  engineering." p3.
+* "If we keep adding new types of tools, soon there will be too many to keep
+  track of." p3.
+* "Science is not described by the falsifications standard."
+
+#### 1.2 Statistical rethinking
+
+* "Statisticians, for their part, can derive pleasure from scolding
+  scientists."
+
+#### 1.3 Three tools for golem engineering.
+
+* "Bayesian inference proceeds as usual, because the deterministic 'noise' can
+  still be modelled using probability, as long as we don't identify probability
+  with frequency.  As a result, the field of image reconstruction and processing
+  is dominated by Bayesian algorithms." p11.
+* "Bayesian golems treat 'randomness' as a property of information, not of the
+  world ... From the perspective of our golem, the coin toss is 'random', but
+  it's really the golem that is random, not the coin." p11.
+* "Bayesian data analysis is just a logical procedure for processing
+  information.  There is a tradition of using this procedure as a normative
+  description of rational belief, a tradition called 'Bayesianism'.  But this
+  book neither describes nor advocates it." p12.
+* "Not only is there 'Bayesian' and 'frequentist' probability, but there are
+  different versions of Bayesian probability even." p12.
+* "the Bayesian framework presents a distinct pedagogical advantage: many people
+  find it more intuitive ... very many scientists interpret non-Bayesian results
+  in Bayesian terms, for example interpreting ordinary *p*-values as Bayesian
+  posterior probabilities and non-Bayesian confidence intervals as Bayesian
+  ones" p13.
+* "as data sets have increased in scale ... alternatives to or approximations to
+  Bayesian inference remain important, and probably always will".
+* "any particular parameter can be usefully regarded as a placeholder of a
+  missing model ... it is simple enough to embed the new model inside the old
+  one ... such models have a natural Bayesian representation" p13.
+* "Multilevel models allow us to preserve the uncertainty in the original,
+  pre-averaged values, while still using the average to make predictions".
+  "*multilevel regression deserves to be the default form of regression*."
+* "The most important statistical phenomenon that you may have never heard of is
+  'overfitting'" p15.
+* "Markov chain Monte Carlo" p17.
+
+### 2. Small Worlds and Large Worlds
+
+* "Once you already know which information to ignore or attend to, being fully
+  Bayesian is a waste." p20.
+
+#### 2.1 The garden of forking data
+
+* "the principle of indifference results in inferences very comparable to
+  mainstream non-Bayesian approaches ... Many non-Bayesian procedures have moved
+  away from this, through the use of penalized likelihood and other methods."
+
+#### 2.2 Building a model
+
+* "the data could be presented to your model in any order, or all at once ...
+  it's important to realize that this merely represents abbreviation of an
+  iterated learning process."
+* "If the prior is a bad one, then the resulting inference will be misleading ...
+  A Bayesian golem must choose an initial plausibility, and a non-Bayesian golem
+  must choose an estimator."
+* "The Bayesian model learns in a way that is demonstrably optimal, provided
+  that the real, large world is accurately described by the  model."
+* "The model's certainty is no guarantee that the model is a good one."
+
+#### 2.3 Components of the model
+
+* "the most influential assumptions in both Bayesian and many non-Bayesian
+  models are the likelihood functions and their relations to the parameters."
+* "in the Bayesian framework the distinction between a datum and a parameter is
+  fuzzy"
+* "In practice, the subjectivist and the non-subjectivist will often analyze
+  data in nearly the same way."
+* "If you don't have a strong argument for any particular prior, then try
+  different ones ... checking how sensitive inference is to the
+  assumption." p35.
+* "Bayesian data analysis isn't about Bayes' theorem."
+
+#### 2.4 Making the model go
+
+* "knowing the mathematical rule is often of little help, because many of the
+  interesting models in contemporary science cannot be conditioned formally, no
+  matter your skill in mathematics."
+* "the logarithm of a Gaussian distribution forms a parabola"
+* "The conceptual challenge with MCMC lies in its highly non-obvious strategy."
+
+### 3. Sampling the Imaginary
+
+* "I don't like these examples [prosecutor's fallacy] .. there's nothing really
+  'Bayesian' about them."
+* "Many scientists are quite shaky about integral calculus, even though they
+  have strong and valid intuitions about how to summarize data." p51.
+* "The most important thing to do is to improve the base rate, Pr(true), and
+  that requires thinking, not testing." p52.
+
+#### 3.2 Sampling to summarize
+
+* "there must be an infinite number of posterior intervals with the same mass.
+  But if you want an interval that best represents the parameter values most
+  consistent with the data, then you want the densest of these intervals.
+  That's what the HPDI is." p56.
+* "the HPDI has some advantages over the PI.  But in most cases, these two types
+  of interval are very similar ... fetishizing precision to the 5th decimal
+  place will not improve your science."
+* "the HPDI ... suffers from greater *simulation variance*"
+* "If the choice of interval type makes a big difference, then you shouldn't be
+  using intervals to summarize the posterior."
+* "The width of the interval, and the values it covers, can provide valuable
+  advice."
+
+## Updated beliefs
+
+* ✓ means the data endorsed the prior belief.
+* ✕ means the data countered the prior belief.
+* ? means no data was observed.
+* ~~strikethrough~~ is no longer believed.
+* *italics* is a new or modified belief.
+
+1. ✓ Bayesian statistics is a way to combine distributions by a kind of
+   averaging.
+1. ~~Andrew Gelman is intimidating~~ *It's difficult to do the right thing in
+   statistics, but that doesn't stop individual statisticians being very sure of
+   themselves.*
+1. ~~Bayesian hypothesis testing is a thing Bayesians do in private when they
+   realise they still have to make decisions somehow~~ *Everyone knows that
+   hypothesis tests are only one way to inform a decision.  Bayesians don't
+   have anything special to say about it but they do anyway.*
+1. ~~You can choose any prior you want as long as it doesn't really affect the
+   posterior~~ *If your model behaves unexpectedly then it might not be good
+   enough.  No mention of the risk that a well-behaved model confirms wrong
+   beliefs.*
+1. ✓ None of this has anything whatsoever to do with Monte Carlo or the
+   prosecutor's fallacy.  ~~It's actually about baseball~~
+1. ✓ Bayesian methods are easy to understand ~~unless you've been brainwashed by
+   the frequentists~~
+1. ? If computers had been invented before frequentist statistics, nobody would
+   have invented frequentist statistics.
+1. ✕ They ~~don't~~ teach Bayes to undergrads ~~because it's embarrassingly easy~~
+1. ✓ Only pedants think there's a meaningful difference between "confidence
+   intervals" and "credible intervals".
+1. ? Bayesian A/B testing is the acceptable face of early stopping, aka ethical
+   and pragmatic experimental design.
+1. ? The Bayesian revival was masterminded by publishers to double their market
+   by publishing Bayesian variants of everything.
+1. ✓ You can use Bayesian methods to account for measurement uncertainty.
+1. ✓ You can use Bayesian methods to account for prior beliefs.
+1. ? Physicists worked out all the useful Bayesian methods ages ago but they
+   have way cooler things to boast about.
+1. ✓ Researchers use Bayes as an excuse to play with code.
+1. ? WinBUGS is a leading indicator of a bad course.
+1. ? STAN is the man.
+1. ✓ Statistics is a science of guesswork; decision-making with uncertainty.
+1. ✕ MCMC stands for Monte Casino Molotov Cocktail.
+1. ✓ It's not about Bayes theorem.
+1. ✓ You can skip the calculus.
+
+## Critic's Choice
+
+The analysis of the data as a maximum run length of one value, and the number of
+switches between values.  It's a neat illustration of a model that represents
+one aspect of reality but not every aspect.  I'd like to know how sensitive
+'maximum run length' and 'number of switches' are to the sample size.

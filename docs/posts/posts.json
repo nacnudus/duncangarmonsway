@@ -1,5 +1,20 @@
 [
   {
+    "path": "posts/2019-02-18-rebel-bayes-day-1/",
+    "title": "Rebel Bayes Day 1",
+    "description": "Prior beliefs about Bayesian statistics, updated by reading Statistical\nRethinking by Richard McElreath.",
+    "author": [
+      {
+        "name": "Duncan Garmonsway",
+        "url": {}
+      }
+    ],
+    "date": "2019-02-18",
+    "categories": [],
+    "preview": {},
+    "last_modified": "2019-02-18T18:07:14+00:00"
+  },
+  {
     "path": "posts/2019-02-08-cran-h-index/",
     "title": "CRAN h-index",
     "description": "h-indexes of CRAN package maintainers.  Read to the end to find your own\nh-index.",
@@ -12,7 +27,7 @@
     "date": "2019-02-15",
     "categories": [],
     "preview": "posts/2019-02-08-cran-h-index/cran-h-index_files/figure-html5/graph-1.png",
-    "last_modified": "2019-02-15T17:11:07+00:00",
+    "last_modified": "2019-02-15T18:16:06+00:00",
     "preview_width": 1248,
     "preview_height": 768
   },
