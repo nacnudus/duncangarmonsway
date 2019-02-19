@@ -1,0 +1,344 @@
+---
+title: "Rebel Bayes Day 2"
+description: |
+  Prior beliefs about Bayesian statistics, updated by reading Statistical
+  Rethinking by Richard McElreath.
+author: Duncan Garmonsway
+date: February 19, 2019
+output:
+  radix::radix_article:
+    self_contained: false
+---
+
+## Reading week
+
+This week I am reading [Statistical
+Rethinking](https://www.crcpress.com/Statistical-Rethinking-A-Bayesian-Course-with-Examples-in-R-and-Stan/McElreath/p/book/9781482253443)
+by Richard McElreath.  Each day I post my prior beliefs about Bayesian
+Statistics, read a bit, and update them.  See also [Day
+1](https://nacnudus.github.io/duncangarmonsway/posts/2019-02-18-rebel-bayes-day-1/).
+
+## Prior beliefs
+
+1. Inference is a mug's game. Unless you have so much data that you
+   don't need stats, then you don't have enough data to do stats.
+1. Linear models combine values of features of a subject, to specify the
+   parameters of a distribution, from which you draw a prediction of a value of
+   a feature.
+1. Distributions are normal because everything is either in one state or
+   another, and the combination of many yes/no decisions is approximately
+   normal.
+1. Don't you dare do this unless everything is independent and identically
+   distributed.
+1. A Bayesian linear model with uniform priors is exactly the same as a
+   frequentist linear model.
+1. The distributions of Bayesian parameter estimates are hard to interpret
+   because they are all conditional on each other.
+1. [It's a pain to specify
+   priors](https://nacnudus.github.io/duncangarmonsway/posts/2018-12-14-choose-a-priors-parameters/).
+1. Polynomial regression is the very devil because it will make false prophecies
+   (overfitting) and polynomial relationships don't occur in nature.
+1. Categorical variables don't have distributions -- treat them as probabilities
+   and pretend everything's okay.
+1. Ordinary Least Squares worked for my grandfather and if you have to use
+   some other obscure method to make the data support you then you're up to no
+   good.
+1. Even Bayes can't protect you from your own willpower to find signal in noise.
+1. Even Bayes can't detect signals buried in ambiguous, indirect observation.
+1. The AIC Information Criterion isn't how acronyms work but it's how Google
+   search terms work.
+1. Bayesians invented the BIC to be more punishing than the AIC and retake the
+   moral high ground.
+1. *p*-values are contrived, essentially meaningless and nobody knows how they
+   really work -- oh look there's an information criterion let's use that!
+
+### Undecided from previous days
+
+1. If computers had been invented before frequentist statistics, nobody would
+   have invented frequentist statistics.
+1. Bayesian A/B testing is the acceptable face of early stopping, aka ethical
+   and pragmatic experimental design.
+1. The Bayesian revival was masterminded by publishers to double their market by
+   publishing Bayesian variants of everything.
+1. Physicists worked out all the useful Bayesian methods ages ago but they have
+   way cooler things to boast about.
+1. WinBUGS is a leading indicator of a bad course.
+1. STAN is the man.
+
+## New data
+
+### 4. Linear Models
+
+* "The Ptolemaic strategy is the same as a *Fourier series*"
+* "The model is incredibly wrong, yet makes quite good predictions."
+
+#### 4.1 Why normal distributions are normal
+
+* "This is the sort of task that would be harrowing in a point-and-click
+  interface."
+* "eventually the most likely sum, in the sense that there are the most ways to
+  realize it, will be a sum in which every fluctuation is canceled by another, a
+  sum of zero (relative to the mean)"
+* "Multiplying small numbers is approximately the same as addition"
+* "Repeatedly adding finite fluctuations results in a distribution of sums
+  that have shed all information about the underlying process, aside from mean
+  and spread."
+* "statistical models based on Gaussian distributions cannot reliably identify
+  micro-process"
+* "[The Gaussian distribution] is the least surprising and least informative
+  assumption to make."
+* "Using a model is not equivalent to swearing an oath to it."
+
+#### 4.2 A language for describing models
+
+* "some procrustean model type, like regression or multiple regression or ANOVA
+  or ANCOVA or such.  These are all the same kind of model"
+
+#### 4.3 A Gaussian model of height
+
+* "Yes, a distribution of distributions."
+* "height is a sum of many small growth factors ... a distribution of sums tends
+  to converge to a Gaussian distribution"
+* "Gawking at the raw data, to try to decide how to model them, is usually not a
+  good idea."
+* "the empirical distribution needn't be actually Gaussian in order to justify
+  using a Gaussian likelihood."
+* "in ignorance ... the most conservative distribution to use is i.i.d."
+* "*de Finetti's theorem* ... tells us that values which are exchangeable can be
+  approximated by mixtures of i.i.d. distributions."
+* "Markov chain Monte Carlo can use highly correlated sequential samples to
+  estimate most any iid distribution we like."
+* "89 is also a prime number, so if someone asks you to justify it, you can
+  stare at them meaningfully and incant, 'Because it is prime.'  That's no worse
+  justification than the conventional justification for 95%."
+* "There's so much data here that you'll have to use pretty extreme priors to
+  have any effect on inference."
+* "Most non-Bayesian estimates implicitly use flat priors."
+* "It's sometimes useful to talk about the strength of a prior in terms of which
+  data would lead to the same posterior distribution, beginning with a flat
+  prior ... the $\mu \sim \mathrm{Normal}(178, 0.1)$ is equivalent to having
+  previously observed 100 heights with mean value 178."
+
+#### 4.4 Adding a predictor
+
+* "The linear model strategy ... is to make the parameter for the mean of a
+  Gaussian distribution, $\mu$, into a linear function of the predictor
+  variable and other, new parameters that we invent."
+* "In this context, such a silly prior is harmless, because there is a lot of
+  data."
+* "Conventional Bayesian priors are *conservative*, relative to conventional
+  non-Bayesian approaches."
+* "*Posterior probabilities of parameter values describe the relative
+  compatibility of different states of the world with the data, according to the
+  model.*"
+* "The value of the intercept is frequently uninterpretable without also
+  studying any $\beta$ parameters.  That is why we need very weak priors for
+  intercepts, in many cases."
+* "tables of estimates are usually insufficient for understanding the
+  information contained in the posterior distribution."
+* "I have tried teaching such an analytical approach before, and it has always
+  been disaster."
+* "The fact that we can compute an expected value to the 10th decimal place does
+  not imply that our inferences are precise to the 10th decimal place."
+* "it's possible to view the Gaussian likelihood as purely ... a device for
+  estimating the mean and variance of a variable"
+
+#### 4.5 Polynomial regression
+
+* "While this section teaches polynomial regression, in general it's a bad thing
+  to do.  Why?  Because polynomials are very hard to interpret.  Better would
+  be to have a more mechanistic model of the data, one that builds the
+  non-linear relationship up from a principled beginning."
+
+### 5. Multivariate Linear Models
+
+* "There are even people would argue that cause does not really exist"
+* "Causal inference always depends upon unverifiable assumptions."
+
+#### 5.1 Spurious association
+
+* "The point here isn't to police language."
+* "We're not going to use the design matrix approach in this book.  And in
+  general you don't need to."
+* "To compute predictor residuals for either [predictor], we just use the other
+  predictor to model it."
+* "Luckily there are more general ways to plumb the mysteries of a model."
+* "An extraordinary and evil degree of control over people would be necessary to
+  really hold marriage rate constant while forcing everyone to marry at a later
+  age."
+* "Stats, huh, yeah what is it good for?"
+
+#### 5.2 Masked relationship
+
+* "Milk is a huge investment, being much more expensive than gestation."
+* "This kind of opaque error message is unfortunately the norm in R."
+* "If you don't get in there and modify some code, make some mistakes, and fix
+  them, you'll never grasp this stuff."
+
+#### 5.3 When adding variables hurts
+
+* "it isn't always true that highly correlated variables are completely
+  redundant -- other predictors might be correlated with only one of the pair"
+* "including post-treatment variables can actually mask the treatment itself."
+* "In observational studies, it is harder to know [which variables are
+  post-treatment]"
+
+#### 5.4 Categorical variables
+
+No notes.
+
+#### 5.5 Ordinary least squares and `lm`
+
+* "Instead of searching for the combination of parameter values that maximizes
+  the posterior probability, OLS instead solves for the parameter values that
+  minimize the sum of the squared residuals.  It turns out that this procedure
+  is often functionally equivalent"
+* "Gauss himself invented OLS as a method of computing Bayesian MAP estimates"
+* "Provided you are happy with flat priors, you'll get the same estimates with
+  `lm` that you got with `map`."
+* "R is not a mind reader"
+
+## 6. Overfitting, Regularization, and Information Criteria
+
+* "The [Copernican] model was neither particularly harmonious nor more accurate
+  than the geocentric model."
+* "You'll find that implementing them is much easier than understanding them."
+* "BIC also requires flat priors and MAP estimates, although it's not actually
+  an 'information criterion'."
+* "Regardless, AIC has a clear and pragmatic interpretation under Bayesian
+  probability"
+
+#### 6.1 The problem with parameters
+
+* "model fitting can be considered a form of data compression"
+* "increasing bias often leads to better predictions"
+
+#### 6.2 Information theory and model performance
+
+* "like many successful fields, information theory has spawned a large number of
+  bogus applications"
+* "*Information*: The reduction in uncertainty derived from learning an outcome."
+* "when an event never happens, there's no point in keeping it in the model."
+* "Divergence depends upon direction."
+* "while we don't know where [the truth] is is, we can estimate how far apart
+  [one model and the other] are, and which is closer to the target."
+
+#### 6.3 Regularization
+
+* "One way to prevent a model from getting too excited by the training sample is
+  to give it a skeptical prior."  *I'm not convinced.  A skeptical prior becomes
+  part of the information that the model encodes, so it is still trying to
+  encode as much information as possible, you have just given it something else
+  to compromise on*.
+* "try different priors and select the one that provides the smallest deviance
+  on the test sample" *Uh-oh, now you're encoding the test sample in the model
+  specification. But everyone does this.  Shaddup Duncan, it's not worth it.*
+* "Linear models in which the slope parameters use Gaussian priors, centered at
+  zero, are sometimes known as 'ridge regression'."
+
+#### 6.4 Information Criteria
+
+* "information criteria ... do not always assign the best expected
+  $D_{\mathrm{test}}$ to the 'true' model."
+* "DIC is essentially a version of AIC that is aware of informative priors."
+* "Even better than the DIC is the Widely Applicable Information Criterion (WAIC)
+  ... it does not require a multivariate Gaussian posterior"
+* "Because WAIC requires splitting up the data into independent observations, it
+  is sometimes hard to define" (e.g. time series)
+* "The choice between BIC or AIC (or neither!) is not about being Bayesian or
+  not."
+* "even when priors are weak and have no influence on estimates within models,
+  priors can have a huge impact on comparisons between models" (when using BIC)
+* "AIC orders models in a way that approximates some forms of cross-validation,
+  and WAIC is explicitly derived as an approximate Bayesian cross-validation."
+* "once you start using multilevel models, 'prediction' is no longer uniquely
+  defined, because the test sample can differ from the training sample in ways
+  that forbid use of some of the parameter estimates."
+
+#### 6.5 Using information criteria
+
+* "It is not possible to provide a principled threshold of difference that makes
+  one model 'significantly' better than another, whatever that means"
+* "Barplots suck"
+* "it's common to advise against trying every possible model"
+
+## Updated beliefs
+
+1. ✓ Inference is a mug's game. Unless you have so much data that you don't need
+   stats, then you don't have enough data to do stats. *This is harsh, but it
+   does seem that the only safe purpose of a model is prediction or to suggest
+   other things to examine, and that any interpretation of parameters is unwise.*
+1. ✓ Linear models combine values of features of a subject, to specify the
+   parameters of a distribution, from which you draw a prediction of a value of
+   a feature.
+1. ✓ Distributions are normal because everything is either in one state or
+   another, and the combination of many yes/no decisions is approximately
+   normal. *The text adds a lot more maths to this, but the gist is there.*
+1. ✕ Don't you dare do this unless everything is independent and identically
+   distributed. *Apparently, like everything else, it might be okay as long as
+   [litany of checks and balances]*
+1. ✓ A Bayesian linear model with uniform priors is exactly the same as a
+   freqentist linear model.
+1. ✓ The distributions of ~~Bayesian~~ parameter estimates are hard to interpret
+   because they are all conditional on each other. *Not Bayes' fault. The world
+   is difficult to understand, and so are difficult models of it*.
+1. ✓ [It's a pain to specify
+   priors](https://nacnudus.github.io/duncangarmonsway/posts/2018-12-14-choose-a-priors-parameters/).
+   *Not explicitly put in the text, but the author knows the distributions well
+   enough to choose parameter estimates for the shape he wants, rather than have
+   to work back from the shape to the parameters, or adjust after guessing.*
+1. ✓ Polynomial regression is the very devil because it will make false prophecies
+   (overfitting) and polynomial relationships don't occur in nature. *Perhaps
+   first-order ones do*.
+1. ? Categorical variables don't have distributions -- treat them as
+   probabilities and pretend everything's okay. *No logits were mentioned*
+1. ✓ Ordinary Least Squares worked for my grandfather and if you have to use
+   some other obscure method to make the data support you then you're up to no
+   good. *They turn out to be at the heart of Bayesian methods.*
+1. ✓ Even Bayes can't protect you from your own willpower to find signal in
+   noise.
+1. ✓ Even Bayes can't detect signals buried in ambiguous, indirect observation.
+1. ✓ The AIC Information Criterion isn't how acronyms work but it's how Google
+   search terms work.
+1. ✕ Bayesians invented the BIC to be more punishing than the AIC and retake the
+   moral high ground. *I was utterly wrong about this.*
+1. ✓ *p*-values are contrived, essentially meaningless and nobody knows how they
+   really work -- oh look there's an information criterion let's use that!  *I
+   don't see how using an information criterion to inform a decision is any more
+   justifiable than using a *p*-value.  They're all rules of thumb*
+1. ✕ The Bayesian revival was masterminded by publishers to double their market by
+   publishing Bayesian variants of everything. *Bayesian methods seem more and
+   more to be generalisations of frequentist methods.*
+1. ✓ If computers had been invented before frequentist statistics, nobody would
+   have invented frequentist statistics. *See above*
+1. ✓ WinBUGS is a leading indicator of a bad course. *There's no way this book
+   could be translated to WinBUGS.*
+
+### Still undecided from previous days
+
+1. ? Bayesian A/B testing is the acceptable face of early stopping, aka ethical
+   and pragmatic experimental design.
+1. ? Physicists worked out all the useful Bayesian methods ages ago but they have
+   way cooler things to boast about.
+1. ? STAN is the man.
+
+## Critic's Choice
+
+My new favourite illustration of overfitting is the plot of different polynomial
+regressions fitted to leave-one-out samples of one data set (p173).  I like the
+idea of talking about the strength of a prior in terms of which data would lead
+to the same posterior distribution.  I also like the idea of using the Gaussian
+likelihood merely to estimate the mean and variance of a variable.
+
+The general impression of these chapters is that Bayesian methods are the same
+as frequentist ones, with the following differences:
+
+* Parameters at least at the top level are drawn from distributions, and
+  the parameters of *those* distributions might be as well, but eventually at
+  the bottom the parameters are fixed.
+* Sampling replaces equations derived analytically.
+* The pedagogy is better -- ommission of smug analytical proofs and abstract
+  rules leaves room for more interesting topics like how to check that a model
+  is reasonable.
+
+The usual limitations of data and modelling remain.
