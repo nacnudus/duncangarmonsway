@@ -16,7 +16,9 @@ This week I am reading [Statistical
 Rethinking](https://www.crcpress.com/Statistical-Rethinking-A-Bayesian-Course-with-Examples-in-R-and-Stan/McElreath/p/book/9781482253443)
 by Richard McElreath.  Each day I post my prior beliefs about Bayesian
 Statistics, read a bit, and update them.  See also [Day
-1](https://nacnudus.github.io/duncangarmonsway/posts/2019-02-18-rebel-bayes-day-1/).
+1](https://nacnudus.github.io/duncangarmonsway/posts/2019-02-18-rebel-bayes-day-1/)
+and [Day
+3](https://nacnudus.github.io/duncangarmonsway/posts/2019-02-20-rebel-bayes-day-3/).
 
 ## Prior beliefs
 
@@ -333,9 +335,9 @@ likelihood merely to estimate the mean and variance of a variable.
 The general impression of these chapters is that Bayesian methods are the same
 as frequentist ones, with the following differences:
 
-* Parameters at least at the top level are drawn from distributions, and
-  the parameters of *those* distributions might be as well, but eventually at
-  the bottom the parameters are fixed.
+* Parameters at least at the top level are drawn from non-flat distributions,
+  and the parameters of *those* distributions might be as well, but eventually
+  at the bottom the parameters are either fixed or flat.
 * Sampling replaces equations derived analytically.
 * The pedagogy is better -- ommission of smug analytical proofs and abstract
   rules leaves room for more interesting topics like how to check that a model

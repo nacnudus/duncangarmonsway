@@ -1,0 +1,242 @@
+---
+title: "Rebel Bayes Day 3"
+description: |
+  Prior beliefs about Bayesian statistics, updated by reading Statistical
+  Rethinking by Richard McElreath.
+author: Duncan Garmonsway
+date: February 20, 2019
+output:
+  radix::radix_article:
+    self_contained: false
+---
+
+## Reading week
+
+This week I am reading [Statistical
+Rethinking](https://www.crcpress.com/Statistical-Rethinking-A-Bayesian-Course-with-Examples-in-R-and-Stan/McElreath/p/book/9781482253443)
+by Richard McElreath.  Each day I post my prior beliefs about Bayesian
+Statistics, read a bit, and update them.  See also [Day
+1](https://nacnudus.github.io/duncangarmonsway/posts/2019-02-18-rebel-bayes-day-1/)
+and [Day
+2](https://nacnudus.github.io/duncangarmonsway/posts/2019-02-19-rebel-bayes-day-2/).
+
+## Prior beliefs
+
+1. The interaction term refers to our conviction that what we are concerned with
+   here is the fundamental interconnectedness of all things.
+1. Just because I sympathise with you doesn't mean you sympathise with me.
+1. If you include an interaction the you must (must not?) include the individual
+   terms as well. R hedges its bets with syntax for either `*` or `:`.
+1. STAN is the man.
+1. Markov chains are gone to the office now that's a good idea to have a great
+   day and I will be in the morning ...
+1. Wardrobes with high entropy suffer less from overfitting.
+1. Generalized linear models wouldn't be such a big deal if everyone teaching
+   undergrad stats had heeded Nelder's and Wedderburn's advice in the [original
+   paper](https://doi.org/10.2307%2F2344614) to abandon t-tests, ANOVA, etc.
+
+   > We hope that the approach developed in this paper will prove to be a useful
+   > way of unifying what are often presented as unrelated statistical
+   > procedures, and that this unification will simplify the teaching of the
+   > subject to both specialists and non-specialists.
+
+## New data
+
+### 7. Interactions
+
+* "Data are conditional on how they get into our sample."
+* "In generalized linear models ... even when one does not explicitly define
+  variables as interacting, they will always interact to some degree."
+* "every variable essentially interacts with itself, as the impact of change in
+  its value will depend upon its current value." *Surely this is ony when the
+  variable has an exponent?*
+* "Common sorts of multilevel models are essentially massive interaction models."
+
+#### 7.1 Building an interaction
+
+* "you want to avoid accidental assumptions"
+* "there are advantages to borrowing information across categories"
+* "do information criteria make sense at all here? I think they do, but
+  reasonable people can disagree on that point"
+* "Too compute the posterior distribution of [the interaction term], you could
+  do some integral calculus, or you could just process the samples from the
+  posterior"
+* "The distribution of their difference is not the same as the visual overlap of
+  their marginal distributions."
+* "Your golem is skeptical, but it's usually a good idea for you to remain
+  skeptical of your golem."
+
+#### 7.2 Symmetry of the linear interaction
+
+* "While these two possibilites sound different to most humans, your golem
+  thinks they are identical."
+* "And the entire mess is shown in Figure 7.6."
+
+#### 7.3 Continuous interactions
+
+* "I'll use very flat priors here, so we get results nearly identical to
+  typical maximum likeelihood inference.  This isn't to imply that this is the
+  best thing to do.  It is not the best thing to do."
+* "The intercept actually means something, when you center the predictors. It
+  becomes the grand mean of the outcome variable."
+* "If you don't see how to read that from the number -52, you are in good
+  company.  And that's why the best thing to do is to plot implied predictions."
+
+#### 7.4 Interactions in design formulas
+
+* "When would you ever fit this model [without main effects]? When you know a
+  priori that there is no direct effect of [one parameter] on the outcome when
+  [the other] is zero, by assumption."
+
+### 8. Markov Chain Monte Carlo
+
+* "Stan was a man"
+* "Ulam applied it to designing fusion bombs."
+
+#### 8.1 Good King Markov and His island kingdom
+
+* "This procedure may seem baroque and, honestly, a bit crazy."
+
+#### 8.2 Markov chain Monte Carlo
+
+* "The goal is ... to draw samples from an unknown and usually complex target
+  distribution"
+* "Conjugate pairs have analytical solutions for the posterior distribution of
+  an individual parameter. And these solutions are what allow Gibbs sampling to
+  make smart jumps around the joint posterior distribution of all parameters.
+* "BUGS (Bayesian inference Using Gibbs Sampling)"
+* "JAGS (Just Another Gibbs Sampler)"
+* "choosing a prior so that the model fits efficiently isn't really a strong
+  argument from a scientific perspective." *It is when you're Fisher and don't
+  have a computer*.
+* "Hamiltonian Monte Carlo ... doesn't need as many samples to describe the
+  posterior distribution."
+* "HMC requires continuous parameters."
+* "a big limitation of HMC is that it needs to be tuned to a particular model
+  and its data ... Stan automates much of that tuning."
+
+#### 8.3 Easy HMC: `map2stan`
+
+* "installing Stan on your computer is the hardest part."
+* "there is so much data that the prior hardly matters."
+* "don't panic when you see this message.  Keep calm and sample on."
+* "quick checks of trace plots provide a lot of peace of mind."
+
+#### 8.4 Care and feeding of your Markov chain
+
+* "Most people who use [MCMC] don't really understand what it is doing."
+* "It is very common to run more than one Markov chain, when estimating a single
+  model ... when deciding whether the chains are valid, you need more than one
+  chain."
+* "One of the perks of using HMC and Stan is that ... bad chains tend to have
+  conspicuous behaviour"
+* "Lost of problematic chains want subtle priors like these."
+* "When you are having trouble fitting a model, it often indicates a bad model."
+  (Gelman's Folk Theorem of Statistical Computing)
+* "Unless you believe infinity is a reasonable estimate, don't use a flat prior."
+
+### 9. Big Entropy and the Generalized Linear Model
+
+* "Exploiting entropy is not going to untie your cords."
+* "Choosing the distribution with the largest entropy means spreading
+  probability as evenly as possible, while still remaining consistent with
+  anything we think we know about a process."
+* "The posterior distribution has the greatest entropy relative to the prior ...
+  among all distributions consistent with the assumed constraints and the
+  observed data."
+* "The posterior distribution has the smallest divergence from the prior that is
+  possible while remaining consistent with the constraints and the data."
+
+#### 9.1 Maximum entropy
+
+* "[Maximum entropy] is the center of gravity for the highly plausible
+  distributions."
+* "if all we are willing to assume about a collection of measurements is that
+  they have a finite variance, then the Gaussian distribution represents the
+  most conservative probability distribution to assign to those measurements."
+* "Entropy maximization, like so much in probability theory, is really just
+  counting."
+* "There is no guarantee that this is the best probability distribution for the
+  real problem you are analyzing.  But there is a guarantee that no other
+  distribution more conservatively reflects your assumptions."
+
+#### 9.2 Generalized linear models
+
+* "when the outcome variable is either discrete or bounded, a Gaussian
+  likelihood is not the most powerful choice."
+* "age of cancer onset is approximately gamma distributed, since multiple events
+  are necessary for onset."
+* "likelihoods are themselves prior probability distributions: They are priors
+  for the data, conditional on the parameters."
+* "usually we require a link function to prevent mathematical accidents like
+  negative distances or probability masses that exceed 1."
+* "The logit link maps a parameter that is defined as a probability mass, and
+  therefore constrained to lie between zero and one, onto a linear model that
+  can take on any real value."
+* "The log link transforms a linear model into a sstrictly positive measurement."
+* "Human height cannot be linearly related to weight forever, because very
+  heavy people stop getting taller and start getting wider ... for very big
+  storms, damage may be capped by the fact that everything gets destroyed."
+* "If none of the alternative assumptions you consider have much impact on
+  inference, that's worth reporting."
+* "The goal of sensitivity analysis is really the opposite of *p*-hacking."
+* "A big beta-coefficient may not correspond to a big effect on the outcome."
+* "Unfortunately WAIC (or any other information criterion) cannot sort it out [compare models with different likelihood functions.]"
+
+#### 9.3 Maximum entropy priors
+
+* "GLMs are easy to use with conventional weakly informative priors"
+* "maximum entropy provides a way to generate a prior that embodies the
+  background information, while assuming as little else as possible." *I'd like
+  to know much more about this.*
+
+## Updated beliefs
+
+1. ✓ The interaction term refers to our conviction that what we are concerned
+   with here is the fundamental interconnectedness of all things.
+1. ✓ Just because I sympathise with you doesn't mean you sympathise with me.
+1. ✕ If you include an interaction the you must (must not?) include the individual
+   terms as well. R hedges its bets with syntax for either `*` or `:`. *It can
+   be reasonable to omit the main effects, but each one can only be interpreted
+   when the others are zero*.
+1. ✕ STAN is the man. *Stan was a man*.
+1. ✕ Markov chains are gone to the office now that's a good idea to have a great
+   day and I will be in the morning ... *There's more to Markov chains than
+   predictive text.  For example, fusion bombs*.
+1. ✓ Wardrobes with high entropy suffer less from overfitting. *They're
+   maximally conservative, given the constraints*.
+1. ✓ Generalized linear models wouldn't be such a big deal if everyone teaching
+   undergrad stats had heeded Nelder's and Wedderburn's advice in the [original
+   paper](https://doi.org/10.2307%2F2344614) to abandon t-tests, ANOVA, etc.
+   *They're not a big deal in this book, which heeded the advice.*
+
+## Critic's choice
+
+'Pathalogical examples' of things going wrong with MCMC, in Chapter 8.  The
+intuition of Gaussian and Binomial distributions maximising entropy given
+constraints in Chapter 9.
+
+Today's chapters tended to address topics I didn't expect and hadn't stated
+prior beliefs about.  For example, it continued a strong case for plots rather
+than tables, and explored the relative merits of Gibbs and Hamiltonion Monte
+Carlo.
+
+I remain glum about inference.  There have now been several mentions of the fact
+that enough data will wash out the priors.  Today Gelman's folk theorem of
+statistical computing was quoted -- if modelling is hard you're doing it wrong.
+I'd go further and say that if you're modelling at all then the data isn't
+convincing.
+
+For example, there was a statistical hoo-ha a while back about whether the rate
+of death on New Zealand roads was increasing.  Well respected statisticians did
+their stuff, but whatever they found couldn't have helped make any important
+decisions.  Better questions to ask are whether the present rate is tolerable,
+and whether the cost of a change of rate in either direction can be borne.
+Those are are largely matters of policy and economics.  There's so much data
+about roads and the economy that I don't believe modelling would be necessary to
+make convincing arguments.
+
+Another example, dwelt on in the book, investigated countries' GDP and terrain.
+Country-level analysis will never work, because there are only a small number of
+countries, and they are so various -- much more so than, say humans, and we know
+how hard it is to detect person-level effects.
