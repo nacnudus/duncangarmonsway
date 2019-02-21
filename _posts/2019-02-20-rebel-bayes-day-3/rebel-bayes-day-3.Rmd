@@ -16,9 +16,11 @@ This week I am reading [Statistical
 Rethinking](https://www.crcpress.com/Statistical-Rethinking-A-Bayesian-Course-with-Examples-in-R-and-Stan/McElreath/p/book/9781482253443)
 by Richard McElreath.  Each day I post my prior beliefs about Bayesian
 Statistics, read a bit, and update them.  See also [Day
-1](https://nacnudus.github.io/duncangarmonsway/posts/2019-02-18-rebel-bayes-day-1/)
+1](https://nacnudus.github.io/duncangarmonsway/posts/2019-02-18-rebel-bayes-day-1/),
+[Day
+2](https://nacnudus.github.io/duncangarmonsway/posts/2019-02-19-rebel-bayes-day-2/)
 and [Day
-2](https://nacnudus.github.io/duncangarmonsway/posts/2019-02-19-rebel-bayes-day-2/).
+4](https://nacnudus.github.io/duncangarmonsway/posts/2019-02-21-rebel-bayes-day-4/).
 
 ## Prior beliefs
 
@@ -48,7 +50,7 @@ and [Day
 * "In generalized linear models ... even when one does not explicitly define
   variables as interacting, they will always interact to some degree."
 * "every variable essentially interacts with itself, as the impact of change in
-  its value will depend upon its current value." *Surely this is ony when the
+  its value will depend upon its current value." *Surely this is only when the
   variable has an exponent?*
 * "Common sorts of multilevel models are essentially massive interaction models."
 
@@ -68,14 +70,14 @@ and [Day
 
 #### 7.2 Symmetry of the linear interaction
 
-* "While these two possibilites sound different to most humans, your golem
+* "While these two possibilities sound different to most humans, your golem
   thinks they are identical."
 * "And the entire mess is shown in Figure 7.6."
 
 #### 7.3 Continuous interactions
 
 * "I'll use very flat priors here, so we get results nearly identical to
-  typical maximum likeelihood inference.  This isn't to imply that this is the
+  typical maximum likelihood inference.  This isn't to imply that this is the
   best thing to do.  It is not the best thing to do."
 * "The intercept actually means something, when you center the predictors. It
   becomes the grand mean of the outcome variable."
@@ -173,7 +175,7 @@ and [Day
 * "The logit link maps a parameter that is defined as a probability mass, and
   therefore constrained to lie between zero and one, onto a linear model that
   can take on any real value."
-* "The log link transforms a linear model into a sstrictly positive measurement."
+* "The log link transforms a linear model into a strictly positive measurement."
 * "Human height cannot be linearly related to weight forever, because very
   heavy people stop getting taller and start getting wider ... for very big
   storms, damage may be capped by the fact that everything gets destroyed."
@@ -212,7 +214,7 @@ and [Day
 
 ## Critic's choice
 
-'Pathalogical examples' of things going wrong with MCMC, in Chapter 8.  The
+'Pathological examples' of things going wrong with MCMC, in Chapter 8.  The
 intuition of Gaussian and Binomial distributions maximising entropy given
 constraints in Chapter 9.
 

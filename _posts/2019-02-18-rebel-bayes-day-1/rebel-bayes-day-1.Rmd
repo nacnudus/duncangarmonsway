@@ -17,9 +17,11 @@ This week I am reading [Statistical
 Rethinking](https://www.crcpress.com/Statistical-Rethinking-A-Bayesian-Course-with-Examples-in-R-and-Stan/McElreath/p/book/9781482253443)
 by Richard McElreath.  Each day I post my prior beliefs about Bayesian
 Statistics, read a bit, and update them.  See also [Day
-2](https://nacnudus.github.io/duncangarmonsway/posts/2019-02-19-rebel-bayes-day-2/)
+2](https://nacnudus.github.io/duncangarmonsway/posts/2019-02-19-rebel-bayes-day-2/),
+[Day
+3](https://nacnudus.github.io/duncangarmonsway/posts/2019-02-20-rebel-bayes-day-3/)
 and [Day
-3](https://nacnudus.github.io/duncangarmonsway/posts/2019-02-20-rebel-bayes-day-3/).
+4](https://nacnudus.github.io/duncangarmonsway/posts/2019-02-21-rebel-bayes-day-4/).
 
 ## Prior beliefs
 

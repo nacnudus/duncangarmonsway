@@ -1,0 +1,287 @@
+---
+title: "Rebel Bayes Day 4"
+description: |
+  Prior beliefs about Bayesian statistics, updated by reading Statistical
+  Rethinking by Richard McElreath.
+author: Duncan Garmonsway
+date: February 21, 2019
+output:
+  radix::radix_article:
+    self_contained: false
+---
+
+## Reading week
+
+This week I am reading [Statistical
+Rethinking](https://www.crcpress.com/Statistical-Rethinking-A-Bayesian-Course-with-Examples-in-R-and-Stan/McElreath/p/book/9781482253443)
+by Richard McElreath.  Each day I post my prior beliefs about Bayesian
+Statistics, read a bit, and update them.  See also [Day
+1](https://nacnudus.github.io/duncangarmonsway/posts/2019-02-18-rebel-bayes-day-1/),
+[Day
+2](https://nacnudus.github.io/duncangarmonsway/posts/2019-02-19-rebel-bayes-day-2/)
+and [Day
+3](https://nacnudus.github.io/duncangarmonsway/posts/2019-02-20-rebel-bayes-day-3/).
+
+## Prior beliefs
+
+* At stats conferences, people arrive in 1.1s and 2.2s.
+* Exactly 3 things will happen about 19.5 percent of the time, and now you've
+  lost your audience.
+* I *can* draw a line between integers and what's more I'm going to.
+* Theoretically `factor(ordered = TRUE)` has a purpose but it has yet to be
+  observed in nature.
+* Zero-inflated outcomes are modelled by fitting a Bernoulli to "is it zero?" and
+  handling non-zeros entirely separately.
+* Over-dispersion is like when the lid of a plastic container has stretched and
+  only one corner fits at a time, so you hold it down with elastic bands,
+  double-bag it and try to keep it upright.  In other words none of the standard
+  distributions fit and nobody can be bothered to invent one that does.
+* Multilevel models are what Gelman says you should do instead of whatever you
+  are doing because mumble mumble *p*-values and they retain more degrees of
+  freedom or something.
+* For some reason 'multilevel' is nothing to do with 'deep'.
+
+## New data
+
+### 10. Counting and Classification
+
+* "No one has ever observed a proportion."
+* "The fundamental friction of passing between count data and inference about
+  proportion never fades"
+
+#### 10.1 Binomial regression
+
+I found the chimpanzee example rather bewildering -- the first such moment so
+far.  It has been completely rewritten in the draft 2nd Edition, but this series
+is about the 1st Edition.  Also the redraft still uses `pulled_left` as the
+outcome variable, so my query about that still stands.
+
+* "you can get a sense of ... how often MAP estimation works, even when in
+  principle it should not"
+* "The outcome `pulled_left` is a 0 or 1 indicator that the focal animal pulled
+  the left-hand lever."  *Why not `pulled_prosocial` -- hasn't
+  left/right-handedness been randomised away?  I think this has resulted in a
+  confusing Figure 10.2*
+* "Think of handedness here as a masking variable."
+* "The only reason the posterior distribution falls off at all is because we
+  used a weak regularizing prior in the model definition."
+* "just inspecting the posterior distribution alone would never have revealed
+  that fact to us.  We had to appeal to something outside the fit model."
+* "a male in this sample has about 90% the odds of admission as a female,
+  comparing within departments" *This is presented as the classic example of
+  Simpson's Paradox, so I'm surprised it concludes summary statistic across all
+  departments*.
+* "remain skeptical of models and try to imagine ways they might be deceiving
+  us."
+* "At large log-odds, almost any value is just about as good as any other. So
+  the uncertainty is asymmetric and the flat prior does nothing to calm
+  inference down on the high end of it. The estimates above, read naively,
+  suggest that there is no association between `y` and `x`, even though they are
+  strongly associated."
+
+#### 10.2 Poisson regression
+
+* "Suppose for example that you come to own, through imperial drama, another
+  monastery."
+* "how could  you analyze both [sets of records] in the same model, given that
+  the counts are aggregated over different amounts of time, different
+  exposures?" *What follows is a neat trick.*
+* "even HMC is going to be less efficient, when there are strong correlations in
+  the posterior distribution."
+* "centering predictors can aid in inference, by reducing correlations among
+  parameters."
+
+#### 10.3 Other count regressions
+
+* "In a multinomial (or categorical) GLM, you need $K - 1$ linear models for $K$
+  types of events."
+* "the estimates swing around wildly, depending upon which event type you assign
+  a constant score."
+* "It's usually computationally easier to use Poisson rather than multinomial
+  likelihoods." *i.e. rates rather than probabilities*
+* "I appreciate that this kind of thing -- modeling the same data different ways
+  but getting the same inferences -- is exactly the kind of thing that makes
+  statistics maddening for scientists."
+* "if there are *k* event types, you can model multinomial probabilities ...
+  using Poisson rate parameters ... And you can recover the multinomial
+  probabilities"
+
+### 11. Monsters and Mixtures
+
+* "if you ever need to construct your own unique monster, feel free to do so."
+
+#### 11.1 Ordered categorical outcomes
+
+* "It is very common in the social sciences ..."
+* "we'd like ... to move predictions progressively through the categories in
+  sequence."
+* "By linking a linear model to cumulative probability, it is possible to
+  guarantee the ordering of the outcomes."
+* Figure 11.1 connects integers by lines.
+* "Since the largest response value always has a cumulative probability of 1, we
+  effectively do not need a parameter for it."
+* "in small sample contexts, you'll have to think much harder about priors.
+  Consider for example that we know $\alpha_1 \lt \alpha_2$, before we even see
+  the data."
+* "if we decrease the log-cumulative-odds of every outcome value *k* below the
+  maximum, this necessarily shifts probability mass upwards towards higher
+  outcome variables ... an increase in the predictor variable *x* results in an
+  increase in the average response."
+* "With power comes hardship."
+
+#### 11.2 Zero-inflated outcomes
+
+* **Now you can imagine your own generative process, simulate data from it, write the
+  model, and verify that it recovers the true parameter values.  You don't have
+  to wait for a mathematician to legalize the model you need.**
+* "To get this model going, we need to define a likelihood function that mixes
+  these two processes." *In this example, logit and Poisson*.
+
+#### 11.3 Over-dispersed outcomes
+
+* "For a counting process like a binomial, the variance is a function of the
+  same parameters as the expected value ... When the observed variance exceeds
+  this amount ... this implies that some omitted variable is producing
+  additional dispersion in the observed counts."
+* "Even when no additional variables are available, it is possible to mitigate
+  the effects of over-dispersion."
+* "it is often easier to use multilevel models in place of beta-binomial and
+  gamma-Poisson GLMs."
+* "This distribution is described using a beta distribution, which is a
+  probability distribution for probabilities" *??*
+* "The model can't see departments, because we didn't tell it about them. But it
+  does see heterogeneity across rows." *This seems a touch disingenuous, because
+  the reason there are rows is because the data were collected
+  one-row-per-department, so we might as well have told the model about
+  departments.  I can't conceive of when you would have rows of data but no
+  variable to include in the model.*
+* "Models for over-dispersion ... draw the expected value of each observation
+  from a distribution that changes shape as a function of a linear model."
+
+### 12. Multilevel Models
+
+* "Any of the models from previous chapters that used dummy variables to handle
+  categories are programmed for amnesia."
+* "It is better to begin to build a multilevel analysis, and then realize it's
+  unnecessary, than to overlook it."
+* "it becomes much easier to incorporate related tricks such as allowing for
+  measurement error int he data and even modelling missing data itself."
+
+#### 12.1 Example: Multilevel tadpoles
+
+* "Take a look at the full paper, if amphibian life history dynamics interests
+  you."
+* "This is a regularizing prior, like you've used in previous chapters, but now
+  the amount of regularization has been learned from the data itself."
+* "Ordinary MAP estimation cannot handle the averaging in the likelihood,
+  because in general it's not possible to derive an analytical solution."
+* "We really need to give up on optimization as a strategy."
+* "Shrinkage is stronger, the further a tank's empirical proportion is from the
+  global average $\alpha$."
+* "Compared to a beta-binomial or gamma-Poisson model, a binomial or Poisson
+  model with varying intercept on every observed outcome will often be easier to
+  estimate and easier to extend."
+* "if you only have 5 clusters, then that's something like trying to estimate a
+  variance with 5 data points."
+* "it is typically useful to try different priors to ensure that inference
+  either is insensitive to them or rather to measure how inference is altered."
+
+#### 12.2 Varying effects and the underfitting/overfitting trade-off
+
+I came totally unstuck here, and it's the same in the draft 2nd Edition, so
+please chip in if you think you can help.  It's the first time I've found the
+Bayesian method harder to follow than the frequentist.
+
+In the previous multilevel model in 12.1 we "adaptively learn the prior that is
+common to all of these intercepts."  The model is:
+
+$$
+\begin{align}
+s_i & \sim \mathrm{Binomial}(n_i, p_i) \\
+\mathrm{logit}(p_i) & = \alpha_{\small{TANK}[i]} \\
+\alpha_{\small{TANK}} & \sim \mathrm{Normal}(0, 5)
+\end{align}
+$$
+
+In this section, the varying effects model renames TANK to POND, and puts
+priors on the parameters of $\alpha_{\small{POND}}$:
+
+$$
+\begin{align}
+s_i & \sim \mathrm{Binomial}(n_i, p_i) \\
+\mathrm{logit}(p_i) & = \alpha_{\small{POND}[i]} \\
+\alpha_{\small{POND}} & \sim \mathrm{Normal}(\alpha, \sigma) \\
+\alpha & \sim \mathrm{Normal}(0, 1) \\
+\sigma & \sim \mathrm{HalfCauchy}(0, 1)
+\end{align}
+$$
+
+But in the end, isn't $\alpha_{\small{POND}}$ still a vector drawn from a single
+normal prior?  What was the point of putting priors on the prior?
+
+Regardless of my lack of understand, a couple of useful quotes:
+
+* "When individual ponds are very large, pooling in this way does hardly
+  anything to improve estimates"
+* "This is a form of regularization ... but now with an amount of regularization
+  that is learned from the data itself."
+* "sometimes outliers really are outliers"
+
+#### 12.3 More than one type of cluster
+
+* "There may be unique intercepts for each actor as well as for each block."
+* "It's conventional to define varying intercepts with a mean of zero, so
+  there's no risk of accidentally creating hard-to-identify parameters."
+* "As soon as you start trusting the machine, the machine will betray your
+  trust."
+* "There is nothing to gain here by selecting either model.  The comparison of
+  the two models tells a richer story"
+* "If you have a good theoretical reason to include a cluster variable, then you
+  also have good theoretical reason to partially pool its parameters."
+
+#### 12.4 Multilevel posterior predictions
+
+* "Every model is a merger of sense and nonsense."
+* "You have to expect that even a perfectly good model fit will differ from the
+  raw data in a systematic way that reflects shrinkage."
+* "the estimates should not necessarily match up with the raw data, once you use
+  pooling"
+* "the uncertainty [about the population mean] is much smaller than it really
+  should be, if we wish to honestly represent the problem of what to expect from
+  a new individual"
+* "To show the variation among actors, we'll need to use `sigma_actor` in the
+  calculation."
+* "The predictions for an average actor help to visualize the impact of
+  treatment."
+* "They hyper-parameters tell us how to forecast a new cluster, by generating a
+  distribution of new per-cluster intercepts."
+
+## Updated beliefs
+
+* ✕ At stats conferences, people arrive in 1.1s and 2.2s. *There are reasonable
+  ways to deal with this.
+* ✓ Exactly 3 things will happen about 19.5 percent of the time, and now you've
+  lost your audience. *I still find it hard to make decisions based on posterior
+  estimates of counts*.
+* ✓ I *can* draw a line between integers and what's more I'm going to. *It's right there in the book!*.
+* ✕ Theoretically `factor(ordered = TRUE)` has a purpose but it has yet to be
+  observed in nature. *Likert scales.*
+* ✓ Zero-inflated outcomes are modelled by fitting a Bernoulli to "is it zero?" and
+  handling non-zeros entirely separately. *This is not something Bayes does differently, it just has better machinery for it.*
+* ✓ Over-dispersion is like when the lid of a plastic container has stretched and
+	only one corner fits at a time, so you hold it down with elastic bands,
+  double-bag it and try to keep it upright.  In other words none of the standard
+  distributions fit and nobody can be bothered to invent one that does.
+  *McElreath's geocentric analogy is so apt -- when a model doesn't fit, add a
+  model to the model.*
+* ✕ Multilevel models are what Gelman says you should do instead of whatever you
+	are doing because mumble mumble *p*-values and they retain more degrees of
+  freedom or something. *Wrong again. I don't know where I got this impression.
+  Perhaps it's a frequentist thing.*
+* ✓ For some reason 'multilevel' is nothing to do with 'deep'. *But it does
+  look a lot like neural networks.*
+
+## Critic's choice
+
+Seeing models adaptively regularize and avoid overfitting is magical.  Figure
+10.1 is a delightful and unexpected drawing of a chimpanzee at a dining table.
