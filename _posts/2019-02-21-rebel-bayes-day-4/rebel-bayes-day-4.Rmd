@@ -18,9 +18,11 @@ by Richard McElreath.  Each day I post my prior beliefs about Bayesian
 Statistics, read a bit, and update them.  See also [Day
 1](https://nacnudus.github.io/duncangarmonsway/posts/2019-02-18-rebel-bayes-day-1/),
 [Day
-2](https://nacnudus.github.io/duncangarmonsway/posts/2019-02-19-rebel-bayes-day-2/)
+2](https://nacnudus.github.io/duncangarmonsway/posts/2019-02-19-rebel-bayes-day-2/),
+[Day
+3](https://nacnudus.github.io/duncangarmonsway/posts/2019-02-20-rebel-bayes-day-3/)
 and [Day
-3](https://nacnudus.github.io/duncangarmonsway/posts/2019-02-20-rebel-bayes-day-3/).
+5](https://nacnudus.github.io/duncangarmonsway/posts/2019-02-20-rebel-bayes-day-5/).
 
 ## Prior beliefs
 

@@ -1,0 +1,198 @@
+---
+title: "Rebel Bayes Day 5"
+description: |
+  Prior beliefs about Bayesian statistics, updated by reading Statistical
+  Rethinking by Richard McElreath.
+author: Duncan Garmonsway
+date: February 22, 2019
+output:
+  radix::radix_article:
+    self_contained: false
+---
+
+## Reading week
+
+This week I am reading [Statistical
+Rethinking](https://www.crcpress.com/Statistical-Rethinking-A-Bayesian-Course-with-Examples-in-R-and-Stan/McElreath/p/book/9781482253443)
+by Richard McElreath.  Each day I post my prior beliefs about Bayesian
+Statistics, read a bit, and update them.  See also [Day
+1](https://nacnudus.github.io/duncangarmonsway/posts/2019-02-18-rebel-bayes-day-1/),
+[Day
+2](https://nacnudus.github.io/duncangarmonsway/posts/2019-02-19-rebel-bayes-day-2/),
+[Day
+3](https://nacnudus.github.io/duncangarmonsway/posts/2019-02-20-rebel-bayes-day-3/)
+and [Day
+4](https://nacnudus.github.io/duncangarmonsway/posts/2019-02-21-rebel-bayes-day-4/).
+
+## Prior beliefs
+
+* It's not right for two predictors to covary. Only a predictor and an outcome
+  ought to covary. Ideally in perfect unison. As nature intended.
+* When each category has its own linear model, you can vary the intercept, or
+  the slope, or both, and you can also either partially pool or not pool at all
+  (fully pooling means they all get the same model). This totally isn't
+  *p*-hacking nor is it (shudder) *deep learning*.
+* There is no data so big that you can't make it too small by (over-)fitting
+  too complex a model.
+* 'Continuous categories' is probably clickbait.
+* Missing data is fundamentally the Curious Incident of the Dog in the Night
+  Time. You guess what wasn't observed by what ought to have been observed.
+* Measurement error correction is this [Dilbert cartoon strip about averaging
+  two wrong databases](https://dilbert.com/strip/2008-05-07).
+
+```{r dilbert, fig.caption = "Dilbert cartoon strip about averaging two wrong databases"}
+knitr::include_graphics("./dilbert.gif")
+```
+
+## New data
+
+### 13. Adventures in Covariance
+
+* "[The robot] likewise learns more information about slopes when it also pools
+  information about slopes.  And the pooling is achieved in the same way, by
+  estimating the population distribution of slopes at the same time the robot
+  estimates each slope."
+* "Any batch of parameters with *exchangeable* parameters can and probably
+  should be pooled."
+* "This covariation is information that the robot can use. If we can figure out
+  a way to pool information *across* parameter types -- intercepts and slopes"
+* "Sometimes, the pattern of variation in slopes provides hints about omitted
+  variables"
+* "if it suddenly seems both conceptually and computationally much more
+  difficult, that only means you are paying attention."
+
+#### 13.1 Varying slopes by construction
+
+* "there aren't very many multivariate distributions that are easy to work with.
+  The only common ones are multivariate Gaussian and multivariate Student (or 't') distributions."
+* "lack of balance can really favor the varying effects analysis, because
+  partial pooling uses information about the population where it is needed most."
+* "we are always forced to analyze data with a model that is misspecified."
+* "In a Bayesian model, a likelihood is merely a prior for the data, and
+  inference about parameters can be shockingly insensitive to its details."
+* "You can think of [LKJcorr(2)] as a regularizing prior for correlations."
+* "shrinkage on the parameter scale naturally produces shrinkage where we
+  actually care about it: on the outcome scale."
+* "instead of being alarmed, feel the warm glow that comes form knowing that
+  Stan is looking out for you."
+
+#### 13.2 Example: Admission decisions and gender
+
+* "Just because a marginal posterior overlaps zero does not mean we should think
+  of it as zero."
+
+#### 13.3 Example: Cross-classified chimpanzees with varying slopes
+
+* "Mathematically, these alternative parameterizations are equivalent, but
+  inside the MCMC engine they are not."
+* "Both models arrive at equivalent inferences, but the non-centered version
+  samples much more efficiently."
+* "It's often more useful to understand the data through the consilience of
+  multiple models than to try to find any one true model."
+
+#### 13.4 Continuous categories and the Gaussian process
+
+* "Individuals of similar ages should have more similar intercepts."
+* "This name [Gaussian Process Regression] is unfortunately wholly uninformative
+  about what it is for and how it works."
+* "What the model does is estimate a function for the covariance between pairs
+  of cases at different distances."
+* "Why square the distance? ... it is easy to fit to data and has the
+  often-realistic property of allowing covariance to decline more quickly as
+  the distance grows." *The graph shows that it declines more *slowly* to begin
+  with, then more quickly.*
+* "The function $\delta_{ij}$ is equal to 1 when $i = j$ but is zero otherwise."
+* "We'll define priors for the square of each, and estimate them on the same
+  scale, because that's computationally easier."
+* "A little knowledge of Pacific navigation would probably allow us a smart,
+  informative prior on [the rate of decline of covariance by distance] at least."
+* "I know, this is rather meta"
+* "it is the entire distribution that matters. No single point within it is
+  special."
+* "network distance is another type of abstract distance that can be plugged
+  into these models."
+* "Building fancier Gaussian process models like the ones described just above
+  is best done directly in Stan's modeling language"
+
+### 14. Missing Data and Other Opportunities
+
+* "A big advantage of Bayesian inference is that it obviates the need to be
+  clever."
+* "the real trick of the Bayesian approach: to apply conditional probability in
+  all places, for data and parameters."
+* "revealing the implications of the assumptions, in light of the evidence."
+
+#### 14.1 Measurement error
+
+* "the fully Bayesian approach: Information flows among the measurements to
+  provide improved estimates of the data itself."
+* "Bayesian models are *generative*, meaning they can be used to simulate
+  observations just as well as they can be used to estimate parameters."
+* "typical 'data' is just a special case of a probability distribution for which
+  all of the mass is piled up on a single value."
+* "If this isn't intuitive to you -- because you are normal ..."
+* "we don't have any additional information here, so Gaussian it is."
+* "it's fine to replace a predictor variable with a probability distribution."
+* "Ignoring measurement error tends to exaggerate associations between outcomes
+  and predictors."
+* "Do not average.  Instead, model."
+
+#### 14.2 Missing data
+
+* "[Missing Completely At Random] is also the assumption that is required for
+  dropping the cases with missing values to make sense."
+* "The joint information then makes the intuitively impossible -- inferring
+  missing data -- a matter of deduction."
+
+### 15. Horoscopes
+
+* "Why pay attention to breathlessly announced new discoveries, when as many as
+  half of them will turn out to be false?"
+* "it's entirely possible for most findings at any one point in time to be
+  false but for science in the long term to still function."
+* "Poor signal will not mean no findings, just unreliable ones."
+* "We agonize over bias and measurement and statistical analysis, but then allow
+  it all back in during publication."
+* "The data and its analysis are the scientific product.  The paper is just an
+  advertisement."
+* "mathematical foundations solve few, if any, of the contingent problems that
+  we confront in the context of a study."
+
+## Updated beliefs
+
+* ✕ It's not right for two predictors to covary. Only a predictor and an outcome
+  ought to covary. Ideally in perfect unison. As nature intended.  *Obviously
+  predictors do covary, which weakens their predictive power, but on the other
+  hand if any predictors are missing then you can use covariance to deduce what
+  they ought to have been.*
+* ✓ When each category has its own linear model, you can vary the intercept, or
+  the slope, or both, and you can also either partially pool or not pool at all
+  (fully pooling means they all get the same model). This totally isn't
+  *p*-hacking nor is it (shudder) *deep learning*. *I mean, it's basically deep
+  learning.  Learning the priors from the data.  Come on.*
+* ✓ There is no data so big that you can't make it too small by (over-)fitting
+  too complex a model.
+* ✓ 'Continuous categories' is probably clickbait. *Pants-on-fire clickbait.
+  It's a linear relationship between a continuous variable and a parameter.*
+* ✓ Missing data is fundamentally the Curious Incident of the Dog in the Night
+  Time. You guess what wasn't observed by what ought to have been observed.
+* ✕ Measurement error correction is this [Dilbert cartoon strip about averaging
+  two wrong databases](https://dilbert.com/strip/2008-05-07). *Average, do not.
+  Model, instead.*
+
+```{r yoda}
+knitr::include_graphics("./yoda.png")
+```
+
+## Critic's Choice
+
+Imputed distributions of missing data points.  There can't be a more intuitive
+way to present how imputation works.
+
+I'm concerned that the optimisations for the sake of computation smack of
+the art of writing performant SQL queries.  It becomes the thing you spend most
+of your time doing.
+
+## Posterior beliefs on Bayes
+
+To follow ...

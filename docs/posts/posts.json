@@ -1,5 +1,22 @@
 [
   {
+    "path": "posts/2019-02-22-rebel-bayes-day-5/",
+    "title": "Rebel Bayes Day 5",
+    "description": "Prior beliefs about Bayesian statistics, updated by reading Statistical\nRethinking by Richard McElreath.",
+    "author": [
+      {
+        "name": "Duncan Garmonsway",
+        "url": {}
+      }
+    ],
+    "date": "2019-02-22",
+    "categories": [],
+    "preview": "posts/2019-02-22-rebel-bayes-day-5/yoda.png",
+    "last_modified": "2019-02-22T18:09:13+00:00",
+    "preview_width": 472,
+    "preview_height": 546
+  },
+  {
     "path": "posts/2019-02-21-rebel-bayes-day-4/",
     "title": "Rebel Bayes Day 4",
     "description": "Prior beliefs about Bayesian statistics, updated by reading Statistical\nRethinking by Richard McElreath.",
@@ -12,7 +29,7 @@
     "date": "2019-02-21",
     "categories": [],
     "preview": {},
-    "last_modified": "2019-02-21T20:18:20+00:00"
+    "last_modified": "2019-02-22T18:09:44+00:00"
   },
   {
     "path": "posts/2019-02-20-rebel-bayes-day-3/",
@@ -27,7 +44,7 @@
     "date": "2019-02-20",
     "categories": [],
     "preview": {},
-    "last_modified": "2019-02-20T18:55:47+00:00"
+    "last_modified": "2019-02-22T18:09:42+00:00"
   },
   {
     "path": "posts/2019-02-19-rebel-bayes-day-2/",
@@ -42,7 +59,7 @@
     "date": "2019-02-19",
     "categories": [],
     "preview": {},
-    "last_modified": "2019-02-19T22:28:07+00:00"
+    "last_modified": "2019-02-22T18:09:41+00:00"
   },
   {
     "path": "posts/2019-02-18-rebel-bayes-day-1/",
@@ -57,7 +74,7 @@
     "date": "2019-02-18",
     "categories": [],
     "preview": {},
-    "last_modified": "2019-02-19T22:28:05+00:00"
+    "last_modified": "2019-02-22T18:09:39+00:00"
   },
   {
     "path": "posts/2019-02-08-cran-h-index/",
