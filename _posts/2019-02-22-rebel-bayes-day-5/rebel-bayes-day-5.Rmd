@@ -177,8 +177,8 @@ knitr::include_graphics("./dilbert.gif")
 * ✓ Missing data is fundamentally the Curious Incident of the Dog in the Night
   Time. You guess what wasn't observed by what ought to have been observed.
 * ✕ Measurement error correction is this [Dilbert cartoon strip about averaging
-  two wrong databases](https://dilbert.com/strip/2008-05-07). *Average, do not.
-  Model, instead.*
+  two wrong databases](https://dilbert.com/strip/2008-05-07). *So, so wrong.
+  Average, do not.  Model, instead.*
 
 ```{r yoda}
 knitr::include_graphics("./yoda.png")
