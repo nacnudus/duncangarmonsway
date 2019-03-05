@@ -65,7 +65,7 @@
 <!--/radix_placeholder_rmarkdown_metadata-->
   
   <script type="text/json" id="radix-resource-manifest">
-  {"type":"character","attributes":{},"value":["choose-a-priors-parameters_files/bowser-1.9.3/bowser.min.js","choose-a-priors-parameters_files/distill-2.2.21/template.v2.js","choose-a-priors-parameters_files/figure-html5/unnamed-chunk-1-1.png","choose-a-priors-parameters_files/figure-html5/unnamed-chunk-2-1.png","choose-a-priors-parameters_files/figure-html5/unnamed-chunk-3-1.png","choose-a-priors-parameters_files/figure-html5/unnamed-chunk-5-1.png","choose-a-priors-parameters_files/figure-html5/unnamed-chunk-7-1.png","choose-a-priors-parameters_files/figure-html5/unnamed-chunk-8-1.png","choose-a-priors-parameters_files/jquery-1.11.3/jquery.min.js","choose-a-priors-parameters_files/webcomponents-2.0.0/webcomponents.js","expert-small.jpg","expert.jpg"]}
+  {"type":"character","attributes":{},"value":["choose-a-priors-parameters_files/bowser-1.9.3/bowser.min.js","choose-a-priors-parameters_files/distill-2.2.21/template.v2.js","choose-a-priors-parameters_files/figure-html5/unnamed-chunk-1-1.png","choose-a-priors-parameters_files/figure-html5/unnamed-chunk-2-1.png","choose-a-priors-parameters_files/figure-html5/unnamed-chunk-3-1.png","choose-a-priors-parameters_files/figure-html5/unnamed-chunk-4-1.png","choose-a-priors-parameters_files/figure-html5/unnamed-chunk-6-1.png","choose-a-priors-parameters_files/figure-html5/unnamed-chunk-7-1.png","choose-a-priors-parameters_files/jquery-1.11.3/jquery.min.js","choose-a-priors-parameters_files/webcomponents-2.0.0/webcomponents.js","expert-small.jpg","expert.jpg"]}
   </script>
   <!--radix_placeholder_navigation_in_header-->
 
@@ -1345,6 +1345,7 @@ gtag('config', 'UA-45097885-3');
 </div>
 
 <div class="d-article">
+<p><strong>Updated 2019-03-05: Python implementation and R improvements.</strong></p>
 <p>Given a distribution, how do you find the parameters? When choosing a beta prior for a Bayesian A/B test, for example.</p>
 <blockquote>
 <p>I came up with these parameters for two reasons:</p>
@@ -1396,6 +1397,7 @@ curve(dbeta(x, 270 / 3, (1000 - 270) / 3), from = 0, to = 1, type = &quot;l&quot
 <p><span class="math display">\[
 \mathrm{Gimme~Beta}(\mathrm{mean}, \mathrm{amount~below~}x) \sim \mathrm{Beta}(\mathrm{shape1}, \mathrm{shape2})
 \]</span></p>
+<p><strong>Updated 2019-03-05: Use absolute differences rather than squared differences, because squared differences shrink to small for floating-point arithmetic to be accurate.</strong></p>
 <div class="layout-chunk" data-layout="l-body">
 <pre class="r"><code>
 gimme_beta &lt;- function(mean, cumulative_density, below, par_start = c(2, 2),
@@ -1405,9 +1407,11 @@ gimme_beta &lt;- function(mean, cumulative_density, below, par_start = c(2, 2),
     beta1  &lt;- x[2]
     fitted_mean &lt;- alpha1 / (alpha1 + beta1)
     fitted_cumulative_density &lt;- pbeta(below, alpha1, beta1)
-    squared_diffs  &lt;- sum((c(fitted_mean, fitted_cumulative_density )
-                           - c(mean, cumulative_density))^2)
-    squared_diffs
+    diff_mean &lt;- abs(fitted_mean - mean)
+    diff_cumulative_density &lt;- abs(fitted_cumulative_density - cumulative_density)
+    diffs &lt;- sum(diff_mean,
+                 diff_cumulative_density)
+    diffs
   }
   estimate &lt;- optim(par_start, error)
   alpha1 = estimate$par[1]
@@ -1430,10 +1434,10 @@ Note that the function doesn’t allow three parameters, which is what David Rob
 <div class="layout-chunk" data-layout="l-body">
 <pre class="r"><code>
 gimme_beta(mean = .270, cumulative_density = .01, below = .2)</code></pre>
-<p><img src="choose-a-priors-parameters_files/figure-html5/unnamed-chunk-5-1.png" width="624" /></p>
+<p><img src="choose-a-priors-parameters_files/figure-html5/unnamed-chunk-4-1.png" width="624" /></p>
 <pre><code>
    shape1    shape2 
- 52.76072 142.63995 </code></pre>
+ 52.75807 142.64219 </code></pre>
 </div>
 <p>That isn’t far off the 81 and 219 that David Robinson came up with, but then we don’t know exactly what David Robinson meant by “lies almost entirely within”. What if we work out the <span class="math inline">\(\mu\)</span> and <span class="math inline">\(\theta\)</span> parameters of David Robinson’s actual distribution, plug them back into <code>gimme_beta()</code> and check again.</p>
 <div class="layout-chunk" data-layout="l-body">
@@ -1450,19 +1454,50 @@ pbeta(.2, 81, 219) # theta, the percentage of the distribution that is below 0.2
 <div class="layout-chunk" data-layout="l-body">
 <pre class="r"><code>
 gimme_beta(mean = .270, cumulative_density = .001897932, below = .2)</code></pre>
-<p><img src="choose-a-priors-parameters_files/figure-html5/unnamed-chunk-7-1.png" width="624" /></p>
+<p><img src="choose-a-priors-parameters_files/figure-html5/unnamed-chunk-6-1.png" width="624" /></p>
 <pre><code>
-   shape1    shape2 
- 81.12597 219.34148 </code></pre>
+shape1 shape2 
+    81    219 </code></pre>
 </div>
 <p>Close enough for government work. And more importantly, <code>gimme_beta()</code> will gimme the parameters I need for my A/B test, which happen to be a mean of .23 with 5% of the distribution below 0.2.</p>
 <div class="layout-chunk" data-layout="l-body">
 <pre class="r"><code>
 gimme_beta(.23, .05, .2)</code></pre>
-<p><img src="choose-a-priors-parameters_files/figure-html5/unnamed-chunk-8-1.png" width="624" /></p>
+<p><img src="choose-a-priors-parameters_files/figure-html5/unnamed-chunk-7-1.png" width="624" /></p>
 <pre><code>
   shape1   shape2 
-117.5303 393.5115 </code></pre>
+117.3925 393.0097 </code></pre>
+</div>
+<p><strong>Updated 2019-03-05: Python implementation.</strong></p>
+<p>Thanks to <a href="https://github.com/sarah-dean">Sarah Dean</a> for pair-coding this translation.</p>
+<div class="layout-chunk" data-layout="l-body">
+<pre class="python"><code>
+from scipy.stats import beta
+from scipy.optimize import minimize
+
+def f(x, desired_mean, cumulative_density, below_point):
+    fitted = beta(x[0], x[1])
+    fitted_mean = fitted.mean()
+    fitted_cdf = fitted.cdf(below_point)
+    diff_mean = abs(fitted_mean - desired_mean)
+    diff_cdf = abs(fitted_cdf - cumulative_density)
+    diff = diff_mean + diff_cdf
+    return diff
+
+fitted = minimize(f, [2.0, 2.0], args = (0.270, 0.01, 0.2), method = &#39;Nelder-Mead&#39;)
+fitted_dist = beta(fitted.x[0], fitted.x[1])
+
+print(fitted.x)</code></pre>
+<pre><code>
+[ 52.75811484 142.64234025]</code></pre>
+<pre class="python"><code>
+print(fitted_dist.mean())</code></pre>
+<pre><code>
+0.26999995889124706</code></pre>
+<pre class="python"><code>
+print(fitted_dist.cdf(0.2))</code></pre>
+<pre><code>
+0.009999998660408616</code></pre>
 </div>
 <!--radix_placeholder_article_footer-->
 <div class="article-footer">
