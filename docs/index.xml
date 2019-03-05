@@ -12,7 +12,16 @@
       <link>https://nacnudus.github.io/duncangarmonsway</link>
     </image>
     <generator>Radix</generator>
-    <lastBuildDate>Fri, 22 Feb 2019 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sun, 03 Mar 2019 00:00:00 +0000</lastBuildDate>
+    <item>
+      <title>With added bacran</title>
+      <dc:creator>Duncan Garmonsway</dc:creator>
+      <link>https://nacnudus.github.io/duncangarmonsway/posts/2019-02-27-with-added-bacran</link>
+      <description>Nerd-sniped by kevinbacran, a graph of CRAN co-authorship.</description>
+      <guid>https://nacnudus.github.io/duncangarmonsway/posts/2019-02-27-with-added-bacran</guid>
+      <pubDate>Sun, 03 Mar 2019 00:00:00 +0000</pubDate>
+      <media:content url="https://nacnudus.github.io/duncangarmonsway/posts/2019-02-27-with-added-bacran/with-added-bacran_files/figure-html5/visualisation-1.png" medium="image" type="image/png" width="1824" height="1344"/>
+    </item>
     <item>
       <title>Rebel Bayes Day 5</title>
       <dc:creator>Duncan Garmonsway</dc:creator>
