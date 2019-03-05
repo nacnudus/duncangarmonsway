@@ -1,0 +1,265 @@
+---
+title: "With added bacran"
+description: |
+  Nerd-sniped by kevinbacran, a graph of CRAN co-authorship.
+author: Duncan Garmonsway
+date: March 03, 2019
+output:
+  radix::radix_article:
+    self_contained: true
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(echo = TRUE, cache = FALSE)
+
+library(kevinbacran)
+library(tidyverse)
+library(tidygraph)
+library(igraph)
+library(ggraph)
+```
+
+[Matt Dray](https://twitter.com/mattdray) came up with the [hilarious
+pun](https://www.rostrum.blog/2019/02/27/hadley-number/) 'kevinbacran' and then
+had to follow through and make the
+[package](https://github.com/matt-dray/kevinbacran).  It calculates the degrees
+of separation between CRAN package authors and Hadley Wick*ham*.  Return here
+when you've [played with the shiny
+app](https://mattdray.shinyapps.io/hadley-number/).
+
+<aside>
+Pun included for compliance with the kevinbacran terms and conditions of reuse.
+</aside>
+
+If you're still reading this then you have been nerd-sniped, as I was.  To help
+you end your procrastination quickly, here are answers to a few questions:
+
+1. Who has the highest Hadley number?
+1. What is the longest 'shortest path' between any two CRAN authors?
+1. What is the largest network disconnected from Hadley?
+1. Is Hadley the most central author?
+
+## 0. Preparation
+
+The `kevinbacran` package provides a graph of package co-authorship, so I piggy
+back on that, just as it is my pleasure to do with Matt's professional work.
+Nodes are authors; edges are packages.
+
+```{r load-graph}
+cran_pkg_graph
+```
+
+Incredibly, the  [igraph](https://cran.r-project.org/package=igraph) package is
+willing and able to calculate the length of the shortest route between all
+nodes, all at once, in a few seconds.  It returns a square matrix, a bit like
+old people used to have on the back of a road atlas, with the driving times
+between cities, except here it's the number of people in the chain linking one
+author with another.  Infinite values represent impossible connections, but I
+subsituted `NA` for these so that they don't upset subsequent `max()` and
+`min()`.
+
+```{r max-distances, cache = FALSE}
+cran_pkg_igraph <- as.igraph(cran_pkg_graph)
+dists <- distances(cran_pkg_igraph)
+dists[is.infinite(dists)] <- NA # is there a more efficient way?
+```
+
+## 1. Who has the highest Hadley number?
+
+First I need to know which column (or row) represents Hadley.  Then I can search
+that row (or column) for the highest value.
+
+```{r highest-hadley}
+# The row and column number of Hadley Wickham in the matrix of distances.
+hadley <-
+  cran_pkg_graph %>%
+  as_tibble() %>%
+  dplyr::filter(name == "Hadley Wickham") %>%
+  pull(number)
+hadley
+
+# The row of distances between Hadley and everyone else.
+hadley_row <- dists[hadley, ]
+
+# The maximum distance between Hadley and anyone else.
+(max_hadley_row <- max(hadley_row, na.rm = TRUE))
+
+# The people at the greatest distance from Hadley.
+which(hadley_row == max_hadley_row)
+```
+
+Congratulations Chelsey, Nicholas and Franz, you are Hadley's most distant
+relations.
+
+## 2. What is the longest 'shortest path' between any two CRAN authors?
+
+I now wipe out the entire upper triangle (and the diagonal), because I don't
+want to notice each path twice.  This question is undirected.  I only need the
+maximum value in the bottom triangle.
+
+```{r all-most-distant-authors, cache = FALSE}
+dists[upper.tri(dists, diag = TRUE)] <- NA # Can it be done faster?
+
+# Maximum distance beteween any two authors
+(maximum_distance <- max(dists, na.rm = TRUE))
+
+max_distances <-
+  which(dists == maximum_distance, arr.ind = TRUE) %>%
+  as_tibble() %>%
+  mutate(from = rownames(dists)[row],
+         to = colnames(dists)[col],
+         distance = map2_int(row, col, ~ as.integer(dists[.x, .y]))) %>%
+  select(from, to, distance)
+max_distances
+```
+
+Oh hi Chelsey, Nicholas and Franz! Not only are you Hadley's most distant
+relations, you are among the most distantly related package authors in the whole
+graph.  What did you write?
+
+```{r distant-authors-packages}
+nodes <- as_tibble(activate(cran_pkg_graph, nodes))
+edges <- as_tibble(activate(cran_pkg_graph, edges))
+
+nodes %>%
+  dplyr::filter(name %in% c("Chelsey Bryant",
+                            "Nicholas R Wheeler",
+                            "Franz Rubel")) %>%
+  inner_join(edges, by = c("number" = "from")) %>%
+  distinct(name, package)
+```
+
+All three collaborated on the same package:
+[kgc](https://cran.r-project.org/package=kgc).  The three authors on the other
+side of the relation are not collaborators -- they each authored a different
+package.
+
+```{r counterparts-packages}
+nodes %>%
+  dplyr::filter(name %in% c("Qihuang Zhang",
+                            "Natalia Vilor",
+                            "Di Shu")) %>%
+  inner_join(edges, by = c("number" = "from")) %>%
+  distinct(name, package)
+```
+
+A visualisation would be easier to interpret.  A few incantations are required:
+
+1. Combine the six author names
+1. Calculate the graph between each pair with `kevinbacran::kb_pair()`.
+1. Merge and distinctify the graphs with `igraph::simplify()`.
+1. Plot with `kevinbacran::kb_plot()`.
+
+(As you can tell, I do very little of the work around here.)
+
+```{r visualisation, fig.width = 9.5, fig.height = 7}
+set.seed(2019-03-03)
+
+max_distances %>%
+  mutate(kb_pair = map2(from, to, kb_pair, tidy_graph = cran_pkg_graph)) %>%
+  pull(kb_pair) %>%
+  reduce(graph_join, by = c("name", "number", ".tidygraph_node_index")) %>%
+  as.igraph() %>%
+  igraph::simplify(remove.multiple = TRUE,
+                   remove.loops = FALSE,
+                   edge.attr.comb = "random") %>%
+  as_tbl_graph() %>%
+  kb_plot()
+```
+
+It's lovely to see that Ernst Wit and Ernst C Wit are such near relations in
+work as in life.
+
+<aside> All this co-authorship analysis depends on the thorough and marvellous
+work of the [cranly](https://cran.r-project.org/package=cranly) package author,
+Ioannis Kosmidis.  It isn't perfect. It isn't possible to be perfect with data
+that isn't used at the source.
+</aside>
+
+Are many authors so distantly related?  What is the distribution of maximum
+distance between authors?  That is, for each author, the maximum distance
+between them and anyone else, what is the distribution of that value across all
+authors?
+
+```{r max-distance-histogram}
+rowmaxes <- apply(dists, 1, max, na.rm = TRUE)
+hist(rowmaxes)
+```
+
+I ... did not expect a bimodal distribution.  That's how naive I am about
+graphs.
+
+## 3. What is the largest network disconnected from Hadley?
+
+The graph can be split into cliques -- my name for graphs that aren't connected
+with one another.  Most cliques only have one author in them -- authors who
+haven't collaborated with anyone.  But the second largest clique only has 29
+people in it, whereas the largest clique has 9251 in it.
+
+```{r cliques}
+cliques <- components(cran_pkg_igraph)
+table(cliques$csize)
+```
+
+Like nearly everyone else, Hadley Wickham is in the largest clique.  Who is in
+the next largest clique?
+
+```{r not-hadley, cache = TRUE}
+hadley_clique <- cliques$membership["Hadley Wickham"]
+max_non_hadley_size <- max(cliques$csize[-hadley_clique])
+
+# The largest graph not connected with Hadley
+largest_non_hadley_cliques <- which(cliques$csize == max_non_hadley_size)
+
+# Members of those cliques
+non_hadley_members <-
+  cliques$membership[cliques$membership %in% largest_non_hadley_cliques]
+
+# Graph of the cliques
+cliques_graph <-
+  cran_pkg_graph %>%
+  activate(nodes) %>%
+  filter(name %in% names(non_hadley_members))
+
+# Packages authored in the largest non-Hadley cliques
+pkgs <- tools::CRAN_package_db()
+
+cliques_graph %>%
+  activate(edges) %>%
+  as_tibble() %>%
+  distinct(package) %>%
+  inner_join(pkgs[, c("Package", "Description")],
+             by = c("package" = "Package")) %>%
+  mutate(Description = str_replace_all(Description, "[\n ]+", " ")) %>%
+  print(n = Inf)
+
+set.seed(2019-03-03)
+kb_plot(cliques_graph)
+```
+
+That is a clique of regression packages.
+
+## 4. Is Hadley the most central author?
+
+Uh, what even is [centrality](https://schochastics.github.io/netrankr/)?
+~~Picking `?centrality_information` at random:~~
+
+> ~~‘centrality_information’: centrality based on inverse sum of resistance~~
+> ~~distance between nodes (‘netrankr’)~~
+
+Crikey that takes a while, let's try
+[`centrality_betweenness`](https://igraph.org/r/doc/betweenness.html).
+
+```{r hadley-centrality}
+centrality <-
+  cran_pkg_graph %>%
+  activate(nodes) %>%
+  mutate(importance = centrality_betweenness(directed = FALSE))
+
+centrality %>%
+  activate(nodes) %>%
+  as_tibble() %>%
+  arrange(desc(importance))
+```
+
+Yes.
