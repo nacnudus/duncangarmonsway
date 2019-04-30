@@ -1,0 +1,143 @@
+---
+title: "Get me to the church on time with R spatial"
+description: |
+  Using Google location data to prove church attendance and get married.
+author: Duncan Garmonsway
+date: May 1, 2019
+output:
+  radix::radix_article:
+    self_contained: false
+resources:
+  exclude: ["locationdata.Rds", "Location History.json", "google-api-key"]
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(include = TRUE, echo = TRUE, cache = TRUE)
+```
+
+![Tweet: "When my church asked for evidence of regular attendance, I bet they
+didn't expect #rstats {sf} {ggcal} and Google location history." Reply by
+@mattdray: "Ah, so you turned to script in liu of scripture."](./tweet.png)
+
+Churches have excellent transport connections, plenty of seating, a resident
+celebrant, are open on weekends, and are often pretty.  In other words they are
+excellent wedding venues.  But they can, and probably will, decline to marry
+couples that have no connection with the church, such as living in the parish,
+and/or worshipping there.
+
+My fiancée and I applied to marry at a church where neither of us lives, but
+where I sing in the choir.  The church responded with a form for us to circle my
+qualifying connection (regular worshipper for six months) and -- the
+catch -- provide documentary evidence.
+
+Evidence?
+
+So I downloaded my Google location data.  It's always on (God and Google know
+the inmost secrets of my heart), and like everyone else I keep my phone within
+arm's reach 24/7.  All I needed then was:
+
+* {jsonlite} to read the Google location data dump
+* {ggmap} to check that it made sense
+* {sf} to filter for points in a radius
+* {ggcal} to mark the days on a calendar
+
+There are a couple of similar blog posts around, so I won't dwell on the parts
+that worked.
+
+```{r library}
+library(jsonlite)
+library(lubridate)
+library(tidyverse)
+library(sf)
+library(ggmap)
+library(ggcal) # devtools::install_github("jayjacobs/ggcal")
+library(here)
+```
+
+Where is the church?  Google knows.
+
+```{r church}
+church <-
+  st_sf(name = "church", st_sfc(st_point(c(55.8735208,-4.2763132)))) %>%
+  st_set_crs(4326) # WGS84 (GPS)
+```
+
+Where was I?  Google knows.  For this post I load it from an R data file because
+reading the JSON is slow.
+
+```{r load_data}
+# locationdata <- fromJSON(here("Location History.json"))
+# saveRDS(locationdata, "locationdata.Rds")
+locationdata <- readRDS(here("locationdata.Rds"))
+```
+
+This is the jankey bit.  Google's latitude and longitude are integers, so you
+have to divide them by ten million (fine) but the longitude is wrong by 69.4970
+degrees or so.  Perhaps it isn't wrong for you.  I also had to take the modulus
+because some points have wrapped around the earth to more than 360.  I, um,
+Googled the problem but couldn't _locate_ an explanation.  The final line
+calculates the distance of each point from the church, in meters or feet or
+seconds or something.
+
+```{r locations}
+locs <-
+  locationdata$locations %>%
+  as_tibble() %>%
+  select(latitudeE7, longitudeE7, `timestampMs`) %>%
+  transmute(lat = latitudeE7 / 1E7,
+            lon = (longitudeE7 / 1E7) %% 360 - 69.4970, # Google you had ONE JOB
+            date = as.POSIXct(as.numeric(timestampMs)/1000, origin="1970-01-01"),
+            day = as.Date(date)) %>%
+  st_as_sf(coords = c("lat", "lon"), remove = FALSE) %>%
+  st_set_crs(4326) %>% # WGS84 (GPS)
+  mutate(dist_from_church = as.numeric(st_distance(geometry, church)))
+```
+
+To show you where the magic number 69.4970 came from, here's a map of the
+points.  I refined the magic number until they lined up with the roads.
+
+```{r map}
+register_google(key = read_file(here("google-api-key")))
+
+m <- get_map(location = c(lat = 55.8735208, lon = -4.2763132), # church again
+             source = "stamen",
+             zoom = 15)
+
+ggmap(m) +
+  geom_point(aes(-4.2763132, 55.8735208)) +
+  geom_point(aes(lon, lat),
+             colour = "red",
+             data = filter(locs, dist_from_church < 1000))
+```
+
+{ggcal} plots calendars as graphs.  This is what went to the vicar.  Not really,
+because I'm not getting married in Glasgow, hah tricked you, but I did used to
+sing there a while back so it makes a safe-ish example for this post, and I did
+send the real one to the parish office.
+
+```{r}
+in_church <-
+  locs %>%
+  filter(dist_from_church <= 100) %>% # So what if I am in the tea shop?
+  filter(date <= ymd("2017-02-28")) %>%
+  distinct(day) %>%
+  pull(day)
+
+in_church_range <- range(in_church)
+in_church_cal <- seq(in_church_range[1], in_church_range[2], by = "day")
+in_church_today <- in_church_cal %in% in_church
+
+ggcal(in_church_cal, in_church_today) +
+  ggtitle("Days when Duncan Garmonsway was within 100 meters of church",
+          subtitle = "Google location history")
+```
+
+<details><summary>Expand for session info</summary>
+
+```{r session_info}
+options(width = 100)
+sessioninfo::session_info()
+```
+
+</details>
+
