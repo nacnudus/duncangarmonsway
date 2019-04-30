@@ -1,5 +1,39 @@
 [
   {
+    "path": "posts/2019-04-22-get-me-to-the-church-on-time-with-r-spatial/",
+    "title": "Get me to the church on time with R spatial",
+    "description": "Using Google location data to prove church attendance and get married.",
+    "author": [
+      {
+        "name": "Duncan Garmonsway",
+        "url": {}
+      }
+    ],
+    "date": "2019-05-01",
+    "categories": [],
+    "preview": "posts/2019-04-22-get-me-to-the-church-on-time-with-r-spatial/get-me-to-the-church-on-time-with-r-spatial_files/figure-html5/map-1.png",
+    "last_modified": "2019-04-30T22:53:41+01:00",
+    "preview_width": 1248,
+    "preview_height": 768
+  },
+  {
+    "path": "posts/2019-03-25-get-good-data-out-of-bad-spreadsheets/",
+    "title": "Get good data out of bad spreadsheets",
+    "description": "Another tutorial with tidyxl and unpivotr.",
+    "author": [
+      {
+        "name": "Duncan Garmonsway",
+        "url": {}
+      }
+    ],
+    "date": "2019-03-25",
+    "categories": [],
+    "preview": "posts/2019-03-25-get-good-data-out-of-bad-spreadsheets/images/tidy.png",
+    "last_modified": "2019-04-04T13:21:29+01:00",
+    "preview_width": 718,
+    "preview_height": 635
+  },
+  {
     "path": "posts/2019-02-27-with-added-bacran/",
     "title": "With added bacran",
     "description": "Nerd-sniped by kevinbacran, a graph of CRAN co-authorship.",

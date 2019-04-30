@@ -12,7 +12,25 @@
       <link>https://nacnudus.github.io/duncangarmonsway</link>
     </image>
     <generator>Radix</generator>
-    <lastBuildDate>Sun, 03 Mar 2019 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Tue, 30 Apr 2019 00:00:00 +0000</lastBuildDate>
+    <item>
+      <title>Get me to the church on time with R spatial</title>
+      <dc:creator>Duncan Garmonsway</dc:creator>
+      <link>https://nacnudus.github.io/duncangarmonsway/posts/2019-04-22-get-me-to-the-church-on-time-with-r-spatial</link>
+      <description>Using Google location data to prove church attendance and get married.</description>
+      <guid>https://nacnudus.github.io/duncangarmonsway/posts/2019-04-22-get-me-to-the-church-on-time-with-r-spatial</guid>
+      <pubDate>Tue, 30 Apr 2019 00:00:00 +0000</pubDate>
+      <media:content url="https://nacnudus.github.io/duncangarmonsway/posts/2019-04-22-get-me-to-the-church-on-time-with-r-spatial/get-me-to-the-church-on-time-with-r-spatial_files/figure-html5/map-1.png" medium="image" type="image/png" width="1248" height="768"/>
+    </item>
+    <item>
+      <title>Get good data out of bad spreadsheets</title>
+      <dc:creator>Duncan Garmonsway</dc:creator>
+      <link>https://nacnudus.github.io/duncangarmonsway/posts/2019-03-25-get-good-data-out-of-bad-spreadsheets</link>
+      <description>Another tutorial with tidyxl and unpivotr.</description>
+      <guid>https://nacnudus.github.io/duncangarmonsway/posts/2019-03-25-get-good-data-out-of-bad-spreadsheets</guid>
+      <pubDate>Mon, 25 Mar 2019 00:00:00 +0000</pubDate>
+      <media:content url="https://nacnudus.github.io/duncangarmonsway/posts/2019-03-25-get-good-data-out-of-bad-spreadsheets/images/tidy.png" medium="image" type="image/png" width="718" height="635"/>
+    </item>
     <item>
       <title>With added bacran</title>
       <dc:creator>Duncan Garmonsway</dc:creator>
