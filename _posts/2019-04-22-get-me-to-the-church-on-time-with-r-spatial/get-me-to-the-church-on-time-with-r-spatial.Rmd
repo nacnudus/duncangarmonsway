@@ -8,7 +8,7 @@ output:
   radix::radix_article:
     self_contained: false
 resources:
-  exclude: ["locationdata.Rds", "Location History.json", "google-api-key"]
+  exclude: ["locationdata.Rds", "Location\\ History.json", "google-api-key"]
 ---
 
 ```{r setup, include=FALSE}
