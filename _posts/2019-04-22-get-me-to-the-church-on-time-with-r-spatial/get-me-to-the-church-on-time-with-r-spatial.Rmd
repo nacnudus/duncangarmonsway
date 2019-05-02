@@ -17,7 +17,7 @@ knitr::opts_chunk$set(include = TRUE, echo = TRUE, cache = TRUE)
 
 ![Tweet: "When my church asked for evidence of regular attendance, I bet they
 didn't expect #rstats {sf} {ggcal} and Google location history." Reply by
-@mattdray: "Ah, so you turned to script in liu of scripture."](./tweet.png)
+\@mattdray: "Ah, so you turned to script in liu of scripture."](./tweet.png)
 
 Churches have excellent transport connections, plenty of seating, a resident
 celebrant, are open on weekends, and are often pretty.  In other words they are
