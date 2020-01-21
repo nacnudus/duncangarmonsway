@@ -22,7 +22,7 @@ Statistics, read a bit, and update them.  See also [Day
 [Day
 3](https://nacnudus.github.io/duncangarmonsway/posts/2019-02-20-rebel-bayes-day-3/)
 and [Day
-5](https://nacnudus.github.io/duncangarmonsway/posts/2019-02-20-rebel-bayes-day-5/).
+5](https://nacnudus.github.io/duncangarmonsway/posts/2019-02-22-rebel-bayes-day-5/).
 
 ## Prior beliefs
 
