@@ -27,4 +27,4 @@ collections:
     disqus: duncangarmonsway
     share: [twitter, linkedin]
     subscribe: _subscribe.html
-output: radix::radix_article
+output: distill::distill_article

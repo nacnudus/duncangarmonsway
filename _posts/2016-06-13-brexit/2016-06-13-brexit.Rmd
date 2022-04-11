@@ -6,7 +6,7 @@ author: "Duncan Garmonsway"
 date: June 13, 2016
 preview: "brexit.png"
 output:
-  radix::radix_article:
+  distill::distill_article:
     self_contained: false
 resources:
   exclude:

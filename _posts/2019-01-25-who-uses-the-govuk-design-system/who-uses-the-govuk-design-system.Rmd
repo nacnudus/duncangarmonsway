@@ -6,7 +6,7 @@ description: |
 author: Duncan Garmonsway
 date: January 25, 2019
 output:
-  radix::radix_article:
+  distill::distill_article:
     self_contained: false
 preview: ./govuk-design-system.png
 ---

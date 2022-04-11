@@ -5,7 +5,7 @@ description: |
 author: Duncan Garmonsway
 date: January 2, 2019
 output:
-  radix::radix_article:
+  distill::distill_article:
     self_contained: false
 ---
 

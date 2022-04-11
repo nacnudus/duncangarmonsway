@@ -7,7 +7,7 @@ author: Duncan Garmonsway
 date: December 14, 2018
 preview: expert.jpg
 output:
-  radix::radix_article:
+  distill::distill_article:
     self_contained: false
 ---
 

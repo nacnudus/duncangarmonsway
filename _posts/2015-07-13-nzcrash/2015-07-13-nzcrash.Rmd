@@ -6,7 +6,7 @@ author: Duncan Garmonsway
 date: July 13, 2015
 preview: "nzcrash.png"
 output:
-  radix::radix_article:
+  distill::distill_article:
     self_contained: false
 resources:
   exclude:

@@ -6,7 +6,7 @@ description: |
   Get a perfect score in the Mango Solution Data Science Radar
 preview: "radar-perfect.png"
 output:
-  radix::radix_article:
+  distill::distill_article:
     self_contained: false
 resources:
   exclude:

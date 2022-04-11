@@ -5,7 +5,7 @@ description: |
 author: Duncan Garmonsway
 date: January 31, 2019
 output:
-  radix::radix_article:
+  distill::distill_article:
     self_contained: false
 preview: ./nowt-so-queer-as-folk.jpg
 ---

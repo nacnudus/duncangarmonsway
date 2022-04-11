@@ -5,7 +5,7 @@ description: |
 author: Duncan Garmonsway
 date: May 1, 2019
 output:
-  radix::radix_article:
+  distill::distill_article:
     self_contained: false
 resources:
   exclude: ["locationdata.Rds", "Location\\ History.json", "google-api-key"]

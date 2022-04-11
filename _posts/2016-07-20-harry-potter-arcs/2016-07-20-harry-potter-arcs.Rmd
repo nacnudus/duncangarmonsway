@@ -6,7 +6,7 @@ author: Duncan Garmonsway
 date: July 20, 2016
 preview: "harry-potter-arcs-wizards.jpg"
 output:
-  radix::radix_article:
+  distill::distill_article:
     self_contained: false
 ---
 

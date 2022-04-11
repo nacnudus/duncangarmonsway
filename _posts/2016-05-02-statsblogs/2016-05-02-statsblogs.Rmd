@@ -6,7 +6,7 @@ description: |
 date: May 2, 2016
 preview: "statsblogs.png"
 output:
-  radix::radix_article:
+  distill::distill_article:
     self_contained: false
 resources:
   exclude:

@@ -6,7 +6,7 @@ description: |
 author: Duncan Garmonsway
 date: February 15, 2019
 output:
-  radix::radix_article:
+  distill::distill_article:
     self_contained: false
 preview: cran-h-index_files/figure-html5/graph-1.png
 ---
