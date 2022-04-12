@@ -1,0 +1,21 @@
+{
+  "articles": [
+    {
+      "path": "about.html",
+      "title": "About this site",
+      "description": "The personal website of Duncan Garmonsway.",
+      "author": [],
+      "contents": "\nI am a data scientist in the UK Government Digital Service and have\npreviously worked for Scottish Power and various New Zealand ministries. I studied English\nLiterature at University College\nLondon and Applied Statistics at Victoria University of\nWellington.\nI wrote Spreadsheet\nMunging Strategies, a guide to getting data out of complex\nspreadsheets using my R packages tidyxl and unpivotr. I am an ROpenSci reviewer. Find more of\nmy work on CRAN\nand GitHub.\nI am a Christian\nand have been a member of the choirs of Wellington Cathedral of\nSaint Paul, St Mary’s\nCathedral, Glasgow, and Pinner Parish Church.\nI play the violin, badminton,\nand go cycle touring.\nRead https://rweekly.org/ for more R blogs.\n\n\n\n",
+      "last_modified": "2022-04-12T22:32:19+01:00"
+    },
+    {
+      "path": "index.html",
+      "title": "Duncan Garmonsway",
+      "description": "The personal website of Duncan Garmonsway, data scientist and UK civil\nservant.\n",
+      "author": [],
+      "contents": "\n\n\n\n",
+      "last_modified": "2022-04-12T22:32:19+01:00"
+    }
+  ],
+  "collections": ["posts/posts.json"]
+}

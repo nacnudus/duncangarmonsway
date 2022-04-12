@@ -11,15 +11,24 @@
       <url>https://nacnudus.github.io/duncangarmonsway/images/favicon.png</url>
       <link>https://nacnudus.github.io/duncangarmonsway</link>
     </image>
-    <generator>Radix</generator>
-    <lastBuildDate>Tue, 30 Apr 2019 00:00:00 +0000</lastBuildDate>
+    <generator>Distill</generator>
+    <lastBuildDate>Sun, 10 Apr 2022 00:00:00 +0000</lastBuildDate>
+    <item>
+      <title>Hashing it out</title>
+      <dc:creator>Duncan Garmonsway</dc:creator>
+      <link>https://nacnudus.github.io/duncangarmonsway/posts/2022-04-11-hashing-it-out</link>
+      <description>Glitches in hashed environments in R</description>
+      <guid>https://nacnudus.github.io/duncangarmonsway/posts/2022-04-11-hashing-it-out</guid>
+      <pubDate>Sun, 10 Apr 2022 00:00:00 +0000</pubDate>
+      <media:content url="https://nacnudus.github.io/duncangarmonsway/posts/2022-04-11-hashing-it-out/hashing-it-out_files/figure-html5/ggplot-1.png" medium="image" type="image/png" width="1248" height="768"/>
+    </item>
     <item>
       <title>Get me to the church on time with R spatial</title>
       <dc:creator>Duncan Garmonsway</dc:creator>
       <link>https://nacnudus.github.io/duncangarmonsway/posts/2019-04-22-get-me-to-the-church-on-time-with-r-spatial</link>
       <description>Using Google location data to prove church attendance and get married.</description>
       <guid>https://nacnudus.github.io/duncangarmonsway/posts/2019-04-22-get-me-to-the-church-on-time-with-r-spatial</guid>
-      <pubDate>Tue, 30 Apr 2019 00:00:00 +0000</pubDate>
+      <pubDate>Wed, 01 May 2019 00:00:00 +0000</pubDate>
       <media:content url="https://nacnudus.github.io/duncangarmonsway/posts/2019-04-22-get-me-to-the-church-on-time-with-r-spatial/get-me-to-the-church-on-time-with-r-spatial_files/figure-html5/map-1.png" medium="image" type="image/png" width="1248" height="768"/>
     </item>
     <item>
@@ -29,7 +38,7 @@
       <description>Nerd-sniped by kevinbacran, a graph of CRAN co-authorship.</description>
       <guid>https://nacnudus.github.io/duncangarmonsway/posts/2019-02-27-with-added-bacran</guid>
       <pubDate>Sun, 03 Mar 2019 00:00:00 +0000</pubDate>
-      <media:content url="https://nacnudus.github.io/duncangarmonsway/posts/2019-02-27-with-added-bacran/radix-preview.png" medium="image" type="image/png" width="1824" height="1344"/>
+      <media:content url="https://nacnudus.github.io/duncangarmonsway/posts/2019-02-27-with-added-bacran/distill-preview.png" medium="image" type="image/png" width="1824" height="1344"/>
     </item>
     <item>
       <title>Rebel Bayes Day 5</title>

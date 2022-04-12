@@ -2,114 +2,118 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" version="1.0">
   <url>
     <loc>https://nacnudus.github.io/duncangarmonsway/about.html</loc>
-    <lastmod>2019-01-02T13:58:10+00:00</lastmod>
+    <lastmod>2022-04-11T22:36:30+01:00</lastmod>
   </url>
   <url>
     <loc>https://nacnudus.github.io/duncangarmonsway/</loc>
-    <lastmod>2019-02-24T17:56:37+00:00</lastmod>
+    <lastmod>2022-04-11T22:46:40+01:00</lastmod>
+  </url>
+  <url>
+    <loc>https://nacnudus.github.io/duncangarmonsway/posts/2022-04-11-hashing-it-out/</loc>
+    <lastmod>2022-04-12T22:35:53+01:00</lastmod>
   </url>
   <url>
     <loc>https://nacnudus.github.io/duncangarmonsway/posts/2019-04-22-get-me-to-the-church-on-time-with-r-spatial/</loc>
-    <lastmod>2019-05-02T19:23:12+01:00</lastmod>
+    <lastmod>2022-04-11T22:36:30+01:00</lastmod>
   </url>
   <url>
     <loc>https://nacnudus.github.io/duncangarmonsway/posts/2019-02-27-with-added-bacran/</loc>
-    <lastmod>2019-03-08T17:34:55+00:00</lastmod>
+    <lastmod>2022-04-11T22:36:30+01:00</lastmod>
   </url>
   <url>
     <loc>https://nacnudus.github.io/duncangarmonsway/posts/2019-02-22-rebel-bayes-day-5/</loc>
-    <lastmod>2019-02-24T17:57:33+00:00</lastmod>
+    <lastmod>2022-04-11T22:36:30+01:00</lastmod>
   </url>
   <url>
     <loc>https://nacnudus.github.io/duncangarmonsway/posts/2019-02-21-rebel-bayes-day-4/</loc>
-    <lastmod>2019-02-22T18:09:44+00:00</lastmod>
+    <lastmod>2022-04-11T22:36:30+01:00</lastmod>
   </url>
   <url>
     <loc>https://nacnudus.github.io/duncangarmonsway/posts/2019-02-20-rebel-bayes-day-3/</loc>
-    <lastmod>2019-02-22T18:09:42+00:00</lastmod>
+    <lastmod>2022-04-11T22:36:30+01:00</lastmod>
   </url>
   <url>
     <loc>https://nacnudus.github.io/duncangarmonsway/posts/2019-02-19-rebel-bayes-day-2/</loc>
-    <lastmod>2019-02-22T18:09:41+00:00</lastmod>
+    <lastmod>2022-04-11T22:36:30+01:00</lastmod>
   </url>
   <url>
     <loc>https://nacnudus.github.io/duncangarmonsway/posts/2019-02-18-rebel-bayes-day-1/</loc>
-    <lastmod>2019-02-22T18:09:39+00:00</lastmod>
+    <lastmod>2022-04-11T22:36:30+01:00</lastmod>
   </url>
   <url>
     <loc>https://nacnudus.github.io/duncangarmonsway/posts/2019-02-08-cran-h-index/</loc>
-    <lastmod>2019-02-15T18:16:06+00:00</lastmod>
+    <lastmod>2022-04-11T22:36:29+01:00</lastmod>
   </url>
   <url>
     <loc>https://nacnudus.github.io/duncangarmonsway/posts/2019-01-31-add-nowt-to-your-tidy-pipelines/</loc>
-    <lastmod>2019-01-31T18:50:00+00:00</lastmod>
+    <lastmod>2022-04-11T22:36:29+01:00</lastmod>
   </url>
   <url>
     <loc>https://nacnudus.github.io/duncangarmonsway/posts/2019-01-25-a-custom-ggplot2-geom-for-deviations/</loc>
-    <lastmod>2019-01-25T23:36:50+00:00</lastmod>
+    <lastmod>2022-04-11T22:36:29+01:00</lastmod>
   </url>
   <url>
     <loc>https://nacnudus.github.io/duncangarmonsway/posts/2019-01-25-who-uses-the-govuk-design-system/</loc>
-    <lastmod>2019-01-25T16:39:44+00:00</lastmod>
+    <lastmod>2022-04-11T22:36:29+01:00</lastmod>
   </url>
   <url>
     <loc>https://nacnudus.github.io/duncangarmonsway/posts/2018-12-29-meltcsv/</loc>
-    <lastmod>2019-01-25T00:25:27+00:00</lastmod>
+    <lastmod>2022-04-11T22:36:29+01:00</lastmod>
   </url>
   <url>
     <loc>https://nacnudus.github.io/duncangarmonsway/posts/2019-01-07-food-nutrition-and-price/</loc>
-    <lastmod>2019-01-07T16:55:01+00:00</lastmod>
+    <lastmod>2022-04-11T22:36:29+01:00</lastmod>
   </url>
   <url>
     <loc>https://nacnudus.github.io/duncangarmonsway/posts/2019-01-02-new-package-armgin-to-summarise-all-margins-of-data-frames/</loc>
-    <lastmod>2019-01-02T11:44:47+00:00</lastmod>
+    <lastmod>2022-04-11T22:36:29+01:00</lastmod>
   </url>
   <url>
     <loc>https://nacnudus.github.io/duncangarmonsway/posts/2018-12-14-choose-a-priors-parameters/</loc>
-    <lastmod>2019-03-08T17:39:44+00:00</lastmod>
+    <lastmod>2022-04-11T22:36:29+01:00</lastmod>
   </url>
   <url>
     <loc>https://nacnudus.github.io/duncangarmonsway/posts/2016-07-20-harry-potter-arcs/</loc>
-    <lastmod>2019-01-08T23:47:23+00:00</lastmod>
+    <lastmod>2022-04-11T22:36:29+01:00</lastmod>
   </url>
   <url>
     <loc>https://nacnudus.github.io/duncangarmonsway/posts/2016-07-13-harry-potter-sentiment/</loc>
-    <lastmod>2019-01-08T23:31:26+00:00</lastmod>
+    <lastmod>2022-04-11T22:36:29+01:00</lastmod>
   </url>
   <url>
     <loc>https://nacnudus.github.io/duncangarmonsway/posts/2016-06-28-radar/</loc>
-    <lastmod>2019-01-08T23:46:41+00:00</lastmod>
+    <lastmod>2022-04-11T22:36:29+01:00</lastmod>
   </url>
   <url>
     <loc>https://nacnudus.github.io/duncangarmonsway/posts/2016-06-22-nests/</loc>
-    <lastmod>2018-11-29T22:36:17+00:00</lastmod>
+    <lastmod>2022-04-11T22:36:29+01:00</lastmod>
   </url>
   <url>
     <loc>https://nacnudus.github.io/duncangarmonsway/posts/2016-06-13-brexit/</loc>
-    <lastmod>2018-11-29T00:41:03+00:00</lastmod>
+    <lastmod>2022-04-11T22:36:29+01:00</lastmod>
   </url>
   <url>
     <loc>https://nacnudus.github.io/duncangarmonsway/posts/2016-06-06-simmer-bank-2/</loc>
-    <lastmod>2019-01-08T23:45:46+00:00</lastmod>
+    <lastmod>2022-04-11T22:36:29+01:00</lastmod>
   </url>
   <url>
     <loc>https://nacnudus.github.io/duncangarmonsway/posts/2016-05-11-simmer-bank-1/</loc>
-    <lastmod>2018-11-29T00:41:13+00:00</lastmod>
+    <lastmod>2022-04-11T22:36:29+01:00</lastmod>
   </url>
   <url>
     <loc>https://nacnudus.github.io/duncangarmonsway/posts/2016-05-02-statsblogs/</loc>
-    <lastmod>2019-01-08T23:48:35+00:00</lastmod>
+    <lastmod>2022-04-11T22:36:29+01:00</lastmod>
   </url>
   <url>
     <loc>https://nacnudus.github.io/duncangarmonsway/posts/2016-04-25-rounding/</loc>
-    <lastmod>2018-11-29T00:41:20+00:00</lastmod>
+    <lastmod>2022-04-11T22:36:29+01:00</lastmod>
   </url>
   <url>
     <loc>https://nacnudus.github.io/duncangarmonsway/posts/2016-04-18-rbloggers/</loc>
-    <lastmod>2018-11-29T00:41:23+00:00</lastmod>
+    <lastmod>2022-04-11T22:36:29+01:00</lastmod>
   </url>
   <url>
     <loc>https://nacnudus.github.io/duncangarmonsway/posts/2015-07-13-nzcrash/</loc>
-    <lastmod>2018-11-29T00:41:25+00:00</lastmod>
+    <lastmod>2022-04-11T22:36:29+01:00</lastmod>
   </url>
 </urlset>
