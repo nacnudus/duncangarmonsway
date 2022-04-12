@@ -1,0 +1,342 @@
+---
+title: "Hashing it out"
+description: |
+  Glitches in hashed environments in R
+author:
+  - name: Duncan Garmonsway
+    url: {}
+date: 2022-04-11
+output:
+  distill::distill_article:
+    self_contained: false
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Environments?
+
+If you want an R function to modify one of its arguments, then you must pass it
+an environment (a special kind of list)^[R version 4.2.0 will introduce an
+alternative, called `hashmap`].  Otherwise, if you pass it anything
+else (say, an ordinary list), it will be copied, then the copy will be modified,
+and the the copy will be deleted when the function return.  The effect will be
+nothing at all.  Pure functional programming.  It's a bit like asking a
+magician to put money into your wallet.  They will convince you that they put
+money into it, but they didn't really.
+
+```{r}
+put_money_into_my_wallet <- function(x) {
+  x[["money"]] <- 1000000
+}
+
+# Create an empty wallet.  Don't give a full wallet to a magician.
+wallet <- list(money = 0)
+wallet$money
+
+# Invite them to put money into your wallet.  It sure looks as though they did!
+put_money_into_my_wallet(wallet)
+
+# Uh-oh, where did the money go?
+wallet$money
+```
+
+Whereas if you pass an environment, any changes that the function makes to the
+contents of the environment will remain after the function is over.
+
+```{r}
+# Outwit the magician by giving them a trick wallet.
+wallet_2 <- list2env(wallet)
+wallet_2$money
+
+# Invite them to put money into your trick wallet.
+put_money_into_my_wallet(wallet_2)
+
+# Ahracadabra!  The money is still in the wallet.  Run for it.
+wallet_2$money
+```
+
+## Hashes?
+
+When creating a new environment, you can choose to hash its keys (the names of
+the objects inside).  Hashing slightly slows down the insertion of new keys, for
+the sake of drastically quickening lookups.  `x[["new_key"]] <- some_value` is
+slightly slower, but `x[["existing_key"]]` is much, much quicker, especially
+when there are very many keys.  Hashing works by compressing each key into a
+much smaller value, so that it's quicker to compare the hashed keys than the
+original keys, when you're searching for a particular key.
+
+The `list2env()` function allows you to choose how many different hashes will be
+available, by setting the `size` parameter. Suppose you only need the
+environment to hold five values, then you only need five different hashes, so
+you do something like `list2env(my_list, size = 5)`.
+
+```{r}
+my_list <- as.list(LETTERS[1:5])
+names(my_list) <- as.character(1:5)
+my_list
+
+my_env <- list2env(my_list, hash = TRUE, size = 5)
+```
+
+Did R do what you asked?  You can call `env.profile()` to find out.
+
+```{r}
+env.profile(my_env)
+```
+
+No, R didn't do what you asked.  It grew the size a little bit, just in case you
+need to create more objects soon.  There's no way to control this, because it's
+hardcoded in C++ that, when the number of objects in the environment is more
+than 85% of the number of hashes available, then the number of hashes available
+will be increased by 20%. In this example we had five original hashes, and now
+we have six available.
+
+Which is the first glitch.  Why is the default size `max(29L, length(x))`?
+Neither of those options will be correct.
+
+## Glitch: The default size triggers an immediate resize
+
+If you use the default size, then you had better have 24 or fewer objects to put
+into the environment.  25 would trigger a resize (what a waste of time), because
+25 is less than 29 (so R will create an environment of size 29), but more than
+85% of 29 (so R will immediately resize the environment to 120% of 29, which is
+34 (it rounds down -- more of that later).
+
+```{r}
+my_list <- as.list(1:25)
+names(my_list) <- as.character(1:25)
+my_env <- list2env(my_list, hash = TRUE)
+env.profile(my_env)
+```
+
+The same goes for `length(x)`, obviously `x` has more items in it than 85% of
+`length(x)`.  It has 100%.  `ceiling(length(x) / 0.85)` would avoid resizing the
+environment immediately.
+
+```{r}
+my_list <- as.list(1:30)
+names(my_list) <- as.character(1:30)
+my_env <- list2env(my_list, hash = TRUE)
+env.profile(my_env) # The size is 36, which is bigger than length(my_list).
+
+# This time, calculate a size that won't be increased.
+size <- ceiling(length(my_list) / 0.85)
+size # Surprise!  It's 36.
+
+my_env <- list2env(my_list, hash = TRUE, size = size)
+env.profile(my_env) # The size is unchanged, so no time was wasted resizing.
+```
+
+So we can avoid an immediate resize.  The previous example used a list of length
+30 so that the default size of 29 wouldn't be used.  But we can create a much
+more minimal example of avoiding resizes if we use a list of length 1, and tell
+R to create room for 2.
+
+```{r}
+my_list <- list("1" = 1)
+size <- ceiling(length(my_list) / 0.85) # It's 2
+my_env <- list2env(my_list, hash = TRUE, size = size)
+env.profile(my_env)
+```
+
+And that's what R would have done anyway, right?  It would have resized to 2,
+because 1 is already 100% of the length of 1.
+
+```{r}
+my_list <- list("1" = 1)
+my_env <- list2env(my_list, hash = TRUE, size = length(my_list))
+env.profile(my_env)
+```
+
+Nope, this time R didn't resize, even though the number of objects (1) was way
+more than 85% of the size (also 1).
+
+## Glitch 2: Resizes don't happen for sizes smaller than 5
+
+I did the maths, and environments that are initialised to a size less than 5
+never grow.  Not ever.
+
+```{r}
+my_list <- as.list(1:100)
+names(my_list) <- 1:100
+my_env <- list2env(my_list, hash = TRUE, size = 1)
+env.profile(my_env) # the size is still 1, even though there are 100 objects
+```
+
+How can 100 objects be stored in an environment of size 1?  Because they all
+share the same hash, R doesn't associate that hash with just one object, it
+associates that hash with an ordinary (unhashed) list of all 100 objects.  When
+it comes to looking up a value in the environment, R doesn't benefit from the
+hashing at all, because the hash only takes it to that ordinary list of objects,
+which then has to be searched in the usual way, slowly.  Try this with a million
+objects, and you'll notice the delay.
+
+But why 5?  Why do environments grow when they are size 5, but not when they are
+size 4?  The answer is in the [C++
+code](https://github.com/wch/r-source/blob/8a7626657e5d8b1d125a574c84c5e0f9b1de327e/src/main/envir.c#L440) that creates a new, larger hash table.
+
+```cpp
+new_table = R_NewHashTable((int)(HASHSIZE(table) * HASHTABLEGROWTHRATE));
+```
+
+An equivalent R expression would be
+
+```r
+new_table = new_hash_table(as.integer(HASHSIZE(table) * HASHTABLEGROWTHRATE))
+```
+
+We can think this through in our heads.  The `HASHTABLEGROWTHRATE` is hardcoded
+to 1.2, and `HASHSIZE(table)` is the size that we ask for.  So let's do the
+maths.
+
+```{r}
+HASHSIZE_table <- 1 # What we asked for with list2env(my_list, size = 1)
+HASHTABLEGROWTHRATE <- 1.2 # Hardcoded
+as.integer(HASHSIZE_table * HASHTABLEGROWTHRATE) # The size of the new table
+```
+
+Well shucks, the table will be resized from 1 to still 1.  And the same for
+sizes 2 to 4, because `as.integer()` truncates the new size down to the integer
+below.  Only with a table that is size 5 or more will the new size be truncated
+to a larger size than was started with.
+
+I reported this bug to the [R-devel mailing
+list](https://stat.ethz.ch/pipermail/r-devel/2022-April/081613.html), and nobody
+cared.  Fair enough, because no package on CRAN uses the `size` argument anyway,
+so all the hash tables will be initialised to at least 29, and the bug will
+never arise.  Hashing such small tables isn't worth it anyway, because lookups
+perform slower than for the unhashed equivalent.
+
+I'm not finished, though.
+
+## Glitch 3: Even 120% of the size of the input list isn't enough
+
+Let's revisit an earlier example, where a list of 30 objects was put into a
+hashed environment, and R resized the environment to 36.  If there are 30
+objects, and space for 36, then surely each object will have its own hash, and
+none will have to share (like they did when 100 objects shared a single hash).
+
+```{r}
+my_list <- as.list(1:30)
+names(my_list) <- as.character(1:30)
+my_env <- list2env(my_list, hash = TRUE)
+env.profile(my_env) # The size is 36, which is bigger than length(my_list).
+```
+
+The `$counts` result above shows how many objects share each hash.  There are
+lots of singletons, some empty positions, as we expect, and yet -- whooops --
+three pairs of objects that have to share a hash.
+
+It turns out that this is just a hazard of hashing.  In fact it's the point of
+hashing.  When compressing many keys into a small space, there are bound to be
+"collisions" of keys that are compressed into the same space.  Ideally, a hash
+algorithm would ensure that for n keys with at least n available hashes, no key
+would share a hash, but in practice they sometimes do.  The performance of
+lookups in hash tables is still better than named lists, notwithstanding a few
+collisions, and it isn't practical to guess a size that is adequate to avoid
+collisions.  I plotted the optimum no-collision size for lists of up to 1000
+objects, and the only pattern is that, for larger number of objects, you need a
+proportionately even larger hash table to avoid collisions.  But exactly how
+much larger seems unpredictable.
+
+```{r "ggplot", echo = FALSE}
+library(tidyverse)
+
+keys <- function(n) {
+  setNames(.Internal(vector("list", n)), seq_len(n))
+}
+
+optimal_size <- function(length) {
+  k <- keys(length)
+  size <- 1
+  while (max((e <- env.profile(list2env(k, hash = TRUE, size = size)))$counts) > 1) {
+    size <- size + 1
+  }
+  e$size
+}
+
+lengths <- seq_len(1000)
+d <- data.frame(length = lengths, size = map_int(lengths, optimal_size))
+
+d |>
+  ggplot(aes(length, size)) +
+  geom_point() +
+  labs(title = "The smallest hash table size that has no collisions",
+       subtitle = "For keys that are a given length of an integer sequence, beginning at 1, as strings")
+```
+
+Or perhaps the R developers chose a poor hash algorithm.
+
+## Glitch 4: A poor choice of hash algorithm?
+
+This one may or may not be a glitch.  Here's the [implementation in
+C++](https://github.com/wch/r-source/blob/8a7626657e5d8b1d125a574c84c5e0f9b1de327e/src/main/envir.c#L223-L239).
+
+```cpp
+/*----------------------------------------------------------------------
+  String Hashing
+  This is taken from the second edition of the "Dragon Book" by
+  Aho, Ullman and Sethi.
+*/
+
+/* was extern: used in this file and names.c (for the symbol table).
+   This hash function seems to work well enough for symbol tables,
+   and hash tables get saved as part of environments so changing it
+   is a major decision.
+ */
+int attribute_hidden R_Newhashpjw(const char *s)
+{
+    char *p;
+    unsigned h = 0, g;
+    for (p = (char *) s; *p; p++) {
+	h = (h << 4) + (*p);
+	if ((g = h & 0xf0000000) != 0) {
+	    h = h ^ (g >> 24);
+	    h = h ^ g;
+	}
+    }
+    return h;
+}
+```
+
+That comment "well enough" raised my suspicions, so I did some digging.
+
+Was it really taken from the second edition of [the "Dragon
+Book"](https://en.wikipedia.org/wiki/Compilers:_Principles,_Techniques,_and_Tools),
+published in 2006?  `git blame` shows that the comment was written in 1999,
+seven years before the second edition of the Dragon Book was published.  Maybe
+they meant a different book.
+
+Is the implementation correct? I looked up "pjw", because that seemed a
+clue to the origin of the algorithm.  The [PJW hash
+function](https://en.wikipedia.org/wiki/PJW_hash_function) has a page on
+Wikipedia, with an example implementation that isn't quite the same, and
+according to
+[StackExchange](https://cs.stackexchange.com/questions/95607/is-this-pjw-hash-function-incorrect),
+the error [might have been copied from a
+textbook](https://www.drdobbs.com/database/hashing-rehashed/184409859).
+
+Is PJW a good algorithm?  It's probably fine, although someone considered
+replacing it with one called DJB2, and someone else [chose not
+to](https://github.com/wch/r-source/commit/2e0eedc0e066fb0679fd50e64f8da798c9d98ad4).
+The [same source](https://www.drdobbs.com/database/hashing-rehashed/184409859)
+that spilled the beans about incorrect implementations of PJW also argues that a
+good-enough hash function should be left alone.
+
+## The future
+
+An upcoming version of R, 4.2.0, will include an experimental implementation of
+hash tables that aren't environments.
+
+- Tables will [always
+  grow](https://github.com/wch/r-source/blob/d1aebde673c12944db1101fe04adc5e98dbd0d78/src/main/unique.c#L2394)
+  if necessary, doubling each time.
+- Tables will grow when there are [more objects than half the size of the
+table](https://github.com/wch/r-source/blob/d1aebde673c12944db1101fe04adc5e98dbd0d78/src/main/unique.c#L2485).
+- The `size` parameter has no default, and is
+[documented](https://github.com/wch/r-source/blob/493f65f473cd0ad1b785ecd1481590a8f601c069/src/library/utils/man/hashtab.Rd#L69-L71)
+as a mere "hint".
+- The same implementation of the PJW hash function is used, apparently.
