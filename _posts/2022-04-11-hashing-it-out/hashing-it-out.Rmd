@@ -204,11 +204,15 @@ below.  Only with a table that is size 5 or more will the new size be truncated
 to a larger size than was started with.
 
 I reported this bug to the [R-devel mailing
-list](https://stat.ethz.ch/pipermail/r-devel/2022-April/081613.html), and nobody
-cared.  Fair enough, because no package on CRAN uses the `size` argument anyway,
-so all the hash tables will be initialised to at least 29, and the bug will
-never arise.  Hashing such small tables isn't worth it anyway, because lookups
-perform slower than for the unhashed equivalent.
+list](https://stat.ethz.ch/pipermail/r-devel/2022-April/081613.html), and
+~~nobody cared~~ (Update 2022-04-14: Prof. Dr. Martin Mächler
+[replied](https://stat.ethz.ch/pipermail/r-devel/2022-April/081631.html), and
+[fixed
+it](https://github.com/wch/r-source/commit/1f534838321e9bd1b85522b651da771dd749a63f)).
+Fair enough, because no package on CRAN uses the `size` argument anyway, so all
+the hash tables will be initialised to at least 29, and the bug will never
+arise.  Hashing such small tables isn't worth it anyway, because lookups perform
+slower than for the unhashed equivalent.
 
 I'm not finished, though.
 
@@ -242,7 +246,7 @@ objects, and the only pattern is that, for larger number of objects, you need a
 proportionately even larger hash table to avoid collisions.  But exactly how
 much larger seems unpredictable.
 
-```{r "ggplot", echo = FALSE}
+```{r "ggplot", echo = FALSE, cache = TRUE}
 library(tidyverse)
 
 keys <- function(n) {

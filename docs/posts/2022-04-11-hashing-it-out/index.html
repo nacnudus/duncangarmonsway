@@ -2422,11 +2422,16 @@ more will the new size be truncated to a larger size than was started
 with.</p>
 <p>I reported this bug to the <a
 href="https://stat.ethz.ch/pipermail/r-devel/2022-April/081613.html">R-devel
-mailing list</a>, and nobody cared. Fair enough, because no package on
-CRAN uses the <code>size</code> argument anyway, so all the hash tables
-will be initialised to at least 29, and the bug will never arise.
-Hashing such small tables isn’t worth it anyway, because lookups perform
-slower than for the unhashed equivalent.</p>
+mailing list</a>, and <del>nobody cared</del> (Update 2022-04-14:
+Prof. Dr. Martin Mächler <a
+href="https://stat.ethz.ch/pipermail/r-devel/2022-April/081631.html">replied</a>,
+and <a
+href="https://github.com/wch/r-source/commit/1f534838321e9bd1b85522b651da771dd749a63f">fixed
+it</a>). Fair enough, because no package on CRAN uses the
+<code>size</code> argument anyway, so all the hash tables will be
+initialised to at least 29, and the bug will never arise. Hashing such
+small tables isn’t worth it anyway, because lookups perform slower than
+for the unhashed equivalent.</p>
 <p>I’m not finished, though.</p>
 <h2
 id="glitch-3-even-120-of-the-size-of-the-input-list-isnt-enough">Glitch
