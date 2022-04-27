@@ -344,3 +344,15 @@ table](https://github.com/wch/r-source/blob/d1aebde673c12944db1101fe04adc5e98dbd
 [documented](https://github.com/wch/r-source/blob/493f65f473cd0ad1b785ecd1481590a8f601c069/src/library/utils/man/hashtab.Rd#L69-L71)
 as a mere "hint".
 - The same implementation of the PJW hash function is used, apparently.
+
+## Other languages
+
+[Added 2022-04-27] The Julia language had similar quirks.  In their case, a
+`resize!()` of a dictionary would sometimes shrink below the number of objects
+already present.  While they were fixing that problem, they also defaulted the
+minimum resize to 1.5 times the number of objects present, as a rule of thumb to
+avoid clashes.  I haven't checked what hashing algorithm Julia uses for the
+default implementation of dictionaries.  It was noticed in a
+[discussion](https://github.com/JuliaLang/julia/pull/37208) about checking
+uniqueness, and was [fixed](https://github.com/JuliaLang/julia/pull/37248),
+doubling the speed of uniqueness checking.

@@ -2064,7 +2064,7 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
 
 <!--/radix_placeholder_distill-->
-  <script src="../../site_libs/header-attrs-2.11/header-attrs.js"></script>
+  <script src="../../site_libs/header-attrs-2.14/header-attrs.js"></script>
   <script src="../../site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
   <script src="../../site_libs/popper-2.6.0/popper.min.js"></script>
   <link href="../../site_libs/tippy-6.2.7/tippy.css" rel="stylesheet" />
@@ -2548,6 +2548,18 @@ as a mere “hint”.</li>
 <li>The same implementation of the PJW hash function is used,
 apparently.</li>
 </ul>
+<h2 id="other-languages">Other languages</h2>
+<p>[Added 2022-04-27] The Julia language had similar quirks. In their
+case, a <code>resize!()</code> of a dictionary would sometimes shrink
+below the number of objects already present. While they were fixing that
+problem, they also defaulted the minimum resize to 1.5 times the number
+of objects present, as a rule of thumb to avoid clashes. I haven’t
+checked what hashing algorithm Julia uses for the default implementation
+of dictionaries. It was noticed in a <a
+href="https://github.com/JuliaLang/julia/pull/37208">discussion</a>
+about checking uniqueness, and was <a
+href="https://github.com/JuliaLang/julia/pull/37248">fixed</a>, doubling
+the speed of uniqueness checking.</p>
 <div class="sourceCode" id="cb19"><pre
 class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
 <section class="footnotes footnotes-end-of-document"
